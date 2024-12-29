@@ -1,0 +1,1056 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/account/genImgVerificationCode": {
+            "get": {
+                "description": "生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "生成图形验证码并返回Base64编码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "邮箱地址，用于生成验证码",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回验证码的Base64编码",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误，邮箱地址为空",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误，生成验证码失败",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/account/getAccount": {
+            "post": {
+                "description": "根据提供的邮箱获取对应用户的详细信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "获取账户信息",
+                "parameters": [
+                    {
+                        "description": "获取账户请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAccountRequest"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "404": {
+                        "description": "用户不存在",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/getUserProfile": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "获取当前登录用户的个人信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "从本地存储中获取用户信息",
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未授权",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/loginAccount": {
+            "post": {
+                "description": "用户登录并获取访问令牌，支持图形验证码校验",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "登录信息",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "图形验证码",
+                        "name": "ImgVerificationCode",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "登录成功，返回访问令牌",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.LoginResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "参数错误，验证码校验失败",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "401": {
+                        "description": "登录失败，凭证无效",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/logoutAccount": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "退出当前用户登录状态",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "用户登出",
+                "responses": {
+                    "200": {
+                        "description": "登出成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未授权",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/registerAccount": {
+            "post": {
+                "description": "注册新用户账号，支持图形验证码和邮箱验证码校验",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "description": "注册信息",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegisterRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "图形验证码",
+                        "name": "ImgVerificationCode",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "邮箱验证码",
+                        "name": "EmailVerificationCode",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "注册成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.RegisterRequest"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "参数错误，验证码校验失败",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/sendEmailVerificationCode": {
+            "get": {
+                "description": "向指定邮箱发送验证码，验证码有效期为3分钟",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "发送邮箱验证码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "邮箱地址，用于发送验证码",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功发送验证码",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误，邮箱地址为空或验证码仍然有效",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误，验证码发送失败",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/authenticated/resetPassword": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "重置用户账户密码，支持邮箱验证码校验",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "重置密码",
+                "parameters": [
+                    {
+                        "description": "重置密码信息",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResetPwdRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "邮箱验证码",
+                        "name": "EmailVerificationCode",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "密码重置成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "参数错误，验证码校验失败",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "401": {
+                        "description": "未授权，用户未登录",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/createOnePost": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "创建新的文章，支持 Markdown 格式内容，系统会自动转换为 HTML",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章"
+                ],
+                "summary": "创建文章",
+                "parameters": [
+                    {
+                        "description": "创建文章请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreatePostRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/deleteOnePost": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "根据文章 ID 删除指定文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章"
+                ],
+                "summary": "删除文章",
+                "parameters": [
+                    {
+                        "description": "删除文章请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeletePostRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "404": {
+                        "description": "文章不存在",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/getAllPost": {
+            "get": {
+                "description": "获取所有的文章列表，按创建时间倒序排序",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章"
+                ],
+                "summary": "获取文章列表",
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/getOnePost": {
+            "post": {
+                "description": "根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章"
+                ],
+                "summary": "获取文章详情",
+                "parameters": [
+                    {
+                        "description": "获取文章请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetPostRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "404": {
+                        "description": "文章不存在",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/updateOnePost": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "更新已存在的文章内容",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章"
+                ],
+                "summary": "更新文章",
+                "parameters": [
+                    {
+                        "description": "更新文章请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdatePostRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "404": {
+                        "description": "文章不存在",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/ping": {
+            "get": {
+                "description": "Test if the API is alive",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Ping API",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.CreatePostRequest": {
+            "type": "object",
+            "required": [
+                "contentMarkdown",
+                "title"
+            ],
+            "properties": {
+                "contentMarkdown": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "visibility": {
+                    "type": "string",
+                    "default": "private"
+                }
+            }
+        },
+        "dto.DeletePostRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.GetAccountRequest": {
+            "description": "请求获取账户信息时所需参数",
+            "type": "object",
+            "required": [
+                "email",
+                "nickname",
+                "phone",
+                "role_code"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetAllPostsResponse": {
+            "type": "object",
+            "properties": {
+                "contentHtml": {
+                    "type": "string"
+                },
+                "contentMarkdown": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "visibility": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetPostRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                }
+            }
+        },
+        "dto.LoginRequest": {
+            "description": "用户登录请求所需参数",
+            "type": "object",
+            "required": [
+                "email",
+                "img_verification_code",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "img_verification_code": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LoginResponse": {
+            "description": "用户登录成功后返回的响应，包括用户ID和令牌",
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "description": "访问令牌",
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "description": "刷新令牌",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "用户ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.RegisterRequest": {
+            "description": "用户注册所需参数",
+            "type": "object",
+            "required": [
+                "email",
+                "email_verification_code",
+                "img_verification_code",
+                "nickname",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "email_verification_code": {
+                    "type": "string"
+                },
+                "img_verification_code": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ResetPwdRequest": {
+            "description": "用户重置密码所需参数",
+            "type": "object",
+            "required": [
+                "again_new_password",
+                "email",
+                "email_verification_code",
+                "new_password"
+            ],
+            "properties": {
+                "again_new_password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 6
+                },
+                "email": {
+                    "type": "string"
+                },
+                "email_verification_code": {
+                    "type": "string"
+                },
+                "new_password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 6
+                }
+            }
+        },
+        "dto.UpdatePostRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "contentMarkdown": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "visibility": {
+                    "type": "string",
+                    "default": "private"
+                }
+            }
+        },
+        "vo.Result": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "msg": {
+                    "type": "string"
+                },
+                "requestId": {},
+                "timestamp": {}
+            }
+        }
+    }
+}

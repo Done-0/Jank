@@ -1,0 +1,62 @@
+services:
+  mysql:
+    image: mysql:8.0.23
+    container_name: mysql_db
+    restart: always
+    environment:
+      - MYSQL_DATABASE=jank_db
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=jank@2024
+      - MYSQL_ROOT_PASSWORD=root@2024
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+    ports:
+      - "3306"
+    volumes:
+      - mysql_data:/var/lib/mysql:rw
+      - ./mysql-files:/var/lib/mysql-files:rw
+      - ./conf:/etc/mysql/conf.d:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=1000
+      - --wait_timeout=28800
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    networks:
+      - app_network
+
+  redis:
+    image: redis:7.0
+    container_name: redis_db
+    restart: always
+    ports:
+      - "6379"
+    volumes:
+      - redis_data:/data:rw
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge
