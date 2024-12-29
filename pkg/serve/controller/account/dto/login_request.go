@@ -12,9 +12,9 @@ type LoginRequest struct {
 }
 
 // LoginResponse 登录响应体
-//	@Description	用户登录成功后返回的响应，包括用户ID和令牌
+//	@Description	用户登录成功后返回的响应，包括用户ID、访问令牌和刷新令牌
 type LoginResponse struct {
-	UserId       uint   `json:"user_id"`       // 用户ID
-	AccessToken  string `json:"access_token"`  // 访问令牌
-	RefreshToken string `json:"refresh_token"` // 刷新令牌
+	UserId       uint   `json:"user_id"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }

@@ -35,6 +35,11 @@ func GetAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(nil, bizerr.New(bizerr.BadRequest, err.Error()), c))
 	}
 
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+	}
+
 	userinfo, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, vo.Fail(nil, bizerr.New(bizerr.UnKnowErr, req.Email+" 用户不存在"), c))
@@ -67,6 +72,11 @@ func RegisterAcc(c echo.Context) error {
 	req := new(dto.RegisterRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(nil, bizerr.New(bizerr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
 	}
 
 	if !verification.VerificationImgCode(req.ImgVerificationCode, req.Email, c) {
@@ -105,6 +115,11 @@ func LoginAccount(c echo.Context) error {
 	req := new(dto.LoginRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(nil, bizerr.New(bizerr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
 	}
 
 	if !verification.VerificationImgCode(req.ImgVerificationCode, req.Email, c) {
@@ -191,6 +206,11 @@ func ResetPassword(c echo.Context) error {
 	req := new(dto.ResetPwdRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(nil, bizerr.New(bizerr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {

@@ -10,30 +10,27 @@ import (
 )
 
 // CreatePost 处理文章的创建
-func CreatePost(title string, image string, visibility string, contentMarkdown string, contentHTML string) (*model.Post, error) {
-	if title == "" {
-		return nil, fmt.Errorf("标题不能为空")
-	}
-	if contentMarkdown == "" && contentHTML == "" {
-		return nil, fmt.Errorf("内容不能为空")
-	}
-	if visibility == "" {
-		visibility = "private"
-	}
+func CreatePost(title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64) (*model.Post, error) {
+    if visibility == "" {
+        visibility = "private"
+    }
 
-	newPost := &model.Post{
-		Title:           title,
-		Image:           image,
-		Visibility:      visibility,
-		ContentMarkdown: contentMarkdown,
-		ContentHTML:     contentHTML,
-	}
+    categoryIDsStr := utils.ConvertInt64SliceToString(categoryIDs)
 
-	if err := mapper.CreatePost(newPost); err != nil {
-		return nil, fmt.Errorf("创建文章失败: %w", err)
-	}
+    newPost := &model.Post{
+        Title:           title,
+        Image:           image,
+        Visibility:      visibility,
+        ContentMarkdown: contentMarkdown,
+        ContentHTML:     contentHTML,
+        CategoryIDs:     categoryIDsStr,
+    }
 
-	return newPost, nil
+    if err := mapper.CreatePost(newPost); err != nil {
+        return nil, fmt.Errorf("创建文章失败: %w", err)
+    }
+
+    return newPost, nil
 }
 
 // GetOnePostByIDOrTitle 根据 ID 或 Title 获取文章
@@ -80,46 +77,33 @@ func GetAllPostsWithPaging(page, pageSize int) ([]*model.Post, int, error) {
 }
 
 // UpdateOnePost 更新文章
-func UpdatePost(id int64, title string, image string, visibility string, contentMarkdown string, contentHTML string, c echo.Context) (*model.Post, error) {
-	if id <= 0 {
-		utils.BizLogger(c).Error("更新操作必须提供有效的文章 ID")
-		return nil, fmt.Errorf("更新操作必须提供有效的文章 ID")
-	}
-	if title == "" {
-		return nil, fmt.Errorf("标题不能为空")
-	}
-	if contentMarkdown == "" && contentHTML == "" {
-		return nil, fmt.Errorf("内容不能为空")
-	}
+func UpdatePost(id int64, title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*model.Post, error) {
+    post, err := mapper.GetPostByID(id)
+    if err != nil {
+        return nil, fmt.Errorf("获取文章失败: %w", err)
+    }
+    if post == nil {
+        return nil, fmt.Errorf("文章不存在")
+    }
 
-	post, err := mapper.GetPostByID(id)
-	if err != nil {
-		return nil, fmt.Errorf("获取文章失败: %w", err)
-	}
-	if post == nil {
-		return nil, fmt.Errorf("文章不存在")
-	}
+    categoryIDsStr := utils.ConvertInt64SliceToString(categoryIDs)
 
-	post.Title = title
-	post.Image = image
-	post.Visibility = visibility
-	post.ContentMarkdown = contentMarkdown
-	post.ContentHTML = contentHTML
+    post.Title = title
+    post.Image = image
+    post.Visibility = visibility
+    post.ContentMarkdown = contentMarkdown
+    post.ContentHTML = contentHTML
+    post.CategoryIDs = categoryIDsStr
 
-	if err := mapper.UpdateOnePostByID(id, post); err != nil {
-		return nil, fmt.Errorf("更新文章失败: %w", err)
-	}
+    if err := mapper.UpdateOnePostByID(id, post); err != nil {
+        return nil, fmt.Errorf("更新文章失败: %w", err)
+    }
 
-	return post, nil
+    return post, nil
 }
 
 // DeleteOnePostByID 删除文章
 func DeletePost(id int64, c echo.Context) error {
-	if id <= 0 {
-		utils.BizLogger(c).Errorf("删除操作必须提供有效的文章 ID")
-		return fmt.Errorf("删除操作必须提供有效的文章 ID")
-	}
-
 	post, err := mapper.GetPostByID(id)
 	if err != nil {
 		return fmt.Errorf("获取文章失败: %w", err)

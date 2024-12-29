@@ -17,13 +17,14 @@ import (
 // @Tags         文章
 // @Accept       json
 // @Produce      json
-// @Param        request  body      dto.GetPostRequest  true  "获取文章请求参数"
-// @Success      200     {object}   vo.Result{data=dto.GetAllPostsResponse}  "获取成功"
-// @Failure      400     {object}   vo.Result          "请求参数错误"
-// @Failure      404     {object}   vo.Result          "文章不存在"
-// @Router       /post/getOnePost [post]
+// @Param        id       query     int     false  "文章 ID"
+// @Param        title    query     string  false  "文章标题"
+// @Success      200      {object}  vo.Result{data=dto.GetAllPostsResponse}  "获取成功"
+// @Failure      400      {object}  vo.Result          "请求参数错误"
+// @Failure      404      {object}  vo.Result          "文章不存在"
+// @Failure      500      {object}  vo.Result          "服务器错误"
 func GetOnePost(c echo.Context) error {
-	req := new(dto.GetPostRequest)
+	req := new(dto.GetOnePostRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
 	}
@@ -96,14 +97,14 @@ func GetAllPosts(c echo.Context) error {
 // @Tags         文章
 // @Accept       json
 // @Produce      json
-// @Param        request  body      dto.CreatePostRequest  true  "创建文章请求参数"
+// @Param        request  body      dto.CreateOnePostRequest  true  "创建文章请求参数"
 // @Success      200     {object}   vo.Result{data=dto.GetAllPostsResponse}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
+// @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
 // @Router       /post/createOnePost [post]
-// CreateOnePost 创建文章
 func CreateOnePost(c echo.Context) error {
-	req := new(dto.CreatePostRequest)
+	req := new(dto.CreateOnePostRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
 	}
@@ -113,7 +114,7 @@ func CreateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, "渲染失败，缺少 contentHtml"), nil, c))
 	}
 
-	createdPost, err := service.CreatePost(req.Title, req.Image, req.Visibility, req.ContentMarkdown, ContentHTML)
+	createdPost, err := service.CreatePost(req.Title, req.Image, req.Visibility, req.ContentMarkdown, ContentHTML, req.CategoryIDs)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
 	}
@@ -127,7 +128,7 @@ func CreateOnePost(c echo.Context) error {
 // @Tags         文章
 // @Accept       json
 // @Produce      json
-// @Param        request  body      dto.UpdatePostRequest  true  "更新文章请求参数"
+// @Param        request  body      dto.UpdateOnePostRequest  true  "更新文章请求参数"
 // @Success      200     {object}   vo.Result{data=dto.GetAllPostsResponse}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "文章不存在"
@@ -135,14 +136,14 @@ func CreateOnePost(c echo.Context) error {
 // @Security     BearerAuth
 // @Router       /post/updateOnePost [post]
 func UpdateOnePost(c echo.Context) error {
-	req := new(dto.UpdatePostRequest)
+	req := new(dto.UpdateOnePostRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
 	}
 
 	contentHTML := c.Get("contentHtml").(string)
 
-	updatedPost, err := service.UpdatePost(req.ID, req.Title, req.Image, req.Visibility, req.ContentMarkdown, contentHTML, c)
+	updatedPost, err := service.UpdatePost(req.ID, req.Title, req.Image, req.Visibility, req.ContentMarkdown, contentHTML, req.CategoryIDs, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
 	}
@@ -156,15 +157,15 @@ func UpdateOnePost(c echo.Context) error {
 // @Tags         文章
 // @Accept       json
 // @Produce      json
-// @Param        request  body      dto.DeletePostRequest  true  "删除文章请求参数"
-// @Success      200     {object}   vo.Result{data=string}  "删除成功"
+// @Param        request  body      dto.DeleteOnePostRequest  true  "删除文章请求参数"
+// @Success      200     {object}   vo.Result          "删除成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "文章不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
 // @Router       /post/deleteOnePost [post]
 func DeleteOnePost(c echo.Context) error {
-	req := new(dto.DeletePostRequest)
+	req := new(dto.DeleteOnePostRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
 	}
