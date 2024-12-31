@@ -21,7 +21,7 @@ import (
 // @Success      200   {object} vo.Result{data=dto.GetOneCategoryResponse}  "获取成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
-// @Router       /category/{id} [get]
+// @Router       /category/getOneCategory [get]
 func GetOneCategory(c echo.Context) error {
 	req := new(dto.GetOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
@@ -49,7 +49,7 @@ func GetOneCategory(c echo.Context) error {
 // @Produce      json
 // @Success      200  {object}  vo.Result{data=[]dto.GetAllCategoriesResponse}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
-// @Router       /category [get]
+// @Router       /category/getCategoryTree [get]
 func GetCategoryTree(c echo.Context) error {
 	categories, err := service.GetCategoryTree()
 	if err != nil {
@@ -70,7 +70,7 @@ func GetCategoryTree(c echo.Context) error {
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"
-// @Router       /category/{id}/children [get]
+// @Router       /category/getCategoryChildrenTree [post]
 func GetCategoryChildrenTree(c echo.Context) error {
 	req := new(dto.GetOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
@@ -100,7 +100,7 @@ func GetCategoryChildrenTree(c echo.Context) error {
 // @Success      200     {object}   vo.Result{data=dto.GetOneCategoryResponse}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Security     BearerAuth
-// @Router       /category [post]
+// @Router       /category/createCategory [post]
 func CreateOneCategory(c echo.Context) error {
 	req := new(dto.CreateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
@@ -133,7 +133,7 @@ func CreateOneCategory(c echo.Context) error {
 // @Failure      404     {object}   vo.Result          "类目不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
-// @Router       /category/{id} [put]
+// @Router       /category/updateCategory [post]
 func UpdateOneCategory(c echo.Context) error {
 	req := new(dto.UpdateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
@@ -155,7 +155,7 @@ func UpdateOneCategory(c echo.Context) error {
 
 // DeleteCategory godoc
 // @Summary      删除类目
-// @Description  根据类目 ID 删除指定类目
+// @Description  根据类目 ID 删除类目
 // @Tags         类目
 // @Accept       json
 // @Produce      json
@@ -165,7 +165,7 @@ func UpdateOneCategory(c echo.Context) error {
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"
 // @Security     BearerAuth
-// @Router       /category/{id} [delete]
+// @Router       /category/deleteCategory [post]
 func DeleteOneCategory(c echo.Context) error {
 	req := new(dto.DeleteOneCategoryRequest)
 

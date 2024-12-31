@@ -123,7 +123,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetAccountRequest"
+                                            "$ref": "#/definitions/dto.GetAccountResponse"
                                         }
                                     }
                                 }
@@ -649,87 +649,13 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "更新已存在的类目信息",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "类目"
-                ],
-                "summary": "更新类目",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "类目ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "更新类目请求参数",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.UpdateOneCategoryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "更新成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dto.GetOneCategoryResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "请求参数错误",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    },
-                    "404": {
-                        "description": "类目不存在",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "根据类目 ID 删除指定类目",
+                "description": "根据类目 ID 删除类目",
                 "consumes": [
                     "application/json"
                 ],
@@ -790,7 +716,7 @@
             }
         },
         "/category/{id}/children": {
-            "get": {
+            "post": {
                 "description": "根据类目 ID 获取子类目树",
                 "consumes": [
                     "application/json"
@@ -1089,7 +1015,7 @@
         },
         "/test/ping": {
             "get": {
-                "description": "Test if the API is alive",
+                "description": "测试接口",
                 "consumes": [
                     "application/json"
                 ],
@@ -1179,11 +1105,17 @@
             "description": "请求获取账户信息时所需参数",
             "type": "object",
             "required": [
-                "email",
-                "nickname",
-                "phone",
-                "role_code"
+                "email"
             ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetAccountResponse": {
+            "description": "请求获取账户信息时所需参数",
+            "type": "object",
             "properties": {
                 "email": {
                     "type": "string"
@@ -1290,19 +1222,16 @@
             }
         },
         "dto.LoginResponse": {
-            "description": "用户登录成功后返回的响应，包括用户ID和令牌",
+            "description": "用户登录成功后返回的响应，包括用户ID、访问令牌和刷新令牌",
             "type": "object",
             "properties": {
                 "access_token": {
-                    "description": "访问令牌",
                     "type": "string"
                 },
                 "refresh_token": {
-                    "description": "刷新令牌",
                     "type": "string"
                 },
                 "user_id": {
-                    "description": "用户ID",
                     "type": "integer"
                 }
             }

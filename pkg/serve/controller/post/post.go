@@ -50,7 +50,6 @@ func GetOnePost(c echo.Context) error {
 // @Success      200  {object}  vo.Result{data=[]dto.GetAllPostsResponse}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /post/getAllPost [get]
-// GetAllPosts 处理分页请求，返回文章数据和总页数
 func GetAllPosts(c echo.Context) error {
 	// 获取 page 页数，默认为 1
 	page := c.QueryParam("page")

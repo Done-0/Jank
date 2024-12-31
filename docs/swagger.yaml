@@ -12,7 +12,7 @@ definitions:
       parent_id:
         type: integer
     required:
-      - name
+    - name
     type: object
   dto.CreateOnePostRequest:
     properties:
@@ -32,17 +32,25 @@ definitions:
         default: private
         type: string
     required:
-      - contentMarkdown
-      - title
+    - contentMarkdown
+    - title
     type: object
   dto.DeleteOnePostRequest:
     properties:
       id:
         type: integer
     required:
-      - id
+    - id
     type: object
   dto.GetAccountRequest:
+    description: 请求获取账户信息时所需参数
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  dto.GetAccountResponse:
     description: 请求获取账户信息时所需参数
     properties:
       email:
@@ -53,17 +61,12 @@ definitions:
         type: string
       role_code:
         type: string
-    required:
-      - email
-      - nickname
-      - phone
-      - role_code
     type: object
   dto.GetAllCategoriesResponse:
     properties:
       categories:
         items:
-          $ref: "#/definitions/dto.GetOneCategoryResponse"
+          $ref: '#/definitions/dto.GetOneCategoryResponse'
         type: array
     type: object
   dto.GetAllPostsResponse:
@@ -90,7 +93,7 @@ definitions:
     properties:
       children:
         items:
-          $ref: "#/definitions/dto.GetOneCategoryResponse"
+          $ref: '#/definitions/dto.GetOneCategoryResponse'
         type: array
       description:
         type: string
@@ -115,21 +118,18 @@ definitions:
       password:
         type: string
     required:
-      - email
-      - img_verification_code
-      - password
+    - email
+    - img_verification_code
+    - password
     type: object
   dto.LoginResponse:
-    description: 用户登录成功后返回的响应，包括用户ID和令牌
+    description: 用户登录成功后返回的响应，包括用户ID、访问令牌和刷新令牌
     properties:
       access_token:
-        description: 访问令牌
         type: string
       refresh_token:
-        description: 刷新令牌
         type: string
       user_id:
-        description: 用户ID
         type: integer
     type: object
   dto.RegisterRequest:
@@ -149,11 +149,11 @@ definitions:
       phone:
         type: string
     required:
-      - email
-      - email_verification_code
-      - img_verification_code
-      - nickname
-      - password
+    - email
+    - email_verification_code
+    - img_verification_code
+    - nickname
+    - password
     type: object
   dto.ResetPwdRequest:
     description: 用户重置密码所需参数
@@ -171,16 +171,16 @@ definitions:
         minLength: 6
         type: string
     required:
-      - again_new_password
-      - email
-      - email_verification_code
-      - new_password
+    - again_new_password
+    - email
+    - email_verification_code
+    - new_password
     type: object
   dto.UpdateOneCategoryRequest:
     properties:
       children:
         items:
-          $ref: "#/definitions/dto.GetOneCategoryResponse"
+          $ref: '#/definitions/dto.GetOneCategoryResponse'
         type: array
       description:
         maxLength: 255
@@ -199,9 +199,9 @@ definitions:
       path:
         type: string
     required:
-      - description
-      - id
-      - name
+    - description
+    - id
+    - name
     type: object
   dto.UpdateOnePostRequest:
     properties:
@@ -223,8 +223,8 @@ definitions:
         default: private
         type: string
     required:
-      - category_ids
-      - id
+    - category_ids
+    - id
     type: object
   vo.Result:
     properties:
@@ -242,660 +242,615 @@ paths:
   /account/genImgVerificationCode:
     get:
       consumes:
-        - application/json
+      - application/json
       description: 生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。
       parameters:
-        - description: 邮箱地址，用于生成验证码
-          in: query
-          name: email
-          required: true
-          type: string
+      - description: 邮箱地址，用于生成验证码
+        in: query
+        name: email
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 成功返回验证码的Base64编码
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    additionalProperties:
-                      type: string
-                    type: object
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: string
+                  type: object
+              type: object
         "400":
           description: 请求参数错误，邮箱地址为空
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    type: string
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
         "500":
           description: 服务器错误，生成验证码失败
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    type: string
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
       summary: 生成图形验证码并返回Base64编码
       tags:
-        - 账户
+      - 账户
   /account/getAccount:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 根据提供的邮箱获取对应用户的详细信息
       parameters:
-        - description: 获取账户请求参数
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.GetAccountRequest"
+      - description: 获取账户请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetAccountRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 获取成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetAccountRequest"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAccountResponse'
+              type: object
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "404":
           description: 用户不存在
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 获取账户信息
       tags:
-        - 账户
+      - 账户
   /account/getUserProfile:
     post:
       description: 获取当前登录用户的个人信息
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 获取成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    additionalProperties: true
-                    type: object
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
         "401":
           description: 未授权
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 从本地存储中获取用户信息
       tags:
-        - 账户
+      - 账户
   /account/loginAccount:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 用户登录并获取访问令牌，支持图形验证码校验
       parameters:
-        - description: 登录信息
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.LoginRequest"
-        - description: 图形验证码
-          in: query
-          name: ImgVerificationCode
-          required: true
-          type: string
+      - description: 登录信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      - description: 图形验证码
+        in: query
+        name: ImgVerificationCode
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 登录成功，返回访问令牌
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.LoginResponse"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.LoginResponse'
+              type: object
         "400":
           description: 参数错误，验证码校验失败
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "401":
           description: 登录失败，凭证无效
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 用户登录
       tags:
-        - 账户
+      - 账户
   /account/logoutAccount:
     post:
       description: 退出当前用户登录状态
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 登出成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    type: string
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
         "401":
           description: 未授权
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 用户登出
       tags:
-        - 账户
+      - 账户
   /account/registerAccount:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 注册新用户账号，支持图形验证码和邮箱验证码校验
       parameters:
-        - description: 注册信息
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.RegisterRequest"
-        - description: 图形验证码
-          in: query
-          name: ImgVerificationCode
-          required: true
-          type: string
-        - description: 邮箱验证码
-          in: query
-          name: EmailVerificationCode
-          required: true
-          type: string
+      - description: 注册信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      - description: 图形验证码
+        in: query
+        name: ImgVerificationCode
+        required: true
+        type: string
+      - description: 邮箱验证码
+        in: query
+        name: EmailVerificationCode
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 注册成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.RegisterRequest"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.RegisterRequest'
+              type: object
         "400":
           description: 参数错误，验证码校验失败
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 用户注册
       tags:
-        - 账户
+      - 账户
   /account/sendEmailVerificationCode:
     get:
       consumes:
-        - application/json
+      - application/json
       description: 向指定邮箱发送验证码，验证码有效期为3分钟
       parameters:
-        - description: 邮箱地址，用于发送验证码
-          in: query
-          name: email
-          required: true
-          type: string
+      - description: 邮箱地址，用于发送验证码
+        in: query
+        name: email
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 成功发送验证码
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "400":
           description: 请求参数错误，邮箱地址为空或验证码仍然有效
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误，验证码发送失败
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 发送邮箱验证码
       tags:
-        - 账户
+      - 账户
   /authenticated/resetPassword:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 重置用户账户密码，支持邮箱验证码校验
       parameters:
-        - description: 重置密码信息
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.ResetPwdRequest"
-        - description: 邮箱验证码
-          in: query
-          name: EmailVerificationCode
-          required: true
-          type: string
+      - description: 重置密码信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ResetPwdRequest'
+      - description: 邮箱验证码
+        in: query
+        name: EmailVerificationCode
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 密码重置成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    type: string
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
         "400":
           description: 参数错误，验证码校验失败
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "401":
           description: 未授权，用户未登录
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 重置密码
       tags:
-        - 账户
+      - 账户
   /category:
     get:
       consumes:
-        - application/json
+      - application/json
       description: 获取类目树
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 获取成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    items:
-                      $ref: "#/definitions/dto.GetAllCategoriesResponse"
-                    type: array
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.GetAllCategoriesResponse'
+                  type: array
+              type: object
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 获取类目树
       tags:
-        - 类目
+      - 类目
     post:
       consumes:
-        - application/json
+      - application/json
       description: 创建新的类目
       parameters:
-        - description: 创建类目请求参数
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.CreateOneCategoryRequest"
+      - description: 创建类目请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateOneCategoryRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 创建成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetOneCategoryResponse"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+              type: object
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 创建类目
       tags:
-        - 类目
+      - 类目
   /category/{id}:
-    delete:
+    get:
       consumes:
-        - application/json
-      description: 根据类目 ID 删除指定类目
+      - application/json
+      description: 根据类目 ID 获取单个类目的详细信息
       parameters:
-        - description: 类目ID
-          in: path
-          name: id
-          required: true
-          type: integer
+      - description: 类目ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
-        - application/json
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "404":
+          description: 类目不存在
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 获取单个类目详情
+      tags:
+      - 类目
+    post:
+      consumes:
+      - application/json
+      description: 根据类目 ID 删除类目
+      parameters:
+      - description: 类目ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
       responses:
         "200":
           description: 删除成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetOneCategoryResponse"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+              type: object
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "404":
           description: 类目不存在
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 删除类目
       tags:
-        - 类目
-    get:
-      consumes:
-        - application/json
-      description: 根据类目 ID 获取单个类目的详细信息
-      parameters:
-        - description: 类目ID
-          in: path
-          name: id
-          required: true
-          type: integer
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetOneCategoryResponse"
-                type: object
-        "400":
-          description: 请求参数错误
-          schema:
-            $ref: "#/definitions/vo.Result"
-        "404":
-          description: 类目不存在
-          schema:
-            $ref: "#/definitions/vo.Result"
-      summary: 获取单个类目详情
-      tags:
-        - 类目
-    put:
-      consumes:
-        - application/json
-      description: 更新已存在的类目信息
-      parameters:
-        - description: 类目ID
-          in: path
-          name: id
-          required: true
-          type: integer
-        - description: 更新类目请求参数
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.UpdateOneCategoryRequest"
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: 更新成功
-          schema:
-            allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetOneCategoryResponse"
-                type: object
-        "400":
-          description: 请求参数错误
-          schema:
-            $ref: "#/definitions/vo.Result"
-        "404":
-          description: 类目不存在
-          schema:
-            $ref: "#/definitions/vo.Result"
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: "#/definitions/vo.Result"
-      security:
-        - BearerAuth: []
-      summary: 更新类目
-      tags:
-        - 类目
+      - 类目
   /category/{id}/children:
-    get:
+    post:
       consumes:
-        - application/json
+      - application/json
       description: 根据类目 ID 获取子类目树
       parameters:
-        - description: 类目ID
-          in: path
-          name: id
-          required: true
-          type: integer
+      - description: 类目ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 获取成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    items:
-                      $ref: "#/definitions/dto.GetOneCategoryResponse"
-                    type: array
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.GetOneCategoryResponse'
+                  type: array
+              type: object
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "404":
           description: 类目不存在
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 获取子类目树
       tags:
-        - 类目
+      - 类目
   /post/createOnePost:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 创建新的文章，支持 Markdown 格式内容，系统会自动转换为 HTML
       parameters:
-        - description: 创建文章请求参数
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.CreateOnePostRequest"
+      - description: 创建文章请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateOnePostRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 创建成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetAllPostsResponse"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAllPostsResponse'
+              type: object
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 创建文章
       tags:
-        - 文章
+      - 文章
   /post/deleteOnePost:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 根据文章 ID 删除指定文章
       parameters:
-        - description: 删除文章请求参数
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.DeleteOnePostRequest"
+      - description: 删除文章请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteOnePostRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 删除成功
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "404":
           description: 文章不存在
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 删除文章
       tags:
-        - 文章
+      - 文章
   /post/getAllPost:
     get:
       consumes:
-        - application/json
+      - application/json
       description: 获取所有的文章列表，按创建时间倒序排序
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 获取成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    items:
-                      $ref: "#/definitions/dto.GetAllPostsResponse"
-                    type: array
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.GetAllPostsResponse'
+                  type: array
+              type: object
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       summary: 获取文章列表
       tags:
-        - 文章
+      - 文章
   /post/updateOnePost:
     post:
       consumes:
-        - application/json
+      - application/json
       description: 更新已存在的文章内容
       parameters:
-        - description: 更新文章请求参数
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: "#/definitions/dto.UpdateOnePostRequest"
+      - description: 更新文章请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateOnePostRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: 更新成功
           schema:
             allOf:
-              - $ref: "#/definitions/vo.Result"
-              - properties:
-                  data:
-                    $ref: "#/definitions/dto.GetAllPostsResponse"
-                type: object
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAllPostsResponse'
+              type: object
         "400":
           description: 请求参数错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "404":
           description: 文章不存在
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
         "500":
           description: 服务器错误
           schema:
-            $ref: "#/definitions/vo.Result"
+            $ref: '#/definitions/vo.Result'
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       summary: 更新文章
       tags:
-        - 文章
+      - 文章
   /test/ping:
     get:
       consumes:
-        - application/json
-      description: Test if the API is alive
+      - application/json
+      description: 测试接口
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -904,5 +859,5 @@ paths:
             type: object
       summary: Ping API
       tags:
-        - test
+      - test
 swagger: "2.0"

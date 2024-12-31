@@ -25,7 +25,7 @@ const (
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.GetAccountRequest  true  "获取账户请求参数"
-// @Success      200     {object}   vo.Result{data=dto.GetAccountRequest}  "获取成功"
+// @Success      200     {object}   vo.Result{data=dto.GetAccountResponse}  "获取成功"
 // @Failure      400     {object}   vo.Result              "请求参数错误"
 // @Failure      404     {object}   vo.Result              "用户不存在"
 // @Router       /account/getAccount [post]
@@ -45,7 +45,7 @@ func GetAccount(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, vo.Fail(nil, bizerr.New(bizerr.UnKnowErr, req.Email+" 用户不存在"), c))
 	}
 
-	response := dto.GetAccountRequest{
+	response := dto.GetAccountResponse{
 		Email:    userinfo.Email,
 		Nickname: userinfo.Nickname,
 		Phone:    userinfo.Phone,
@@ -194,7 +194,7 @@ func LogoutAccount(c echo.Context) error {
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "未授权，用户未登录"
 // @Failure      500     {object}   vo.Result         "服务器错误"
-// @Security     BearerAuth
+// @security     BearerAuth
 // @Router       /authenticated/resetPassword [post]
 func ResetPassword(c echo.Context) error {
 	userId, ok := c.Get(LocalsUserIdKey).(int64)

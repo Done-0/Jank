@@ -6,7 +6,7 @@ import (
 )
 
 // @Summary		Ping API
-// @Description	Test if the API is alive
+// @Description	测试接口
 // @Tags			test
 // @Accept			json
 // @Produce		json
