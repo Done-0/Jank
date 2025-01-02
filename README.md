@@ -1,15 +1,35 @@
-### Jank 简客博客系统
+<p align="center">
+  <a><img src="https://s2.loli.net/2025/01/02/6F8fzMvrBDCATZk.png" alt="Jank"></a>
+</p>
+<p align="center">
+    <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
+</p>
+<p align="center">
+<a href="https://img.shields.io/github/stars/Done-0/Jank?style=social" target="_blank">
+    <img src="https://img.shields.io/github/stars/Done-0/Jank?style=social" alt="Stars">
+</a>
+<a href="https://img.shields.io/github/forks/Done-0/Jank?style=social" target="_blank">
+    <img src="https://img.shields.io/github/forks/Done-0/Jank?style=social" alt="Forks">
+</a>
+<a href="https://img.shields.io/github/contributors/Done-0/Jank" target="_blank">
+    <img src="https://img.shields.io/github/contributors/Done-0/Jank" alt="Contributors">
+</a>
+<a href="https://img.shields.io/github/issues/Done-0/Jank" target="_blank">
+    <img src="https://img.shields.io/github/issues/Done-0/Jank" alt="Issues">
+</a>
+<a href="https://img.shields.io/github/issues-pr/Done-0/Jank" target="_blank">
+    <img src="https://img.shields.io/github/issues-pr/Done-0/Jank" alt="Pull Requests">
+</a>
+<a href="https://img.shields.io/github/license/Done-0/Jank" target="_blank">
+    <img src="https://img.shields.io/github/license/Done-0/Jank" alt="License">
+</a>
+</p>
 
-[![Stars](https://img.shields.io/github/stars/Done-0/Jank?style=social)](https://github.com/Done-0/Jank)
-[![Forks](https://img.shields.io/github/forks/Done-0/Jank?style=social)](https://github.com/Done-0/Jank/fork)
-[![Contributors](https://img.shields.io/github/contributors/Done-0/Jank)](https://github.com/Done-0/Jank/graphs/contributors)
-[![Issues](https://img.shields.io/github/issues/Done-0/Jank)](https://github.com/Done-0/Jank/issues)
-[![Pull Requests](https://img.shields.io/github/issues-pr/Done-0/Jank)](https://github.com/Done-0/Jank/pulls)
-[![License](https://img.shields.io/github/license/Done-0/Jank)](https://github.com/Done-0/Jank/blob/main/LICENSE)
+---
 
-Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，设计理念强调极简、高效和高扩展性，旨在为用户提供功能丰富、界面简洁、操作简单且安全可靠的博客体验。
+Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，设计理念强调极简、低耦合和高扩展，旨在为用户提供功能丰富、界面简洁、操作简单且安全可靠的博客体验。
 
-#### 技术栈
+## 技术栈
 
 - **Go 语言**：热门后端开发语言，适合构建高并发应用。
 - **Echo 框架**：高性能的 Web 框架，支持快速开发和灵活的路由管理。
@@ -19,7 +39,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
 - **前端**：Vue 3 + Nuxt + Shadcn-vue（暂时搁置）。
 
-#### 功能模块
+## 功能模块
 
 - **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
@@ -34,7 +54,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 > **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
-#### 本地开发
+## 本地开发
 
 1. **安装依赖**：
 
@@ -69,22 +89,22 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 4. **访问接口**：  
    打开浏览器，访问 [http://localhost:9010/ping](http://localhost:9010/ping)
 
-#### Docker 容器部署
+## Docker 容器部署
 
 ```bash
 docker-compose up -d
 ```
 
-#### 联系方式
+## 联系方式
 
 - **QQ 群**：828270460
 - **作者 QQ**：927171598
 
-#### 许可证
+## 许可证
 
 本项目采用 [MIT 开源许可证](https://opensource.org/licenses/MIT)。
 
-#### 代码统计
+## 代码统计
 
 ```bash
 -------------------------------------------------------------------------------
@@ -100,10 +120,10 @@ TOTAL                           97            567            464           6433
 -------------------------------------------------------------------------------
 ```
 
-#### GitHub 统计
+## GitHub 统计
 
 <img src="https://github-readme-stats.vercel.app/api?username=Done-0&show_icons=true&hide_title=true&theme=radical" width="100%" height="65%">
 
-#### 增长趋势
+## 增长趋势
 
 <img src="https://api.star-history.com/svg?repos=Done-0/Jank&type=timeline" width="100%" height="65%">
