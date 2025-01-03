@@ -26,7 +26,6 @@ type Config struct {
 	SwaggerHost     string `mapstructure:"SWAGGER_HOST"`
 	QqSmtp          string `mapstructure:"QQ_SMTP"`
 	FromEmail       string `mapstructure:"FROM_EMAIL"`
-	Salt            string `mapstructure:"SALT"`
 }
 
 // LoadConfig 加载配置文件

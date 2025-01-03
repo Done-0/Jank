@@ -533,32 +533,7 @@ paths:
       summary: 重置密码
       tags:
       - 账户
-  /category:
-    get:
-      consumes:
-      - application/json
-      description: 获取类目树
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/vo.Result'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/dto.GetAllCategoriesResponse'
-                  type: array
-              type: object
-        "500":
-          description: 服务器错误
-          schema:
-            $ref: '#/definitions/vo.Result'
-      summary: 获取类目树
-      tags:
-      - 类目
+  /category/createCategory:
     post:
       consumes:
       - application/json
@@ -591,40 +566,7 @@ paths:
       summary: 创建类目
       tags:
       - 类目
-  /category/{id}:
-    get:
-      consumes:
-      - application/json
-      description: 根据类目 ID 获取单个类目的详细信息
-      parameters:
-      - description: 类目ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/vo.Result'
-            - properties:
-                data:
-                  $ref: '#/definitions/dto.GetOneCategoryResponse'
-              type: object
-        "400":
-          description: 请求参数错误
-          schema:
-            $ref: '#/definitions/vo.Result'
-        "404":
-          description: 类目不存在
-          schema:
-            $ref: '#/definitions/vo.Result'
-      summary: 获取单个类目详情
-      tags:
-      - 类目
+  /category/deleteCategory:
     post:
       consumes:
       - application/json
@@ -664,7 +606,7 @@ paths:
       summary: 删除类目
       tags:
       - 类目
-  /category/{id}/children:
+  /category/getCategoryChildrenTree:
     post:
       consumes:
       - application/json
@@ -702,6 +644,112 @@ paths:
           schema:
             $ref: '#/definitions/vo.Result'
       summary: 获取子类目树
+      tags:
+      - 类目
+  /category/getCategoryTree:
+    get:
+      consumes:
+      - application/json
+      description: 获取类目树
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.GetAllCategoriesResponse'
+                  type: array
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 获取类目树
+      tags:
+      - 类目
+  /category/getOneCategory:
+    get:
+      consumes:
+      - application/json
+      description: 根据类目 ID 获取单个类目的详细信息
+      parameters:
+      - description: 类目ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "404":
+          description: 类目不存在
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 获取单个类目详情
+      tags:
+      - 类目
+  /category/updateCategory:
+    post:
+      consumes:
+      - application/json
+      description: 更新已存在的类目信息
+      parameters:
+      - description: 类目ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新类目请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateOneCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "404":
+          description: 类目不存在
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+      security:
+      - BearerAuth: []
+      summary: 更新类目
       tags:
       - 类目
   /post/createOnePost:

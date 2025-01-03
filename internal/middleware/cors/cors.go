@@ -8,7 +8,7 @@ import (
 	"jank.com/jank_blog/internal/global"
 )
 
-func CORS() echo.MiddlewareFunc {
+func InitCORS() echo.MiddlewareFunc {
 	return corsWithConfig(defaultCORSConfig())
 }
 
