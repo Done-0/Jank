@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
-	verification "jank.com/jank_blog/pkg/serve/controller/verification"
+	"jank.com/jank_blog/pkg/serve/controller/verification"
 )
 
 func RegisterVerificationRoutes(app *echo.Echo) {

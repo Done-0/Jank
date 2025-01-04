@@ -1,4 +1,4 @@
-package varification
+package verification
 
 import (
 	"context"
