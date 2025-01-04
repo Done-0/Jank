@@ -7,14 +7,10 @@ import (
 	model "jank.com/jank_blog/internal/model/category"
 )
 
-const (
-	activeCategoryCondition = "`is_active` = true"
-)
-
 // GetCategoryByID 根据 ID 查找类目
 func GetCategoryByID(id int64) (*model.Category, error) {
 	var category model.Category
-	err := global.DB.Where("id = ? AND is_active = ?", id, true).First(&category).Error
+	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&category).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +20,7 @@ func GetCategoryByID(id int64) (*model.Category, error) {
 // GetCategoriesByParentID 根据父类目 ID 查找直接子类目
 func GetCategoriesByParentID(parentID int64) ([]model.Category, error) {
 	var categories []model.Category
-	err := global.DB.Where("parent_id = ?", parentID).Find(&categories).Error
+	err := global.DB.Where("parent_id = ? AND deleted = ?", parentID, 0).Find(&categories).Error
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +30,7 @@ func GetCategoriesByParentID(parentID int64) ([]model.Category, error) {
 // GetCategoriesByParentPath 根据父类目的路径查找所有子类目
 func GetCategoriesByParentPath(parentPath string) ([]model.Category, error) {
 	var categories []model.Category
-	err := global.DB.Where("path LIKE ?", fmt.Sprintf("%s%%", parentPath)).Find(&categories).Error
+	err := global.DB.Where("path LIKE ? AND deleted = ?", fmt.Sprintf("%s%%", parentPath), 0).Find(&categories).Error
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +41,7 @@ func GetCategoriesByParentPath(parentPath string) ([]model.Category, error) {
 func GetCategoriesByPath(path string) ([]*model.Category, error) {
 	var categories []*model.Category
 	err := global.DB.Model(&model.Category{}).
-		Where("path LIKE ?", fmt.Sprintf("%s%%", path)).
+		Where("path LIKE ? AND deleted = ?", fmt.Sprintf("%s%%", path), 0).
 		Find(&categories).Error
 	if err != nil {
 		return nil, err
@@ -54,10 +50,10 @@ func GetCategoriesByPath(path string) ([]*model.Category, error) {
 	return categories, nil
 }
 
-// GetAllCategories 获取所有有效类目
+// GetAllCategories 获取所有未删除的类目
 func GetAllActivedCategories() ([]*model.Category, error) {
 	var categories []*model.Category
-	err := global.DB.Where(activeCategoryCondition).
+	err := global.DB.Where("deleted = ?", 0).
 		Find(&categories).Error
 
 	if err != nil {
@@ -73,7 +69,7 @@ func GetParentCategoryPathByID(parentID int64) (string, error) {
 		return "", nil
 	}
 	var parentCategory *model.Category
-	err := global.DB.Select("path").Where("id = ? AND is_active = ?", parentID, true).First(&parentCategory).Error
+	err := global.DB.Select("path").Where("id = ? AND deleted = ?", parentID, 0).First(&parentCategory).Error
 	if err != nil {
 		return "", err
 	}
@@ -93,6 +89,6 @@ func UpdateCategory(category *model.Category) error {
 // DeleteCategoriesByPathSoftly 软删除类目及其子类目
 func DeleteCategoriesByPathSoftly(path string) error {
 	return global.DB.Model(&model.Category{}).
-		Where("path LIKE ?", fmt.Sprintf("%s%%", path)).
-		Update("is_active", false).Error
+		Where("path LIKE ? AND deleted = ?", fmt.Sprintf("%s%%", path), 0).
+		Update("deleted", 1).Error
 }

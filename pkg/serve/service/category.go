@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	model "jank.com/jank_blog/internal/model/category"
@@ -80,27 +79,47 @@ func GetCategoryChildrenByID(id int64, c echo.Context) ([]*model.Category, error
 
 // CreateCategory 创建类目
 func CreateCategory(name string, description string, parentID int64, c echo.Context) (*model.Category, error) {
-	category, err := mapper.GetCategoryByID(parentID)
-	if err != nil {
-		utils.BizLogger(c).Errorf("获取父类目失败：%v", err)
-		return nil, fmt.Errorf("获取父类目失败: %w", err)
-	}
+    var newCategory *model.Category
 
-	now := time.Now().UnixMilli()
-	newCategory := &model.Category{
-		Name:        name,
-		Description: description,
-		ParentID:    parentID,
-		IsActive:    true,
-		Path:        fmt.Sprintf("%s/%d", category.Path, now),
-	}
+    // 创建根类目
+    if parentID == 0 {
+        newCategory = &model.Category{
+            Name:        name,
+            Description: description,
+            ParentID:    0,
+            Path:        "",
+        }
 
-	if err := mapper.CreateCategory(newCategory); err != nil {
-		utils.BizLogger(c).Errorf("创建类目失败：%v", err)
-		return nil, fmt.Errorf("创建类目失败: %w", err)
-	}
+        // 创建根类目
+        if err := mapper.CreateCategory(newCategory); err != nil {
+            utils.BizLogger(c).Errorf("创建根类目失败：%v", err)
+            return nil, fmt.Errorf("创建根类目失败: %w", err)
+        }
 
-	return newCategory, nil
+        return newCategory, nil
+    }
+
+    // 获取父类目
+    category, err := mapper.GetCategoryByID(parentID)
+    if err != nil {
+        utils.BizLogger(c).Errorf("获取父类目失败：%v", err)
+        return nil, fmt.Errorf("获取父类目失败: %w", err)
+    }
+
+    // 创建子类目
+    newCategory = &model.Category{
+        Name:        name,
+        Description: description,
+        ParentID:    parentID,
+        Path:        fmt.Sprintf("%s/%d", category.Path, parentID), 
+    }
+
+    if err := mapper.CreateCategory(newCategory); err != nil {
+        utils.BizLogger(c).Errorf("创建子类目失败：%v", err)
+        return nil, fmt.Errorf("创建子类目失败: %w", err)
+    }
+
+    return newCategory, nil
 }
 
 // UpdateCategory 更新类目
@@ -120,7 +139,7 @@ func UpdateCategory(id int64, name string, description string, parentID int64, c
 	existingCategory.Name = name
 	existingCategory.Description = description
 	existingCategory.ParentID = parentID
-	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, id)
+	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, parentID)
 
 	if err := mapper.UpdateCategory(existingCategory); err != nil {
 		return nil, fmt.Errorf("[%s]类目更新失败: %w", existingCategory.Name, err)
