@@ -1,4 +1,4 @@
-package account
+package varification
 
 import (
 	"context"
@@ -34,34 +34,28 @@ var ctx = context.Background()
 // @Failure      500   {object} vo.Result{data=string} "服务器错误，生成验证码失败"
 // @Router       /account/genImgVerificationCode [get]
 func GenImgVerificationCode(c echo.Context) error {
-	req := c.QueryParam("email")
-	if req == "" {
+	email := c.QueryParam("email")
+	if email == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
 		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizerr.New(bizerr.UnKnowErr), c))
 	}
 
-	errors := utils.Validator(req)
-	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
-	}
-
-	key := ImgVerificationCodeCachePrefix + req
+	key := ImgVerificationCodeCachePrefix + email
 
 	// 生成单个图形验证码
-	imgBase64, err := utils.GenImgVerificationCode(req)
+	imgBase64, answer, err := utils.GenImgVerificationCode(email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("生成图片验证码失败: %v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成验证码失败", bizerr.New(bizerr.ServerError), c))
 	}
 
 	// 将验证码存储在 Redis 中，并设置过期时间
-	err = global.Redis.Set(ctx, key, imgBase64, ImgVerificationCodeCacheExpiration).Err()
+	err = global.Redis.Set(ctx, key, answer, ImgVerificationCodeCacheExpiration).Err()
 	if err != nil {
-		utils.BizLogger(c).Errorf("验证码写入缓存失败，key: %v, 错误: %v", key, err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成验证码失败", bizerr.New(bizerr.ServerError), c))
+		utils.BizLogger(c).Errorf("图形验证码写入缓存失败，key: %v, 错误: %v", key, err)
+		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成图形验证码失败", bizerr.New(bizerr.ServerError), c))
 	}
 
-	utils.BizLogger(c).Info("图形验证码生成成功")
 	return c.JSON(http.StatusOK, vo.Success(map[string]string{"imgBase64": imgBase64}, c))
 }
 
@@ -88,7 +82,7 @@ func SendEmailVerificationCode(c echo.Context) error {
 	// 检查验证码是否存在并有效
 	exists, err := global.Redis.Exists(ctx, key).Result()
 	if err != nil {
-		utils.BizLogger(c).Errorf("检查验证码是否有效失败: %v", err)
+		utils.BizLogger(c).Errorf("检查邮箱验证码是否有效失败: %v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizerr.New(bizerr.ServerError), c))
 	}
 
@@ -100,7 +94,7 @@ func SendEmailVerificationCode(c echo.Context) error {
 	code := utils.NewRand()
 	err = global.Redis.Set(ctx, key, strconv.Itoa(code), EmailVerificationCodeCacheExpiration).Err()
 	if err != nil {
-		utils.BizLogger(c).Errorf("验证码写入缓存失败: %v", err)
+		utils.BizLogger(c).Errorf("邮箱验证码写入缓存失败: %v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizerr.New(bizerr.ServerError), c))
 	}
 
@@ -110,71 +104,42 @@ func SendEmailVerificationCode(c echo.Context) error {
 		utils.SendEmail(emailContent, []string{req})
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("验证码发送成功, 请注意查收邮件", c))
+	return c.JSON(http.StatusOK, vo.Success("邮箱验证码发送成功, 请注意查收邮件", c))
 }
 
-// VerifyEmailCode 检查提供的验证码是否与存储的验证码匹配
+// VerifyEmailCode 检查邮箱验证码
 func VerifyEmailCode(code, email string, c echo.Context) bool {
-	key := EmailVerificationCodeCacheKeyPrefix + email
-
-	// 检查验证码缓存是否存在
-	exists, err := global.Redis.Exists(ctx, key).Result()
-	if err != nil {
-		utils.BizLogger(c).Errorf("检查验证码缓存失败: %v", err)
-		return false
-	}
-
-	if exists == 0 {
-		utils.BizLogger(c).Error("验证码不存在或已过期")
-		return false
-	}
-
-	// 获取缓存中的验证码
-	storedCode, err := global.Redis.Get(ctx, key).Result()
-	if err != nil {
-		utils.BizLogger(c).Errorf("获取验证码缓存失败: %v", err)
-		return false
-	}
-
-	// 比对验证码
-	if storedCode != code {
-		utils.BizLogger(c).Error("验证码不匹配")
-		return false
-	}
-
-	// 删除验证码缓存
-	err = global.Redis.Del(ctx, key).Err()
-	if err != nil {
-		utils.BizLogger(c).Errorf("删除验证码缓存失败: %v", err)
-		return false
-	}
-
-	return true
+	return verifyCode(code, email, EmailVerificationCodeCacheKeyPrefix, c)
 }
 
 // VerificationImgCode 校验图形验证码
 func VerificationImgCode(code, email string, c echo.Context) bool {
-	key := ImgVerificationCodeCachePrefix + email
+	return verifyCode(code, email, ImgVerificationCodeCachePrefix, c)
+}
 
-	// 从Redis获取存储的验证码
+// verifyCode 验证码校验函数
+func verifyCode(code, email, prefix string, c echo.Context) bool {
+	key := prefix + email
+
 	storedCode, err := global.Redis.Get(ctx, key).Result()
 	if err != nil {
 		if err.Error() == "redis: nil" {
-			utils.BizLogger(c).Error("图形验证码不存在或已过期")
+			utils.BizLogger(c).Error("验证码不存在或已过期")
 		} else {
-			utils.BizLogger(c).Errorf("获取图形验证码失败: %v", err)
+			utils.BizLogger(c).Errorf("验证码校验失败: %v", err)
 		}
 		return false
 	}
 
-	isValid := storedCode == code
-	if !isValid {
-		utils.BizLogger(c).Error("图形验证码不匹配")
-	} else {
-		if err := global.Redis.Del(ctx, key).Err(); err != nil {
-			utils.BizLogger(c).Errorf("删除已使用的图形验证码失败: %v", err)
-		}
+	if storedCode != code {
+		utils.BizLogger(c).Error("验证码错误")
+		return false
 	}
 
-	return isValid
+	// 验证通过后删除缓存
+	if err := global.Redis.Del(ctx, key).Err(); err != nil {
+		utils.BizLogger(c).Errorf("删除验证码缓存失败: %v", err)
+	}
+
+	return true
 }

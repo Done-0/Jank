@@ -13,6 +13,7 @@ import (
 func RegisterRoutes(app *echo.Echo) {
 	routes.RegisterTestRoutes(app)
 	routes.RegisterAccountRoutes(app)
+	routes.RegisterVerificationRoutes(app)
 	routes.RegisterPostRoutes(app)
 	routes.RegisterCategoryRoutes(app)
 }

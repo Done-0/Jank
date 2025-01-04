@@ -14,8 +14,8 @@ type BaseModel struct {
 	ID          int64   `gorm:"primaryKey;autoIncrement" json:"id"`       // 主键
 	GmtCreate   int64   `gorm:"type:bigint" json:"gmt_create"`            // 创建时间
 	GmtModified int64   `gorm:"type:bigint" json:"gmt_modified"`          // 更新时间
-	Ext         JSONMap `gorm:"type:json" json:"ext"`                     // 扩展字段，json 格式
-	Deleted     bool    `gorm:"type:tinyint(1);default:0" json:"deleted"` // 逻辑删除字段
+	Ext         JSONMap `gorm:"type:json" json:"ext"`                     // 扩展字段
+	Deleted     bool    `gorm:"type:tinyint(1);default:0" json:"deleted"` // 逻辑删除
 }
 
 // JSONMap 处理 json 类型字段

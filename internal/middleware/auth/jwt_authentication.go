@@ -17,14 +17,22 @@ import (
 
 // JWTConfig 用于配置 JWT 中间件
 type JWTConfig struct {
-	TokenPrefix string
-	RedisPrefix string
+	Authorization   string
+	TokenPrefix     string
+	RefreshToken    string
+	RedisPrefix     string
+	LocalsUserIdKey string
+	LocalsEmailKey  string
 }
 
 // DefaultJWTConfig 提供默认的 JWT 配置
 var DefaultJWTConfig = JWTConfig{
-	TokenPrefix: "Bearer ",
-	RedisPrefix: "ACC_AUTH_TOKEN_CACHE_PREFIX",
+	Authorization:   "Authorization",
+	TokenPrefix:     "Bearer ",
+	RefreshToken:    "Refresh_Token",
+	RedisPrefix:     "ACC_AUTH_TOKEN_CACHE_PREFIX",
+	LocalsUserIdKey: "Locals_User_Id",
+	LocalsEmailKey:  "Locals_Email",
 }
 
 func JWTMiddleware() echo.MiddlewareFunc {
@@ -32,7 +40,7 @@ func JWTMiddleware() echo.MiddlewareFunc {
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			authHeader := c.Request().Header.Get("Authorization")
+			authHeader := c.Request().Header.Get(DefaultJWTConfig.Authorization)
 			if authHeader == "" {
 				return echo.NewHTTPError(http.StatusUnauthorized, "缺少 Authorization Header 身份验证请求头")
 			}
@@ -47,8 +55,8 @@ func JWTMiddleware() echo.MiddlewareFunc {
 
 			// 将验证后的用户信息设置到上下文中
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-				userId := int64(claims["userId"].(float64))
-				email := claims["email"].(string)
+				userId := int64(claims[DefaultJWTConfig.LocalsUserIdKey].(float64))
+				email := claims[DefaultJWTConfig.LocalsEmailKey].(string)
 				c.Set(account.LocalsUserIdKey, userId)
 				c.Set(account.LocalsEmailKey, email)
 
@@ -66,7 +74,7 @@ func JWTMiddleware() echo.MiddlewareFunc {
 
 // handleTokenRefresh 尝试使用 Refresh Token 刷新 Access Token
 func handleTokenRefresh(c echo.Context, config JWTConfig) error {
-	refreshHeader := c.Request().Header.Get("Refresh-Token")
+	refreshHeader := c.Request().Header.Get(DefaultJWTConfig.RefreshToken)
 	if refreshHeader == "" {
 		return echo.NewHTTPError(http.StatusUnauthorized, "无效的 Access Token")
 	}
@@ -77,15 +85,15 @@ func handleTokenRefresh(c echo.Context, config JWTConfig) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "无效的 Access 和 Refresh Token")
 	}
 
-	c.Response().Header().Set("Authorization", config.TokenPrefix+newTokens["accessToken"])
-	c.Response().Header().Set("Refresh-Token", config.TokenPrefix+newTokens["refreshToken"])
+	c.Response().Header().Set(DefaultJWTConfig.Authorization, config.TokenPrefix+newTokens["accessToken"])
+	c.Response().Header().Set(DefaultJWTConfig.RefreshToken, config.TokenPrefix+newTokens["refreshToken"])
 	return nil
 }
 
 // processToken 处理有效的 Access Token
 func processToken(c echo.Context, token *jwt.Token, tokenString string, config JWTConfig) error {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		userId := int64(claims["userId"].(float64))
+		userId := int64(claims[DefaultJWTConfig.LocalsUserIdKey].(float64))
 		c.Set(account.LocalsUserIdKey, userId)
 
 		redisKey := config.RedisPrefix + strconv.FormatInt(userId, 10)
@@ -106,12 +114,12 @@ func processToken(c echo.Context, token *jwt.Token, tokenString string, config J
 
 // RefreshToken 处理刷新 JWT 的请求
 func RefreshToken(c echo.Context) error {
-	authHeader := c.Request().Header.Get("Authorization")
+	authHeader := c.Request().Header.Get(DefaultJWTConfig.Authorization)
 	if authHeader == "" {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Refresh Token 缺失")
 	}
 
-	refreshTokenString := strings.TrimPrefix(authHeader, "Bearer ")
+	refreshTokenString := strings.TrimPrefix(authHeader, DefaultJWTConfig.TokenPrefix)
 
 	tokens, err := RefreshTokenLogic(refreshTokenString)
 	if err != nil {
@@ -129,8 +137,8 @@ func RefreshTokenLogic(refreshTokenString string) (map[string]string, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		userId := uint(claims["userId"].(float64))
-		email := claims["email"].(string)
+		userId := uint(claims[DefaultJWTConfig.LocalsUserIdKey].(float64))
+		email := claims[DefaultJWTConfig.LocalsEmailKey].(string)
 
 		newAccessToken, newRefreshToken, err := utils.GenerateJWT(userId, email)
 		if err != nil {
