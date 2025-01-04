@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"jank.com/jank_blog/configs"
+	"jank.com/jank_blog/internal/banner"
 	"jank.com/jank_blog/internal/db"
 	"jank.com/jank_blog/internal/middleware"
 	"jank.com/jank_blog/internal/redis"
@@ -13,6 +14,8 @@ import (
 )
 
 func Start() {
+	banner.InitBanner()
+
 	config, err := configs.LoadConfig()
 	if err != nil {
 		log.Fatalf("应用启动中, 加载配置失败: %v", err)
@@ -21,6 +24,7 @@ func Start() {
 
 	// 创建echo实例
 	app := echo.New()
+	app.HideBanner = true
 
 	// 初始化中间件
 	middleware.InitMiddleware(app)
