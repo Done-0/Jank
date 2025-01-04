@@ -5,24 +5,24 @@
     <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
 </p>
 <p align="center">
-<a href="https://img.shields.io/github/stars/Done-0/Jank?style=social" target="_blank">
+  <a href="https://img.shields.io/github/stars/Done-0/Jank?style=social" target="_blank">
     <img src="https://img.shields.io/github/stars/Done-0/Jank?style=social" alt="Stars">
-</a>
-<a href="https://img.shields.io/github/forks/Done-0/Jank?style=social" target="_blank">
+  </a> &nbsp;
+  <a href="https://img.shields.io/github/forks/Done-0/Jank?style=social" target="_blank">
     <img src="https://img.shields.io/github/forks/Done-0/Jank?style=social" alt="Forks">
-</a>
-<a href="https://img.shields.io/github/contributors/Done-0/Jank" target="_blank">
+  </a> &nbsp;
+  <a href="https://img.shields.io/github/contributors/Done-0/Jank" target="_blank">
     <img src="https://img.shields.io/github/contributors/Done-0/Jank" alt="Contributors">
-</a>
-<a href="https://img.shields.io/github/issues/Done-0/Jank" target="_blank">
+  </a> &nbsp;
+  <a href="https://img.shields.io/github/issues/Done-0/Jank" target="_blank">
     <img src="https://img.shields.io/github/issues/Done-0/Jank" alt="Issues">
-</a>
-<a href="https://img.shields.io/github/issues-pr/Done-0/Jank" target="_blank">
+  </a> &nbsp;
+  <a href="https://img.shields.io/github/issues-pr/Done-0/Jank" target="_blank">
     <img src="https://img.shields.io/github/issues-pr/Done-0/Jank" alt="Pull Requests">
-</a>
-<a href="https://img.shields.io/github/license/Done-0/Jank" target="_blank">
+  </a> &nbsp;
+  <a href="https://img.shields.io/github/license/Done-0/Jank" target="_blank">
     <img src="https://img.shields.io/github/license/Done-0/Jank" alt="License">
-</a>
+  </a>
 </p>
 
 ---
@@ -66,6 +66,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
 
    ```yaml
+   # 数据库密码
    DB_PSW: "<DATABASE_PASSWORD>"
 
    # QQ 邮箱和 SMTP 授权码（可选）
@@ -95,14 +96,11 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 docker-compose up -d
 ```
 
-## 联系方式
+## 官方社区
 
-- **QQ 群**：828270460
-- **作者 QQ**：927171598
+如果有任何疑问或建议，欢迎加入官方社区交流。
 
-## 许可证
-
-本项目采用 [MIT 开源许可证](https://opensource.org/licenses/MIT)。
+<img src="https://s2.loli.net/2025/01/04/cVqDO7a4djAPmEJ.jpg" alt="官方社区" width="300" />
 
 ## 代码统计
 
@@ -110,15 +108,19 @@ docker-compose up -d
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Go                              65            521            458           3857
-JSON                             1              0              0           1456
-YAML                             3              8              6            986
-Markdown                        27             32              0             98
+Go                              67            530            464           4002
+JSON                             1              0              0           1532
+YAML                             3              8              6           1030
+Markdown                        26             33              0            135
 TOML                             1              6              0             36
 -------------------------------------------------------------------------------
-TOTAL                           97            567            464           6433
+TOTAL                           98            577            470           6735
 -------------------------------------------------------------------------------
 ```
+
+## 许可证
+
+本项目遵循 [MIT 协议](https://opensource.org/licenses/MIT)。
 
 ## GitHub 统计
 

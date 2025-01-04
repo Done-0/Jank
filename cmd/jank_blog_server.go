@@ -14,8 +14,6 @@ import (
 )
 
 func Start() {
-	banner.InitBanner()
-
 	config, err := configs.LoadConfig()
 	if err != nil {
 		log.Fatalf("应用启动中, 加载配置失败: %v", err)
@@ -25,6 +23,7 @@ func Start() {
 	// 创建echo实例
 	app := echo.New()
 	app.HideBanner = true
+	banner.InitBanner()
 
 	// 初始化中间件
 	middleware.InitMiddleware(app)

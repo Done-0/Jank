@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	VerificationCodeCacheKeyPrefix     = "Email:VERIFICATION:CODE:"
-	VerificationCodeCacheExpiration    = 180 * time.Second
-	ImgVerificationCodeCachePrefix     = "IMG:VERIFICATION:CODE:CACHE:"
-	ImgVerificationCodeCacheExpiration = 180 * time.Second
+	EmailVerificationCodeCacheKeyPrefix  = "Email:VERIFICATION:CODE:"
+	EmailVerificationCodeCacheExpiration = 180 * time.Second
+	ImgVerificationCodeCachePrefix       = "IMG:VERIFICATION:CODE:CACHE:"
+	ImgVerificationCodeCacheExpiration   = 180 * time.Second
 )
 
 var ctx = context.Background()
@@ -34,16 +34,21 @@ var ctx = context.Background()
 // @Failure      500   {object} vo.Result{data=string} "服务器错误，生成验证码失败"
 // @Router       /account/genImgVerificationCode [get]
 func GenImgVerificationCode(c echo.Context) error {
-	registerParam := c.QueryParam("email")
-	if registerParam == "" {
+	req := c.QueryParam("email")
+	if req == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
 		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizerr.New(bizerr.UnKnowErr), c))
 	}
 
-	key := ImgVerificationCodeCachePrefix + registerParam
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+	}
+
+	key := ImgVerificationCodeCachePrefix + req
 
 	// 生成单个图形验证码
-	imgBase64, err := utils.GenImgVerificationCode(registerParam)
+	imgBase64, err := utils.GenImgVerificationCode(req)
 	if err != nil {
 		utils.BizLogger(c).Errorf("生成图片验证码失败: %v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成验证码失败", bizerr.New(bizerr.ServerError), c))
@@ -67,18 +72,18 @@ func GenImgVerificationCode(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        email  query   string  true  "邮箱地址，用于发送验证码"
-// @Success      200     {object} vo.Result  "成功发送验证码"
-// @Failure      400     {object} vo.Result  "请求参数错误，邮箱地址为空或验证码仍然有效"
+// @Success      200     {object} vo.Result  "验证码发送成功, 请注意查收邮件"
+// @Failure      400     {object} vo.Result  "请求参数错误，邮箱地址为空"
 // @Failure      500     {object} vo.Result  "服务器错误，验证码发送失败"
 // @Router       /account/sendEmailVerificationCode [get]
 func SendEmailVerificationCode(c echo.Context) error {
-	target := c.QueryParam("email")
-	if target == "" {
-		utils.BizLogger(c).Errorf("验证码目标地址为空")
-		return c.JSON(http.StatusBadRequest, vo.Fail(nil, bizerr.New(bizerr.SendEmailVerificationCodeFail), c))
+	req := c.QueryParam("email")
+	if req == "" {
+		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
+		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizerr.New(bizerr.SendEmailVerificationCodeFail), c))
 	}
 
-	key := VerificationCodeCacheKeyPrefix + target
+	key := EmailVerificationCodeCacheKeyPrefix + req
 
 	// 检查验证码是否存在并有效
 	exists, err := global.Redis.Exists(ctx, key).Result()
@@ -93,16 +98,16 @@ func SendEmailVerificationCode(c echo.Context) error {
 
 	// 生成新的验证码并保存到缓存
 	code := utils.NewRand()
-	err = global.Redis.Set(ctx, key, strconv.Itoa(code), VerificationCodeCacheExpiration).Err()
+	err = global.Redis.Set(ctx, key, strconv.Itoa(code), EmailVerificationCodeCacheExpiration).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("验证码写入缓存失败: %v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizerr.New(bizerr.ServerError), c))
 	}
 
 	// 发送邮件
-	if utils.ValidEmail(target) {
+	if utils.ValidEmail(req) {
 		emailContent := "您的注册验证码是: " + strconv.Itoa(code) + " , 有效期为 3 分钟"
-		utils.SendEmail(emailContent, []string{target})
+		utils.SendEmail(emailContent, []string{req})
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("验证码发送成功, 请注意查收邮件", c))
@@ -110,7 +115,7 @@ func SendEmailVerificationCode(c echo.Context) error {
 
 // VerifyEmailCode 检查提供的验证码是否与存储的验证码匹配
 func VerifyEmailCode(code, email string, c echo.Context) bool {
-	key := VerificationCodeCacheKeyPrefix + email
+	key := EmailVerificationCodeCacheKeyPrefix + email
 
 	// 检查验证码缓存是否存在
 	exists, err := global.Redis.Exists(ctx, key).Result()

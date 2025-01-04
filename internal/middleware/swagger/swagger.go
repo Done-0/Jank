@@ -34,11 +34,11 @@ func initSwagger() {
 		time.Sleep(2 * time.Second)
 		config, err := configs.LoadConfig()
 		if err != nil {
-			log.Fatalf("加载配置失败: %v", err)
+			log.Fatalf("配置加载失败: %v", err)
 		}
 
 		docs.SwaggerInfo.Title = "Jank Blog API"
-		docs.SwaggerInfo.Description = "这是 Jank Blog 的 API 文档，适用于账户管理、用户认证，文章管理等功能。"
+		docs.SwaggerInfo.Description = "这是 Jank Blog 的 API 文档，适用于账户管理、用户认证，文章管理，类目管理等功能。"
 		docs.SwaggerInfo.Version = "1.0"
 		docs.SwaggerInfo.Host = config.SwaggerHost
 		if docs.SwaggerInfo.Host == "" {
@@ -51,9 +51,9 @@ func initSwagger() {
 		cmd := exec.Command("swag", "init")
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			log.Fatalf("初始化 Swagger 文档失败: %v, 输出信息: %s", err, string(output))
+			log.Fatalf("初始化 Swagger 文档失败，错误: %v\n输出信息: %s", err, string(output))
 		}
 
-		log.Printf("Swagger 初始化成功，访问地址: http://%s/swagger/index.html", docs.SwaggerInfo.Host)
+		log.Printf("Swagger service started on: http://%s/swagger/index.html", docs.SwaggerInfo.Host)
 	})
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	bizerr "jank.com/jank_blog/internal/error"
+	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/post/dto"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
@@ -23,10 +24,16 @@ import (
 // @Failure      400      {object}  vo.Result          "请求参数错误"
 // @Failure      404      {object}  vo.Result          "文章不存在"
 // @Failure      500      {object}  vo.Result          "服务器错误"
+// @Router       /post/getOnePost [get]
 func GetOnePost(c echo.Context) error {
 	req := new(dto.GetOnePostRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+	}
+
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
 	}
 
 	if req.ID == 0 && req.Title == "" {
@@ -108,6 +115,11 @@ func CreateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
 	}
 
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+	}
+
 	ContentHTML, ok := c.Get("contentHtml").(string)
 	if !ok {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, "渲染失败，缺少 contentHtml"), nil, c))
@@ -140,6 +152,11 @@ func UpdateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
 	}
 
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+	}
+
 	contentHTML := c.Get("contentHtml").(string)
 
 	updatedPost, err := service.UpdatePost(req.ID, req.Title, req.Image, req.Visibility, req.ContentMarkdown, contentHTML, req.CategoryIDs, c)
@@ -167,6 +184,10 @@ func DeleteOnePost(c echo.Context) error {
 	req := new(dto.DeleteOnePostRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+	}
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
 	}
 
 	err := service.DeletePost(req.ID, c)

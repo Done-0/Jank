@@ -473,11 +473,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: 成功发送验证码
+          description: 验证码发送成功, 请注意查收邮件
           schema:
             $ref: '#/definitions/vo.Result'
         "400":
-          description: 请求参数错误，邮箱地址为空或验证码仍然有效
+          description: 请求参数错误，邮箱地址为空
           schema:
             $ref: '#/definitions/vo.Result'
         "500":
@@ -849,6 +849,47 @@ paths:
           schema:
             $ref: '#/definitions/vo.Result'
       summary: 获取文章列表
+      tags:
+      - 文章
+  /post/getOnePost:
+    get:
+      consumes:
+      - application/json
+      description: 根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数
+      parameters:
+      - description: 文章 ID
+        in: query
+        name: id
+        type: integer
+      - description: 文章标题
+        in: query
+        name: title
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAllPostsResponse'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "404":
+          description: 文章不存在
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 获取文章详情
       tags:
       - 文章
   /post/updateOnePost:

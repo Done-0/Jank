@@ -399,13 +399,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "成功发送验证码",
+                        "description": "验证码发送成功, 请注意查收邮件",
                         "schema": {
                             "$ref": "#/definitions/vo.Result"
                         }
                     },
                     "400": {
-                        "description": "请求参数错误，邮箱地址为空或验证码仍然有效",
+                        "description": "请求参数错误，邮箱地址为空",
                         "schema": {
                             "$ref": "#/definitions/vo.Result"
                         }
@@ -1013,6 +1013,73 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/post/getOnePost": {
+            "get": {
+                "description": "根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章"
+                ],
+                "summary": "获取文章详情",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "文章 ID",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "文章标题",
+                        "name": "title",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "404": {
+                        "description": "文章不存在",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
                         }
                     },
                     "500": {

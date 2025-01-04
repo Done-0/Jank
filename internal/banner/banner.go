@@ -1,9 +1,9 @@
 package banner
- 
+
 import "fmt"
- 
+
 func InitBanner() {
- banner := `
+	banner := `
    ╔══════════════════════════════════════╗
    ║       ██╗ █████╗ ███╗   ██╗██╗  ██╗  ║
    ║       ██║██╔══██╗████╗  ██║██║ ██╔╝  ║
@@ -16,5 +16,5 @@ func InitBanner() {
  ════════════════════════════════════════════
      Simplicity is the ultimate sophistication
 `
- fmt.Println(banner)
+	fmt.Println(banner)
 }
