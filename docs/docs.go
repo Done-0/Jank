@@ -134,7 +134,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetAccountResponse"
+                                            "$ref": "#/definitions/account.GetAccountVo"
                                         }
                                     }
                                 }
@@ -243,7 +243,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.LoginResponse"
+                                            "$ref": "#/definitions/account.LoginVO"
                                         }
                                     }
                                 }
@@ -547,7 +547,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetOneCategoryResponse"
+                                            "$ref": "#/definitions/category.GetOneCategoryVo"
                                         }
                                     }
                                 }
@@ -602,7 +602,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetOneCategoryResponse"
+                                            "$ref": "#/definitions/category.GetOneCategoryVo"
                                         }
                                     }
                                 }
@@ -666,7 +666,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.GetOneCategoryResponse"
+                                                "$ref": "#/definitions/category.GetOneCategoryVo"
                                             }
                                         }
                                     }
@@ -722,7 +722,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.GetAllCategoriesResponse"
+                                                "$ref": "#/definitions/category.GetAllCategoriesVo"
                                             }
                                         }
                                     }
@@ -773,7 +773,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetOneCategoryResponse"
+                                            "$ref": "#/definitions/category.GetOneCategoryVo"
                                         }
                                     }
                                 }
@@ -843,7 +843,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetOneCategoryResponse"
+                                            "$ref": "#/definitions/category.GetOneCategoryVo"
                                         }
                                     }
                                 }
@@ -912,7 +912,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                            "$ref": "#/definitions/post.GetAllPostsVo"
                                         }
                                     }
                                 }
@@ -1004,6 +1004,20 @@ const docTemplate = `{
                     "文章"
                 ],
                 "summary": "获取文章列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页数",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页显示数量",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "获取成功",
@@ -1018,7 +1032,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                                "$ref": "#/definitions/post.GetAllPostsVo"
                                             }
                                         }
                                     }
@@ -1074,7 +1088,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                            "$ref": "#/definitions/post.GetAllPostsVo"
                                         }
                                     }
                                 }
@@ -1143,7 +1157,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetAllPostsResponse"
+                                            "$ref": "#/definitions/post.GetAllPostsVo"
                                         }
                                     }
                                 }
@@ -1197,6 +1211,75 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "account.GetAccountVo": {
+            "description": "请求获取账户信息时所需参数",
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "account.LoginVO": {
+            "description": "登录成功后返回的访问令牌和刷新令牌",
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "category.GetAllCategoriesVo": {
+            "description": "获取所有类目时返回的响应数据",
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/category.GetOneCategoryVo"
+                    }
+                }
+            }
+        },
+        "category.GetOneCategoryVo": {
+            "description": "获取类目响应",
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/category.GetOneCategoryVo"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parent_id": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.CreateOneCategoryRequest": {
             "type": "object",
             "required": [
@@ -1271,94 +1354,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.GetAccountResponse": {
-            "description": "请求获取账户信息时所需参数",
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "nickname": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "role_code": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.GetAllCategoriesResponse": {
-            "type": "object",
-            "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.GetOneCategoryResponse"
-                    }
-                }
-            }
-        },
-        "dto.GetAllPostsResponse": {
-            "description": "获取全部文章响应",
-            "type": "object",
-            "properties": {
-                "category_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "contentHtml": {
-                    "type": "string"
-                },
-                "contentMarkdown": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "visibility": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.GetOneCategoryResponse": {
-            "type": "object",
-            "properties": {
-                "children": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.GetOneCategoryResponse"
-                    }
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "parent_id": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "string"
-                }
-            }
-        },
         "dto.LoginRequest": {
             "description": "用户登录请求所需参数",
             "type": "object",
@@ -1376,21 +1371,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
-                }
-            }
-        },
-        "dto.LoginResponse": {
-            "description": "用户登录成功后返回的响应，包括用户ID、访问令牌和刷新令牌",
-            "type": "object",
-            "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "refresh_token": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -1465,7 +1445,7 @@ const docTemplate = `{
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.GetOneCategoryResponse"
+                        "$ref": "#/definitions/category.GetOneCategoryVo"
                     }
                 },
                 "description": {
@@ -1475,9 +1455,6 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
-                },
-                "is_active": {
-                    "type": "boolean"
                 },
                 "name": {
                     "type": "string",
@@ -1522,6 +1499,36 @@ const docTemplate = `{
                 "visibility": {
                     "type": "string",
                     "default": "private"
+                }
+            }
+        },
+        "post.GetAllPostsVo": {
+            "description": "获取所有帖子时返回的响应数据",
+            "type": "object",
+            "properties": {
+                "category_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "contentHtml": {
+                    "type": "string"
+                },
+                "contentMarkdown": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "visibility": {
+                    "type": "string"
                 }
             }
         },

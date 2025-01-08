@@ -13,6 +13,7 @@ import (
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
 	"jank.com/jank_blog/pkg/serve/mapper"
+	"jank.com/jank_blog/pkg/vo/account"
 )
 
 var (
@@ -23,39 +24,57 @@ var (
 
 const (
 	AccAuthTokenCachePrefix         = "ACC_AUTH_TOKEN_CACHE_PREFIX"
-	AccAuthTokenCacheExpire         = 60 * 15 // 15 分钟
+	AccAuthTokenCacheExpire         = 60 * 15          // 15 分钟
 	RefreshAuthTokenCachePrefix     = "REFRESH_AUTH_TOKEN_CACHE_PREFIX"
 	RefreshAuthTokenCacheExpire     = 60 * 60 * 24 * 7 // 7 天
 	RefreshAuthTokenCacheUserExpire = 60 * 3           // 3 分钟
 )
 
+// GetAccount 获取用户信息逻辑
+func GetAccount(GetAccountRequest *dto.GetAccountRequest, c echo.Context) (*account.GetAccountVo, error) {
+	userInfo, _ := mapper.GetAccountByEmail(GetAccountRequest.Email)
+    if userInfo == nil {
+        utils.BizLogger(c).Errorf("邮箱(%s)不存在", GetAccountRequest.Email)
+        return nil, fmt.Errorf("邮箱不存在")
+    }
+
+	acc := &account.GetAccountVo{
+		Email:    userInfo.Email,
+		Nickname: userInfo.Nickname,
+		Phone:    userInfo.Phone,
+		RoleCode: userInfo.RoleCode,
+	}
+
+	return acc, nil
+}
+
 // Register 用户注册逻辑
-func RegisterUser(registerDto *dto.RegisterRequest, c echo.Context) (*model.Account, error) {
+func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.Account, error) {
 	registerLock.Lock()
 	defer registerLock.Unlock()
 
-	existingUser, _ := mapper.GetAccountByEmail(registerDto.Email)
+	existingUser, _ := mapper.GetAccountByEmail(RegisterRequest.Email)
 	if existingUser != nil {
-		utils.BizLogger(c).Errorf("邮箱(%s)已被注册", registerDto.Email)
+		utils.BizLogger(c).Errorf("邮箱[%s]已被注册", RegisterRequest.Email)
 		return nil, fmt.Errorf("邮箱已被注册")
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(registerDto.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(RegisterRequest.Password), bcrypt.DefaultCost)
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码加密失败: %v", err)
-		return nil, fmt.Errorf("密码加密失败")
+		return nil, fmt.Errorf("密码加密失败: %v", err)
 	}
 
 	acc := &model.Account{
-		Email:    registerDto.Email,
+		Email:    RegisterRequest.Email,
 		Password: string(hashedPassword),
-		Nickname: registerDto.Nickname,
-		Phone:    registerDto.Phone,
+		Nickname: RegisterRequest.Nickname,
+		Phone:    RegisterRequest.Phone,
 		RoleCode: "user",
 	}
 
 	if err := mapper.CreateAccount(acc); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("用户注册失败: %v", err)
 	}
 
 	go func() {
@@ -66,17 +85,17 @@ func RegisterUser(registerDto *dto.RegisterRequest, c echo.Context) (*model.Acco
 }
 
 // LoginUser 登录用户逻辑
-func LoginUser(email, password, imgVerificationCode string, c echo.Context) (*dto.LoginResponse, error) {
+func LoginUser(email, password, imgVerificationCode string, c echo.Context) (*account.LoginVO, error) {
 	user, err := mapper.GetAccountByEmail(email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("用户不存在: %v", err)
-		return nil, fmt.Errorf("用户不存在")
+		return nil, fmt.Errorf("用户不存在: %v", err)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码错误: %v", err)
-		return nil, fmt.Errorf("密码错误")
+		return nil, fmt.Errorf("密码错误: %v", err)
 	}
 
 	accessTokenString, refreshTokenString, err := utils.GenerateJWT(uint(user.ID), user.Email)
@@ -85,8 +104,7 @@ func LoginUser(email, password, imgVerificationCode string, c echo.Context) (*dt
 		return nil, fmt.Errorf("生成 token 失败: %v", err)
 	}
 
-	response := &dto.LoginResponse{
-		UserId:       uint(user.ID),
+	response := &account.LoginVO{
 		AccessToken:  accessTokenString,
 		RefreshToken: refreshTokenString,
 	}
@@ -134,7 +152,7 @@ func ResetPassword(userId int64, req *dto.ResetPwdRequest, c echo.Context) error
 
 	acc, err := mapper.GetAccountByUserID(userId)
 	if err != nil {
-		return err
+		return fmt.Errorf("用户不存在: %v", err)
 	}
 	if acc == nil {
 		utils.BizLogger(c).Errorf("此用户不存在")
@@ -149,8 +167,8 @@ func ResetPassword(userId int64, req *dto.ResetPwdRequest, c echo.Context) error
 	acc.Password = string(newPassword)
 
 	if err := mapper.UpdateAccount(acc); err != nil {
-		utils.BizLogger(c).Errorf("修改密码失败: %v", err)
-		return err
+		utils.BizLogger(c).Errorf("密码修改失败: %v", err)
+		return fmt.Errorf("密码修改失败: %v", err)
 	}
 
 	go func() {

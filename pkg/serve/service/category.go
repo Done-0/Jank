@@ -14,16 +14,17 @@ func GetCategoryByID(id int64, c echo.Context) (*model.Category, error) {
 	category, err := mapper.GetCategoryByID(id)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
-		return nil, fmt.Errorf("获取类目失败：%w", err)
+		return nil, fmt.Errorf("获取类目失败：%v", err)
 	}
 	return category, nil
 }
 
 // GetCategoryTree 获取类目树
-func GetCategoryTree() ([]model.Category, error) {
+func GetCategoryTree(c echo.Context) ([]model.Category, error) {
 	categories, err := mapper.GetAllActivedCategories()
 	if err != nil {
-		return nil, fmt.Errorf("获取类目树失败: %w", err)
+		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
+		return nil, fmt.Errorf("获取类目树失败: %v", err)
 	}
 
 	categoryMap := make(map[int64]*model.Category)
@@ -71,7 +72,7 @@ func GetCategoryChildrenByID(id int64, c echo.Context) ([]*model.Category, error
 	children, err := recursivelyGetChildren(category.ID, c)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取层级子类目失败：%v", err)
-		return nil, fmt.Errorf("获取层级子类目失败：%w", err)
+		return nil, fmt.Errorf("获取层级子类目失败：%v", err)
 	}
 
 	return children, nil
@@ -79,47 +80,47 @@ func GetCategoryChildrenByID(id int64, c echo.Context) ([]*model.Category, error
 
 // CreateCategory 创建类目
 func CreateCategory(name string, description string, parentID int64, c echo.Context) (*model.Category, error) {
-    var newCategory *model.Category
+	var newCategory *model.Category
 
-    // 创建根类目
-    if parentID == 0 {
-        newCategory = &model.Category{
-            Name:        name,
-            Description: description,
-            ParentID:    0,
-            Path:        "",
-        }
+	// 创建根类目
+	if parentID == 0 {
+		newCategory = &model.Category{
+			Name:        name,
+			Description: description,
+			ParentID:    0,
+			Path:        "",
+		}
 
-        // 创建根类目
-        if err := mapper.CreateCategory(newCategory); err != nil {
-            utils.BizLogger(c).Errorf("创建根类目失败：%v", err)
-            return nil, fmt.Errorf("创建根类目失败: %w", err)
-        }
+		// 创建根类目
+		if err := mapper.CreateCategory(newCategory); err != nil {
+			utils.BizLogger(c).Errorf("创建根类目失败：%v", err)
+			return nil, fmt.Errorf("创建根类目失败: %v", err)
+		}
 
-        return newCategory, nil
-    }
+		return newCategory, nil
+	}
 
-    // 获取父类目
-    category, err := mapper.GetCategoryByID(parentID)
-    if err != nil {
-        utils.BizLogger(c).Errorf("获取父类目失败：%v", err)
-        return nil, fmt.Errorf("获取父类目失败: %w", err)
-    }
+	// 获取父类目
+	category, err := mapper.GetCategoryByID(parentID)
+	if err != nil {
+		utils.BizLogger(c).Errorf("获取父类目失败：%v", err)
+		return nil, fmt.Errorf("获取父类目失败: %v", err)
+	}
 
-    // 创建子类目
-    newCategory = &model.Category{
-        Name:        name,
-        Description: description,
-        ParentID:    parentID,
-        Path:        fmt.Sprintf("%s/%d", category.Path, parentID), 
-    }
+	// 创建子类目
+	newCategory = &model.Category{
+		Name:        name,
+		Description: description,
+		ParentID:    parentID,
+		Path:        fmt.Sprintf("%s/%d", category.Path, parentID),
+	}
 
-    if err := mapper.CreateCategory(newCategory); err != nil {
-        utils.BizLogger(c).Errorf("创建子类目失败：%v", err)
-        return nil, fmt.Errorf("创建子类目失败: %w", err)
-    }
+	if err := mapper.CreateCategory(newCategory); err != nil {
+		utils.BizLogger(c).Errorf("创建子类目失败：%v", err)
+		return nil, fmt.Errorf("创建子类目失败: %v", err)
+	}
 
-    return newCategory, nil
+	return newCategory, nil
 }
 
 // UpdateCategory 更新类目
@@ -127,7 +128,7 @@ func UpdateCategory(id int64, name string, description string, parentID int64, c
 	existingCategory, err := mapper.GetCategoryByID(id)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
-		return nil, fmt.Errorf("获取类目失败: %w", err)
+		return nil, fmt.Errorf("获取类目失败: %v", err)
 	}
 
 	parentPath, err := mapper.GetParentCategoryPathByID(parentID)
@@ -142,11 +143,13 @@ func UpdateCategory(id int64, name string, description string, parentID int64, c
 	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, parentID)
 
 	if err := mapper.UpdateCategory(existingCategory); err != nil {
-		return nil, fmt.Errorf("[%s]类目更新失败: %w", existingCategory.Name, err)
+		utils.BizLogger(c).Errorf("[%s]类目更新失败：%v", existingCategory.Name, err)
+		return nil, fmt.Errorf("[%s]类目更新失败: %v", existingCategory.Name, err)
 	}
 
 	if err := recursivelyUpdateChildrenPaths(existingCategory, c); err != nil {
-		return nil, err
+		utils.BizLogger(c).Errorf("递归更新[%s]类目失败: %v", existingCategory.Name, err)
+		return nil, fmt.Errorf("递归更新[%s]类目失败: %v", existingCategory.Name, err)
 	}
 
 	return existingCategory, nil
@@ -157,7 +160,7 @@ func DeleteCategory(id int64, c echo.Context) ([]*model.Category, error) {
 	category, err := mapper.GetCategoryByID(id)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
-		return nil, fmt.Errorf("获取类目失败：%w", err)
+		return nil, fmt.Errorf("获取类目失败：%v", err)
 	}
 
 	deletedCategories, err := mapper.GetCategoriesByPath(category.Path)
@@ -187,11 +190,11 @@ func recursivelyUpdateChildrenPaths(parentCategory *model.Category, c echo.Conte
 		child.Path = fmt.Sprintf("%s/%d", parentCategory.Path, child.ID)
 
 		if err := mapper.UpdateCategory(&child); err != nil {
-			return err
+			return fmt.Errorf("更新[%s]子类目失败：%v", child.Name, err)
 		}
 
 		if err := recursivelyUpdateChildrenPaths(&child, c); err != nil {
-			return err
+			return fmt.Errorf("递归更新[%s]子类目失败：%v", child.Name, err)
 		}
 	}
 
@@ -203,7 +206,7 @@ func recursivelyGetChildren(parentID int64, c echo.Context) ([]*model.Category, 
 	categories, err := mapper.GetCategoriesByParentID(parentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取子类目失败：%v", err)
-		return nil, fmt.Errorf("获取子类目失败：%w", err)
+		return nil, fmt.Errorf("获取子类目失败：%v", err)
 	}
 
 	var result []*model.Category

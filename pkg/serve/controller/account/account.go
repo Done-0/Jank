@@ -8,7 +8,6 @@ import (
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
 	verification "jank.com/jank_blog/pkg/serve/controller/verification"
-	"jank.com/jank_blog/pkg/serve/mapper"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
 )
@@ -25,7 +24,7 @@ const (
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.GetAccountRequest  true  "获取账户请求参数"
-// @Success      200     {object}   vo.Result{data=dto.GetAccountResponse}  "获取成功"
+// @Success      200     {object}   vo.Result{data=account.GetAccountVo}  "获取成功"
 // @Failure      400     {object}   vo.Result              "请求参数错误"
 // @Failure      404     {object}   vo.Result              "用户不存在"
 // @Router       /account/getAccount [post]
@@ -40,16 +39,9 @@ func GetAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
 	}
 
-	userinfo, err := mapper.GetAccountByEmail(req.Email)
+	response, err := service.GetAccount(req, c)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, vo.Fail(errors, bizerr.New(bizerr.UnKnowErr, req.Email+" 用户不存在"), c))
-	}
-
-	response := dto.GetAccountResponse{
-		Email:    userinfo.Email,
-		Nickname: userinfo.Nickname,
-		Phone:    userinfo.Phone,
-		RoleCode: userinfo.RoleCode,
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -103,7 +95,7 @@ func RegisterAcc(c echo.Context) error {
 // @Produce      json
 // @Param        request  body      dto.LoginRequest  true  "登录信息"
 // @Param        ImgVerificationCode  query   string  true  "图形验证码"  // 图形验证码（参数名称需要和请求的参数一致）
-// @Success      200     {object}   vo.Result{data=dto.LoginResponse}  "登录成功，返回访问令牌"
+// @Success      200     {object}   vo.Result{data=LoginVO}  "登录成功，返回访问令牌"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "登录失败，凭证无效"
 // @Router       /account/loginAccount [post]
@@ -126,12 +118,12 @@ func LoginAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest, "参数验证失败"), c))
 	}
 
-	loginResponse, err := service.LoginUser(req.Email, req.Password, req.ImgVerificationCode, c)
+	response, err := service.LoginUser(req.Email, req.Password, req.ImgVerificationCode, c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizerr.New(bizerr.UnKnowErr, err.Error()), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(loginResponse, c))
+	return c.JSON(http.StatusOK, vo.Success(response, c))
 }
 
 // GetUserProfile godoc

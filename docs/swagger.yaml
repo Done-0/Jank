@@ -1,4 +1,50 @@
 definitions:
+  account.GetAccountVo:
+    description: 请求获取账户信息时所需参数
+    properties:
+      email:
+        type: string
+      nickname:
+        type: string
+      phone:
+        type: string
+      role_code:
+        type: string
+    type: object
+  account.LoginVO:
+    description: 登录成功后返回的访问令牌和刷新令牌
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  category.GetAllCategoriesVo:
+    description: 获取所有类目时返回的响应数据
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/category.GetOneCategoryVo'
+        type: array
+    type: object
+  category.GetOneCategoryVo:
+    description: 获取类目响应
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/category.GetOneCategoryVo'
+        type: array
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      parent_id:
+        type: integer
+      path:
+        type: string
+    type: object
   dto.CreateOneCategoryRequest:
     properties:
       description:
@@ -50,64 +96,6 @@ definitions:
     required:
     - email
     type: object
-  dto.GetAccountResponse:
-    description: 请求获取账户信息时所需参数
-    properties:
-      email:
-        type: string
-      nickname:
-        type: string
-      phone:
-        type: string
-      role_code:
-        type: string
-    type: object
-  dto.GetAllCategoriesResponse:
-    properties:
-      categories:
-        items:
-          $ref: '#/definitions/dto.GetOneCategoryResponse'
-        type: array
-    type: object
-  dto.GetAllPostsResponse:
-    description: 获取全部文章响应
-    properties:
-      category_ids:
-        items:
-          type: integer
-        type: array
-      contentHtml:
-        type: string
-      contentMarkdown:
-        type: string
-      id:
-        type: integer
-      image:
-        type: string
-      title:
-        type: string
-      visibility:
-        type: string
-    type: object
-  dto.GetOneCategoryResponse:
-    properties:
-      children:
-        items:
-          $ref: '#/definitions/dto.GetOneCategoryResponse'
-        type: array
-      description:
-        type: string
-      id:
-        type: integer
-      is_active:
-        type: boolean
-      name:
-        type: string
-      parent_id:
-        type: integer
-      path:
-        type: string
-    type: object
   dto.LoginRequest:
     description: 用户登录请求所需参数
     properties:
@@ -121,16 +109,6 @@ definitions:
     - email
     - img_verification_code
     - password
-    type: object
-  dto.LoginResponse:
-    description: 用户登录成功后返回的响应，包括用户ID、访问令牌和刷新令牌
-    properties:
-      access_token:
-        type: string
-      refresh_token:
-        type: string
-      user_id:
-        type: integer
     type: object
   dto.RegisterRequest:
     description: 用户注册所需参数
@@ -180,7 +158,7 @@ definitions:
     properties:
       children:
         items:
-          $ref: '#/definitions/dto.GetOneCategoryResponse'
+          $ref: '#/definitions/category.GetOneCategoryVo'
         type: array
       description:
         maxLength: 255
@@ -188,8 +166,6 @@ definitions:
         type: string
       id:
         type: integer
-      is_active:
-        type: boolean
       name:
         maxLength: 255
         minLength: 1
@@ -225,6 +201,26 @@ definitions:
     required:
     - category_ids
     - id
+    type: object
+  post.GetAllPostsVo:
+    description: 获取所有帖子时返回的响应数据
+    properties:
+      category_ids:
+        items:
+          type: integer
+        type: array
+      contentHtml:
+        type: string
+      contentMarkdown:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      title:
+        type: string
+      visibility:
+        type: string
     type: object
   vo.Result:
     properties:
@@ -307,7 +303,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetAccountResponse'
+                  $ref: '#/definitions/account.GetAccountVo'
               type: object
         "400":
           description: 请求参数错误
@@ -372,7 +368,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.LoginResponse'
+                  $ref: '#/definitions/account.LoginVO'
               type: object
         "400":
           description: 参数错误，验证码校验失败
@@ -555,7 +551,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+                  $ref: '#/definitions/category.GetOneCategoryVo'
               type: object
         "400":
           description: 请求参数错误
@@ -587,7 +583,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+                  $ref: '#/definitions/category.GetOneCategoryVo'
               type: object
         "400":
           description: 请求参数错误
@@ -628,7 +624,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/dto.GetOneCategoryResponse'
+                    $ref: '#/definitions/category.GetOneCategoryVo'
                   type: array
               type: object
         "400":
@@ -662,7 +658,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/dto.GetAllCategoriesResponse'
+                    $ref: '#/definitions/category.GetAllCategoriesVo'
                   type: array
               type: object
         "500":
@@ -693,7 +689,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+                  $ref: '#/definitions/category.GetOneCategoryVo'
               type: object
         "400":
           description: 请求参数错误
@@ -733,7 +729,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetOneCategoryResponse'
+                  $ref: '#/definitions/category.GetOneCategoryVo'
               type: object
         "400":
           description: 请求参数错误
@@ -774,7 +770,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetAllPostsResponse'
+                  $ref: '#/definitions/post.GetAllPostsVo'
               type: object
         "400":
           description: 请求参数错误
@@ -830,6 +826,15 @@ paths:
       consumes:
       - application/json
       description: 获取所有的文章列表，按创建时间倒序排序
+      parameters:
+      - description: 页数
+        in: query
+        name: page
+        type: integer
+      - description: 每页显示数量
+        in: query
+        name: pageSize
+        type: integer
       produces:
       - application/json
       responses:
@@ -841,7 +846,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/dto.GetAllPostsResponse'
+                    $ref: '#/definitions/post.GetAllPostsVo'
                   type: array
               type: object
         "500":
@@ -875,7 +880,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetAllPostsResponse'
+                  $ref: '#/definitions/post.GetAllPostsVo'
               type: object
         "400":
           description: 请求参数错误
@@ -914,7 +919,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetAllPostsResponse'
+                  $ref: '#/definitions/post.GetAllPostsVo'
               type: object
         "400":
           description: 请求参数错误

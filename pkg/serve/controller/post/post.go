@@ -10,6 +10,7 @@ import (
 	"jank.com/jank_blog/pkg/serve/controller/post/dto"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
+	_ "jank.com/jank_blog/pkg/vo/post"
 )
 
 // GetOnePost godoc
@@ -20,7 +21,7 @@ import (
 // @Produce      json
 // @Param        id       query     int     false  "文章 ID"
 // @Param        title    query     string  false  "文章标题"
-// @Success      200      {object}  vo.Result{data=dto.GetAllPostsResponse}  "获取成功"
+// @Success      200      {object}  vo.Result{data=post.GetAllPostsVo}  "获取成功"
 // @Failure      400      {object}  vo.Result          "请求参数错误"
 // @Failure      404      {object}  vo.Result          "文章不存在"
 // @Failure      500      {object}  vo.Result          "服务器错误"
@@ -54,47 +55,21 @@ func GetOnePost(c echo.Context) error {
 // @Tags         文章
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  vo.Result{data=[]dto.GetAllPostsResponse}  "获取成功"
+// @Param        page     query    int     false  "页数"
+// @Param        pageSize query    int     false  "每页显示数量"
+// @Success      200  {object}  vo.Result{data=[]post.GetAllPostsVo}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /post/getAllPost [get]
 func GetAllPosts(c echo.Context) error {
-	// 获取 page 页数，默认为 1
-	page := c.QueryParam("page")
-	// 设定每页显示数量，默认为 5
-	pageSize := c.QueryParam("pageSize")
+    page, _ := strconv.Atoi(c.QueryParam("page"))
+    pageSize, _ := strconv.Atoi(c.QueryParam("pageSize"))
 
-	pageInt, err := strconv.Atoi(page)
-	if err != nil || pageInt < 1 {
-		pageInt = 1
-	}
+    response, err := service.GetAllPostsWithPagingAndFormat(page, pageSize, c)
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+    }
 
-	pageSizeInt, err := strconv.Atoi(pageSize)
-	if err != nil || pageSizeInt < 1 {
-		pageSizeInt = 5
-	}
-
-	// 获取分页数据和总页数
-	posts, totalPages, err := service.GetAllPostsWithPaging(pageInt, pageSizeInt)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
-	}
-
-	var postResponse []*dto.GetAllPostsResponse
-	for _, post := range posts {
-		postResponse = append(postResponse, &dto.GetAllPostsResponse{
-			ID:          post.ID,
-			Title:       post.Title,
-			Image:       post.Image,
-			Visibility:  post.Visibility,
-			ContentHTML: post.ContentHTML,
-		})
-	}
-
-	return c.JSON(http.StatusOK, vo.Success(map[string]interface{}{
-		"posts":       postResponse,
-		"totalPages":  totalPages,
-		"currentPage": pageInt,
-	}, c))
+    return c.JSON(http.StatusOK, vo.Success(response, c))
 }
 
 // CreateOnePost godoc
@@ -104,7 +79,7 @@ func GetAllPosts(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateOnePostRequest  true  "创建文章请求参数"
-// @Success      200     {object}   vo.Result{data=dto.GetAllPostsResponse}  "创建成功"
+// @Success      200     {object}   vo.Result{data=post.GetAllPostsVo}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
@@ -125,7 +100,7 @@ func CreateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, "渲染失败，缺少 contentHtml"), nil, c))
 	}
 
-	createdPost, err := service.CreatePost(req.Title, req.Image, req.Visibility, req.ContentMarkdown, ContentHTML, req.CategoryIDs)
+	createdPost, err := service.CreatePost(req.Title, req.Image, req.Visibility, req.ContentMarkdown, ContentHTML, req.CategoryIDs, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
 	}
@@ -140,7 +115,7 @@ func CreateOnePost(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.UpdateOnePostRequest  true  "更新文章请求参数"
-// @Success      200     {object}   vo.Result{data=dto.GetAllPostsResponse}  "更新成功"
+// @Success      200     {object}   vo.Result{data=post.GetAllPostsVo}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "文章不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
