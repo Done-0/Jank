@@ -16,13 +16,13 @@ func New(config *configs.Config) {
 		log.Fatalf("MySQL 连接失败: %v", err)
 	}
 
-	if err := createDBIfNotExists(tempDB, config.DBName); err != nil {
-		log.Fatalf("数据库 %s 不存在: %v", config.DBName, err)
+	if err := createDBIfNotExists(tempDB, config.DBConfig.DBName); err != nil {
+		log.Fatalf("数据库 %s 不存在: %v", config.DBConfig.DBName, err)
 	}
 
-	global.DB, err = connectDB(config, config.DBName)
+	global.DB, err = connectDB(config, config.DBConfig.DBName)
 	if err != nil {
-		log.Fatalf("数据库 %s 连接失败: %v", config.DBName, err)
+		log.Fatalf("数据库 %s 连接失败: %v", config.DBConfig.DBName, err)
 	}
 
 	global.SysLog.Info("MySQL 数据库连接成功")
@@ -32,10 +32,10 @@ func New(config *configs.Config) {
 func connectDB(config *configs.Config, dbName string) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		config.DBUser,
-		config.DBPassword,
-		config.DBHost,
-		config.DBPort,
+		config.DBConfig.DBUser,
+		config.DBConfig.DBPassword,
+		config.DBConfig.DBHost,
+		config.DBConfig.DBPort,
 		dbName,
 	)
 	return gorm.Open(mysql.Open(dsn), &gorm.Config{})

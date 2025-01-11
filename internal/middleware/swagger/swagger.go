@@ -40,7 +40,7 @@ func initSwagger() {
 		docs.SwaggerInfo.Title = "Jank Blog API"
 		docs.SwaggerInfo.Description = "这是 Jank Blog 的 API 文档，适用于账户管理、用户认证，文章管理，类目管理等功能。"
 		docs.SwaggerInfo.Version = "1.0"
-		docs.SwaggerInfo.Host = config.SwaggerHost
+		docs.SwaggerInfo.Host = config.SwaggerConfig.SwaggerHost
 		if docs.SwaggerInfo.Host == "" {
 			docs.SwaggerInfo.Host = "localhost:9010"
 		}

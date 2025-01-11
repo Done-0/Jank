@@ -25,8 +25,8 @@ func initLogger() {
 		log.Fatalf("初始化日志组件时加载配置失败: %v", err)
 	}
 
-	logFilePath := cfg.LogFilePath
-	logFileName := cfg.LogFileName
+	logFilePath := cfg.LogConfig.LogFilePath
+	logFileName := cfg.LogConfig.LogFileName
 
 	// 打开日志文件
 	fileName := path.Join(logFilePath, logFileName)
@@ -45,20 +45,20 @@ func initLogger() {
 
 	// 初始化 logrus
 	logger := logrus.New()
-	log.Printf(cfg.LogTimestampFmt)
+	log.Printf(cfg.LogConfig.LogTimestampFmt)
 	logger.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat: cfg.LogTimestampFmt,
+		TimestampFormat: cfg.LogConfig.LogTimestampFmt,
 	})
 	logger.Out = global.LogFile
-	logLevel, err := logrus.ParseLevel(cfg.LogLevel)
+	logLevel, err := logrus.ParseLevel(cfg.LogConfig.LogLevel)
 	if err != nil {
 		return
 	}
 	logger.SetLevel(logLevel)
 
 	// 设置日志轮转
-	maxAge := time.Duration(cfg.LogMaxAge) * time.Hour
-	rotationTime := time.Duration(cfg.LogRotationTime) * time.Hour
+	maxAge := time.Duration(cfg.LogConfig.LogMaxAge) * time.Hour
+	rotationTime := time.Duration(cfg.LogConfig.LogRotationTime) * time.Hour
 
 	writer, err := rotatelogs.New(
 		logFilePath+"%Y%m%d.log",
@@ -82,7 +82,7 @@ func initLogger() {
 
 	// 添加钩子到 logrus
 	hook := lfshook.NewHook(writeMap, &logrus.JSONFormatter{
-		TimestampFormat: cfg.LogTimestampFmt,
+		TimestampFormat: cfg.LogConfig.LogTimestampFmt,
 	})
 	logger.AddHook(hook)
 	global.SysLog = logger

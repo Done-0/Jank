@@ -32,7 +32,7 @@ var ctx = context.Background()
 // @Success      200   {object} vo.Result{data=map[string]string} "成功返回验证码的Base64编码"
 // @Failure      400   {object} vo.Result{data=string} "请求参数错误，邮箱地址为空"
 // @Failure      500   {object} vo.Result{data=string} "服务器错误，生成验证码失败"
-// @Router       /account/genImgVerificationCode [get]
+// @Router       /verification/genImgVerificationCode [get]
 func GenImgVerificationCode(c echo.Context) error {
 	email := c.QueryParam("email")
 	if email == "" {
@@ -69,7 +69,7 @@ func GenImgVerificationCode(c echo.Context) error {
 // @Success      200     {object} vo.Result  "验证码发送成功, 请注意查收邮件"
 // @Failure      400     {object} vo.Result  "请求参数错误，邮箱地址为空"
 // @Failure      500     {object} vo.Result  "服务器错误，验证码发送失败"
-// @Router       /account/sendEmailVerificationCode [get]
+// @Router       /verification/sendEmailVerificationCode [get]
 func SendEmailVerificationCode(c echo.Context) error {
 	req := c.QueryParam("email")
 	if req == "" {

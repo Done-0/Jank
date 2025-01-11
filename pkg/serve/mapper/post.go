@@ -4,41 +4,41 @@ import (
 	"fmt"
 	"strings"
 
+	"jank.com/jank_blog/internal/global"
 	category "jank.com/jank_blog/internal/model/category"
 	post "jank.com/jank_blog/internal/model/post"
-	"jank.com/jank_blog/internal/global"
 )
 
 // getValidCategoryIDs 获取未删除的分类 ID 列表并更新数据库
 func getValidCategoryIDs(postID int64, categoryIDs string) (string, bool, error) {
-    if categoryIDs == "" {
-        return "", false, nil
-    }
+	if categoryIDs == "" {
+		return "", false, nil
+	}
 
-    ids := strings.Split(categoryIDs, ",")
-    var validIDs []string
-    updated := false
+	ids := strings.Split(categoryIDs, ",")
+	var validIDs []string
+	updated := false
 
-    for _, id := range ids {
-        var category category.Category
-        err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&category).Error
-        if err == nil {
-            validIDs = append(validIDs, id)
-        } else {
-            updated = true
-        }
-    }
+	for _, id := range ids {
+		var category category.Category
+		err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&category).Error
+		if err == nil {
+			validIDs = append(validIDs, id)
+		} else {
+			updated = true
+		}
+	}
 
-    newCategoryIDs := strings.Join(validIDs, ",")
-    
-    if updated && postID > 0 {
-        err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", newCategoryIDs).Error
-        if err != nil {
-            return "", false, err
-        }
-    }
+	newCategoryIDs := strings.Join(validIDs, ",")
 
-    return newCategoryIDs, updated, nil
+	if updated && postID > 0 {
+		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", newCategoryIDs).Error
+		if err != nil {
+			return "", false, err
+		}
+	}
+
+	return newCategoryIDs, updated, nil
 }
 
 // CreatePost 将文章保存到数据库

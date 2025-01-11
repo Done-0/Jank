@@ -1,0 +1,34 @@
+# 应用相关
+app:
+  APP_NAME: "JANK_BLOG"
+  APP_PORT: "9010"
+  SWAGGER_HOST: "localhost:9010"
+  QQ_SMTP: "<QQ_SMTP>"
+  FROM_EMAIL: "<FROM_QQ_EMAIL>"
+
+# 数据库相关
+database:
+  DB_NAME: "jank"
+  DB_HOST: "127.0.0.1"
+  DB_PORT: "3306"
+  DB_USER: "root"
+  DB_PSW: "<DATABASE_PASSWORD>"
+
+# Redis 相关
+redis:
+  REDIS_HOST: "127.0.0.1"
+  REDIS_DB: "0"
+  REDIS_PSW: ""
+
+# 日志相关
+log:
+  LOG_FILE_PATH: ".logs/"
+  LOG_FILE_NAME: "app.log"
+  LOG_TIMESTAMP_FMT: "2006-01-02 15:04:05"
+  LOG_MAX_AGE: 72
+  LOG_ROTATION_TIME: 24
+  LOG_LEVEL: "INFO"
+
+# Swagger 相关
+swagger:
+  SWAGGER_HOST: "localhost:9010"

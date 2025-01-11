@@ -29,11 +29,11 @@ func SendEmail(content string, toEmail []string) bool {
 	}
 
 	ema := email.NewEmail()
-	ema.From = config.FromEmail
+	ema.From = config.AppConfig.FromEmail
 	ema.To = toEmail
 	ema.Subject = SUBJECT
 	ema.Text = []byte(content)
-	err = ema.Send(QqEmailSmtp+QqEmailSmtpPort, smtp.PlainAuth("", config.FromEmail, config.QqSmtp, QqEmailSmtp))
+	err = ema.Send(QqEmailSmtp+QqEmailSmtpPort, smtp.PlainAuth("", config.AppConfig.FromEmail, config.AppConfig.QqSmtp, QqEmailSmtp))
 	if err != nil {
 		global.SysLog.Errorf("发送邮件失败, toEmail: %v, 错误信息: %v", toEmail, err)
 		return false

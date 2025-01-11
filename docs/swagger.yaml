@@ -235,52 +235,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /account/genImgVerificationCode:
-    get:
-      consumes:
-      - application/json
-      description: 生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。
-      parameters:
-      - description: 邮箱地址，用于生成验证码
-        in: query
-        name: email
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功返回验证码的Base64编码
-          schema:
-            allOf:
-            - $ref: '#/definitions/vo.Result'
-            - properties:
-                data:
-                  additionalProperties:
-                    type: string
-                  type: object
-              type: object
-        "400":
-          description: 请求参数错误，邮箱地址为空
-          schema:
-            allOf:
-            - $ref: '#/definitions/vo.Result'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: 服务器错误，生成验证码失败
-          schema:
-            allOf:
-            - $ref: '#/definitions/vo.Result'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: 生成图形验证码并返回Base64编码
-      tags:
-      - 账户
   /account/getAccount:
     post:
       consumes:
@@ -454,36 +408,7 @@ paths:
       summary: 用户注册
       tags:
       - 账户
-  /account/sendEmailVerificationCode:
-    get:
-      consumes:
-      - application/json
-      description: 向指定邮箱发送验证码，验证码有效期为3分钟
-      parameters:
-      - description: 邮箱地址，用于发送验证码
-        in: query
-        name: email
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 验证码发送成功, 请注意查收邮件
-          schema:
-            $ref: '#/definitions/vo.Result'
-        "400":
-          description: 请求参数错误，邮箱地址为空
-          schema:
-            $ref: '#/definitions/vo.Result'
-        "500":
-          description: 服务器错误，验证码发送失败
-          schema:
-            $ref: '#/definitions/vo.Result'
-      summary: 发送邮箱验证码
-      tags:
-      - 账户
-  /authenticated/resetPassword:
+  /account/resetPassword:
     post:
       consumes:
       - application/json
@@ -529,7 +454,7 @@ paths:
       summary: 重置密码
       tags:
       - 账户
-  /category/createCategory:
+  /category/createOneCategory:
     post:
       consumes:
       - application/json
@@ -562,7 +487,7 @@ paths:
       summary: 创建类目
       tags:
       - 类目
-  /category/deleteCategory:
+  /category/deleteOneCategory:
     post:
       consumes:
       - application/json
@@ -702,7 +627,7 @@ paths:
       summary: 获取单个类目详情
       tags:
       - 类目
-  /category/updateCategory:
+  /category/updateOneCategory:
     post:
       consumes:
       - application/json
@@ -821,7 +746,7 @@ paths:
       summary: 删除文章
       tags:
       - 文章
-  /post/getAllPost:
+  /post/getAllPosts:
     get:
       consumes:
       - application/json
@@ -938,6 +863,36 @@ paths:
       summary: 更新文章
       tags:
       - 文章
+  /test/hello:
+    get:
+      consumes:
+      - application/json
+      description: 测试接口
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: "Hello, Jank \U0001F389!\\n"
+          schema:
+            type: string
+      summary: Hello API
+      tags:
+      - test
+  /test/long:
+    get:
+      consumes:
+      - application/json
+      description: 模拟一个耗时请求
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 模拟耗时请求处理完成!\n
+          schema:
+            type: string
+      summary: 长时间请求接口
+      tags:
+      - test
   /test/ping:
     get:
       consumes:
@@ -947,11 +902,160 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Pong successfully!\n
           schema:
-            additionalProperties: true
-            type: object
+            type: string
       summary: Ping API
       tags:
       - test
+  /test/testErr:
+    get:
+      consumes:
+      - application/json
+      description: 用于测试错误响应
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 测试错误响应接口
+      tags:
+      - test
+  /test/testErrorMiddleware:
+    get:
+      consumes:
+      - application/json
+      description: 用于测试错误中间件
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: 测试错误处理中间件接口
+      tags:
+      - test
+  /test/testLogger:
+    get:
+      consumes:
+      - application/json
+      description: 用于测试日志功能
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 测试日志成功!
+          schema:
+            type: string
+      summary: 测试日志接口
+      tags:
+      - test
+  /test/testRedis:
+    get:
+      consumes:
+      - application/json
+      description: 用于测试 Redis 功能
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 测试缓存功能完成!
+          schema:
+            type: string
+      summary: 测试 Redis 接口
+      tags:
+      - test
+  /test/testSuccess:
+    get:
+      consumes:
+      - application/json
+      description: 用于测试成功响应
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 测试成功响应成功!
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 测试成功响应接口
+      tags:
+      - test
+  /verification/genImgVerificationCode:
+    get:
+      consumes:
+      - application/json
+      description: 生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。
+      parameters:
+      - description: 邮箱地址，用于生成验证码
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回验证码的Base64编码
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: string
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误，邮箱地址为空
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误，生成验证码失败
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 生成图形验证码并返回Base64编码
+      tags:
+      - 账户
+  /verification/sendEmailVerificationCode:
+    get:
+      consumes:
+      - application/json
+      description: 向指定邮箱发送验证码，验证码有效期为3分钟
+      parameters:
+      - description: 邮箱地址，用于发送验证码
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 验证码发送成功, 请注意查收邮件
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "400":
+          description: 请求参数错误，邮箱地址为空
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "500":
+          description: 服务器错误，验证码发送失败
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 发送邮箱验证码
+      tags:
+      - 账户
 swagger: "2.0"

@@ -13,7 +13,7 @@ import (
 	_ "jank.com/jank_blog/pkg/vo/post"
 )
 
-// GetOnePost godoc
+// getOnePost godoc
 // @Summary      获取文章详情
 // @Description  根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数
 // @Tags         文章
@@ -49,7 +49,7 @@ func GetOnePost(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success(post, c))
 }
 
-// GetAllPost godoc
+// getAllPosts godoc
 // @Summary      获取文章列表
 // @Description  获取所有的文章列表，按创建时间倒序排序
 // @Tags         文章
@@ -59,20 +59,20 @@ func GetOnePost(c echo.Context) error {
 // @Param        pageSize query    int     false  "每页显示数量"
 // @Success      200  {object}  vo.Result{data=[]post.GetAllPostsVo}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
-// @Router       /post/getAllPost [get]
+// @Router       /post/getAllPosts [get]
 func GetAllPosts(c echo.Context) error {
-    page, _ := strconv.Atoi(c.QueryParam("page"))
-    pageSize, _ := strconv.Atoi(c.QueryParam("pageSize"))
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	pageSize, _ := strconv.Atoi(c.QueryParam("pageSize"))
 
-    response, err := service.GetAllPostsWithPagingAndFormat(page, pageSize, c)
-    if err != nil {
-        return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
-    }
+	response, err := service.GetAllPostsWithPagingAndFormat(page, pageSize, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+	}
 
-    return c.JSON(http.StatusOK, vo.Success(response, c))
+	return c.JSON(http.StatusOK, vo.Success(response, c))
 }
 
-// CreateOnePost godoc
+// createOnePost godoc
 // @Summary      创建文章
 // @Description  创建新的文章，支持 Markdown 格式内容，系统会自动转换为 HTML
 // @Tags         文章
@@ -108,7 +108,7 @@ func CreateOnePost(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success(createdPost, c))
 }
 
-// UpdateOnePost godoc
+// updateOnePost godoc
 // @Summary      更新文章
 // @Description  更新已存在的文章内容
 // @Tags         文章
@@ -142,7 +142,7 @@ func UpdateOnePost(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success(updatedPost, c))
 }
 
-// DeleteOnePost godoc
+// deleteOnePost godoc
 // @Summary      删除文章
 // @Description  根据文章 ID 删除指定文章
 // @Tags         文章

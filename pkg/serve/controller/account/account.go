@@ -183,7 +183,7 @@ func LogoutAccount(c echo.Context) error {
 // @Failure      401     {object}   vo.Result         "未授权，用户未登录"
 // @Failure      500     {object}   vo.Result         "服务器错误"
 // @security     BearerAuth
-// @Router       /authenticated/resetPassword [post]
+// @Router       /account/resetPassword [post]
 func ResetPassword(c echo.Context) error {
 	userId, ok := c.Get(LocalsUserIdKey).(int64)
 	if !ok {

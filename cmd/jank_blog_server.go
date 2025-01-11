@@ -41,5 +41,5 @@ func Start() {
 	router.RegisterRoutes(app)
 
 	// 启动服务
-	app.Logger.Fatal(app.Start(fmt.Sprintf("%s:%s", config.DBHost, config.AppPort)))
+	app.Logger.Fatal(app.Start(fmt.Sprintf("%s:%s", config.DBConfig.DBHost, config.AppConfig.AppPort)))
 }

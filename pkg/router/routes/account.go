@@ -6,11 +6,13 @@ import (
 	"jank.com/jank_blog/pkg/serve/controller/account"
 )
 
-func RegisterAccountRoutes(app *echo.Echo) {
-	accountGroup := app.Group("/account")
-	accountGroup.POST("/getAccount", account.GetAccount)
-	accountGroup.POST("/registerAccount", account.RegisterAcc)
-	accountGroup.POST("/loginAccount", account.LoginAccount)
-	accountGroup.POST("/getUserProfile", account.GetUserProfile, auth_middleware.JWTMiddleware())
-	accountGroup.POST("/logoutAccount", account.LogoutAccount, auth_middleware.JWTMiddleware())
+func RegisterAccountRoutes(r ...*echo.Group) {
+	// api v1 group
+	apiV1 := r[0]
+	accountGroupV1 := apiV1.Group("/account")
+	accountGroupV1.POST("/getAccount", account.GetAccount)
+	accountGroupV1.POST("/registerAccount", account.RegisterAcc)
+	accountGroupV1.POST("/loginAccount", account.LoginAccount)
+	accountGroupV1.POST("/getUserProfile", account.GetUserProfile, auth_middleware.JWTMiddleware())
+	accountGroupV1.POST("/logoutAccount", account.LogoutAccount, auth_middleware.JWTMiddleware())
 }

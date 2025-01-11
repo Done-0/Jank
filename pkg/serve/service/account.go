@@ -24,7 +24,7 @@ var (
 
 const (
 	AccAuthTokenCachePrefix         = "ACC_AUTH_TOKEN_CACHE_PREFIX"
-	AccAuthTokenCacheExpire         = 60 * 15          // 15 分钟
+	AccAuthTokenCacheExpire         = 60 * 15 // 15 分钟
 	RefreshAuthTokenCachePrefix     = "REFRESH_AUTH_TOKEN_CACHE_PREFIX"
 	RefreshAuthTokenCacheExpire     = 60 * 60 * 24 * 7 // 7 天
 	RefreshAuthTokenCacheUserExpire = 60 * 3           // 3 分钟
@@ -33,10 +33,10 @@ const (
 // GetAccount 获取用户信息逻辑
 func GetAccount(GetAccountRequest *dto.GetAccountRequest, c echo.Context) (*account.GetAccountVo, error) {
 	userInfo, _ := mapper.GetAccountByEmail(GetAccountRequest.Email)
-    if userInfo == nil {
-        utils.BizLogger(c).Errorf("邮箱(%s)不存在", GetAccountRequest.Email)
-        return nil, fmt.Errorf("邮箱不存在")
-    }
+	if userInfo == nil {
+		utils.BizLogger(c).Errorf("邮箱(%s)不存在", GetAccountRequest.Email)
+		return nil, fmt.Errorf("邮箱不存在")
+	}
 
 	acc := &account.GetAccountVo{
 		Email:    userInfo.Email,

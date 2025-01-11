@@ -15,89 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/account/genImgVerificationCode": {
-            "get": {
-                "description": "生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "账户"
-                ],
-                "summary": "生成图形验证码并返回Base64编码",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "邮箱地址，用于生成验证码",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "成功返回验证码的Base64编码",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "additionalProperties": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "请求参数错误，邮箱地址为空",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误，生成验证码失败",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/account/getAccount": {
             "post": {
                 "description": "根据提供的邮箱获取对应用户的详细信息",
@@ -386,51 +303,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/account/sendEmailVerificationCode": {
-            "get": {
-                "description": "向指定邮箱发送验证码，验证码有效期为3分钟",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "账户"
-                ],
-                "summary": "发送邮箱验证码",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "邮箱地址，用于发送验证码",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "验证码发送成功, 请注意查收邮件",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    },
-                    "400": {
-                        "description": "请求参数错误，邮箱地址为空",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误，验证码发送失败",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    }
-                }
-            }
-        },
-        "/authenticated/resetPassword": {
+        "/account/resetPassword": {
             "post": {
                 "security": [
                     {
@@ -506,7 +379,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/category/createCategory": {
+        "/category/createOneCategory": {
             "post": {
                 "security": [
                     {
@@ -563,7 +436,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/category/deleteCategory": {
+        "/category/deleteOneCategory": {
             "post": {
                 "security": [
                     {
@@ -795,7 +668,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/category/updateCategory": {
+        "/category/updateOneCategory": {
             "post": {
                 "security": [
                     {
@@ -991,7 +864,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/post/getAllPost": {
+        "/post/getAllPosts": {
             "get": {
                 "description": "获取所有的文章列表，按创建时间倒序排序",
                 "consumes": [
@@ -1185,6 +1058,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/test/hello": {
+            "get": {
+                "description": "测试接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Hello API",
+                "responses": {
+                    "200": {
+                        "description": "Hello, Jank 🎉!\\n",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/long": {
+            "get": {
+                "description": "模拟一个耗时请求",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "长时间请求接口",
+                "responses": {
+                    "200": {
+                        "description": "模拟耗时请求处理完成!\\n",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/test/ping": {
             "get": {
                 "description": "测试接口",
@@ -1200,10 +1119,251 @@ const docTemplate = `{
                 "summary": "Ping API",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Pong successfully!\\n",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testErr": {
+            "get": {
+                "description": "用于测试错误响应",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "测试错误响应接口",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testErrorMiddleware": {
+            "get": {
+                "description": "用于测试错误中间件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "测试错误处理中间件接口",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testLogger": {
+            "get": {
+                "description": "用于测试日志功能",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "测试日志接口",
+                "responses": {
+                    "200": {
+                        "description": "测试日志成功!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testRedis": {
+            "get": {
+                "description": "用于测试 Redis 功能",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "测试 Redis 接口",
+                "responses": {
+                    "200": {
+                        "description": "测试缓存功能完成!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testSuccess": {
+            "get": {
+                "description": "用于测试成功响应",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "测试成功响应接口",
+                "responses": {
+                    "200": {
+                        "description": "测试成功响应成功!",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/verification/genImgVerificationCode": {
+            "get": {
+                "description": "生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "生成图形验证码并返回Base64编码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "邮箱地址，用于生成验证码",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回验证码的Base64编码",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误，邮箱地址为空",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误，生成验证码失败",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/verification/sendEmailVerificationCode": {
+            "get": {
+                "description": "向指定邮箱发送验证码，验证码有效期为3分钟",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "发送邮箱验证码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "邮箱地址，用于发送验证码",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "验证码发送成功, 请注意查收邮件",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误，邮箱地址为空",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误，验证码发送失败",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
                         }
                     }
                 }

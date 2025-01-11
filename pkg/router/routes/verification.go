@@ -5,8 +5,10 @@ import (
 	"jank.com/jank_blog/pkg/serve/controller/verification"
 )
 
-func RegisterVerificationRoutes(app *echo.Echo) {
-	accountGroup := app.Group("/verification")
-	accountGroup.GET("/genImgVerificationCode", verification.GenImgVerificationCode)
-	accountGroup.GET("/sendEmailVerificationCode", verification.SendEmailVerificationCode)
+func RegisterVerificationRoutes(r ...*echo.Group) {
+	// api v1 group
+	apiV1 := r[0]
+	accountGroupV1 := apiV1.Group("/verification")
+	accountGroupV1.GET("/genImgVerificationCode", verification.GenImgVerificationCode)
+	accountGroupV1.GET("/sendEmailVerificationCode", verification.SendEmailVerificationCode)
 }

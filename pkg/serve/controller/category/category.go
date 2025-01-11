@@ -91,7 +91,7 @@ func GetCategoryChildrenTree(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success(childrenCategories, c))
 }
 
-// CreateCategory godoc
+// createOneCategory godoc
 // @Summary      创建类目
 // @Description  创建新的类目
 // @Tags         类目
@@ -101,7 +101,7 @@ func GetCategoryChildrenTree(c echo.Context) error {
 // @Success      200     {object}   vo.Result{data=category.GetOneCategoryVo}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Security     BearerAuth
-// @Router       /category/createCategory [post]
+// @Router       /category/createOneCategory [post]
 func CreateOneCategory(c echo.Context) error {
 	req := new(dto.CreateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
@@ -121,7 +121,7 @@ func CreateOneCategory(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success(createdCategory, c))
 }
 
-// UpdateCategory godoc
+// updateOneCategory godoc
 // @Summary      更新类目
 // @Description  更新已存在的类目信息
 // @Tags         类目
@@ -134,7 +134,7 @@ func CreateOneCategory(c echo.Context) error {
 // @Failure      404     {object}   vo.Result          "类目不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
-// @Router       /category/updateCategory [post]
+// @Router       /category/updateOneCategory [post]
 func UpdateOneCategory(c echo.Context) error {
 	req := new(dto.UpdateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
@@ -154,7 +154,7 @@ func UpdateOneCategory(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success(updatedCategory, c))
 }
 
-// DeleteCategory godoc
+// deleteOneCategory godoc
 // @Summary      删除类目
 // @Description  根据类目 ID 删除类目
 // @Tags         类目
@@ -166,7 +166,7 @@ func UpdateOneCategory(c echo.Context) error {
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"
 // @Security     BearerAuth
-// @Router       /category/deleteCategory [post]
+// @Router       /category/deleteOneCategory [post]
 func DeleteOneCategory(c echo.Context) error {
 	req := new(dto.DeleteOneCategoryRequest)
 

@@ -25,15 +25,15 @@ func New(config *configs.Config) {
 }
 
 func newRedisClient(config *configs.Config) *redis.Client {
-	db, _ := strconv.Atoi(config.RedisDB)
+	db, _ := strconv.Atoi(config.RedisConfig.RedisDB)
 	return redis.NewClient(&redis.Options{
-		Addr:         fmt.Sprintf("%s:6379", config.RedisHost),
-		Password:     config.RedisPassword,   // 数据库密码，默认为空字符串
-		DB:           db,                     // 数据库索引
-		DialTimeout:  10 * time.Second,       // 连接超时时间
-		ReadTimeout:  1 * time.Second,        // 读超时时间
-		WriteTimeout: 2 * time.Second,        // 写超时时间
-		PoolSize:     runtime.GOMAXPROCS(10), // 最大连接池大小
-		MinIdleConns: 50,                     // 最小空闲连接数
+		Addr:         fmt.Sprintf("%s:6379", config.RedisConfig.RedisHost),
+		Password:     config.RedisConfig.RedisPassword, // 数据库密码，默认为空字符串
+		DB:           db,                               // 数据库索引
+		DialTimeout:  10 * time.Second,                 // 连接超时时间
+		ReadTimeout:  1 * time.Second,                  // 读超时时间
+		WriteTimeout: 2 * time.Second,                  // 写超时时间
+		PoolSize:     runtime.GOMAXPROCS(10),           // 最大连接池大小
+		MinIdleConns: 50,                               // 最小空闲连接数
 	})
 }
