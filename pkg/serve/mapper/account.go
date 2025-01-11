@@ -4,17 +4,17 @@ import (
 	"fmt"
 
 	"jank.com/jank_blog/internal/global"
-	model "jank.com/jank_blog/internal/model/account"
+	account "jank.com/jank_blog/internal/model/account"
 )
 
 // GetAccountByEmail 根据 Email 获取 Account 用户信息
-func GetAccountByEmail(email string) (*model.Account, error) {
+func GetAccountByEmail(email string) (*account.Account, error) {
 	if email == "" {
 		return nil, fmt.Errorf("邮箱不能为空")
 	}
 
-	var account model.Account
-	err := global.DB.Where("email = ?", email).First(&account).Error
+	var account account.Account
+	err := global.DB.Where("email = ? AND deleted = ?", email, 0).First(&account).Error
 	if err != nil {
 		return nil, err
 	}
@@ -22,13 +22,13 @@ func GetAccountByEmail(email string) (*model.Account, error) {
 }
 
 // GetAccountByUserID 根据用户ID获取账户信息
-func GetAccountByUserID(userID int64) (*model.Account, error) {
+func GetAccountByUserID(userID int64) (*account.Account, error) {
 	if userID <= 0 {
 		return nil, fmt.Errorf("无效用户ID: %d", userID)
 	}
 
-	var account model.Account
-	err := global.DB.Where("user_id = ?", userID).First(&account).Error
+	var account account.Account
+	err := global.DB.Where("user_id = ? AND deleted = ?", userID, 0).First(&account).Error
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func GetAccountByUserID(userID int64) (*model.Account, error) {
 }
 
 // CreateAccount 创建新账户
-func CreateAccount(account *model.Account) error {
+func CreateAccount(account *account.Account) error {
 	if account == nil {
 		return fmt.Errorf("账户信息不能为空")
 	}
@@ -45,7 +45,7 @@ func CreateAccount(account *model.Account) error {
 }
 
 // UpdateAccount 更新账户信息
-func UpdateAccount(account *model.Account) error {
+func UpdateAccount(account *account.Account) error {
 	if account == nil {
 		return fmt.Errorf("账户信息不能为空")
 	}
