@@ -100,19 +100,26 @@ Jank is a lightweight blogging system developed using Go and the Echo framework,
 docker-compose up -d
 ```
 
+## API Documentation
+1. **Local Swagger Documentation**: After launching the application locally, visit [http://localhost:9010/swagger/index.html](http://localhost:9010/swagger/index.html) in your browser.
+2. **Postman Documentation**: In the project root directory, import the `docs/Jank_blog.postman_collection.json` file into Postman to view.
+
+## Architecture Diagram
+Architecture Diagram and Visualized API Documentation: Open the `docs/jank_blog_architecture.drawio` file in the project root directory.
+
 ## Code Statistics
 
 ```bash
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Go                              74            531            493           4031
-JSON                             1              0              0           1539
-YAML                             3              8              6           1035
-Markdown                        27             34              0            137
+Go                              74            556            566           4334
+JSON                             2              0              0           2259
+YAML                             3              7              5           1145
+Markdown                        28             76              0            257
 TOML                             1              6              0             36
 -------------------------------------------------------------------------------
-TOTAL                          106            579            499           6778
+TOTAL                          108            645            571           8031
 -------------------------------------------------------------------------------
 ```
 

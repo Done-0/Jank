@@ -28,7 +28,6 @@
   <span style="text-decoration: underline; color: grey;">简体中文</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
 </p>
 
-
 ---
 
 Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，设计理念强调极简、低耦合和高扩展，旨在为用户提供功能丰富、界面简洁、操作简单且安全可靠的博客体验。
@@ -101,20 +100,29 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 docker-compose up -d
 ```
 
+## 接口文档
+
+1. **本地启动查看 swagger 文档**：本地启动应用后，通过浏览器访问 [http://localhost:9010/swagger/index.html](http://localhost:9010/swagger/index.html)
+
+2. **postman 文档**：在项目根目录下，导入 `docs/Jank_blog.postman_collection.json` 至 Postman 查看。
+
+## 架构图
+
+**架构图及可视化接口文档**：在项目根目录中打开 `docs/jank_blog_architecture.drawio` 文件。
+
 ## 代码统计
 
 ```bash
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Go                              74            557            566           4333
-JSON                             1              0              0           1699
+Go                              74            556            566           4334
+JSON                             2              0              0           2259
 YAML                             3              7              5           1145
-Markdown                        28             76              0            256
-Plain Text                       1             11              0             55
+Markdown                        28             76              0            257
 TOML                             1              6              0             36
 -------------------------------------------------------------------------------
-TOTAL                          108            657            571           7524
+TOTAL                          108            645            571           8031
 -------------------------------------------------------------------------------
 ```
 

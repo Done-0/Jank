@@ -4,9 +4,6 @@
 # 忽略 tmp 目录
 tmp/
 
-# 忽略 .env.development 文件
-.env.development
-
 # 忽略 .history 文件
 .history
 

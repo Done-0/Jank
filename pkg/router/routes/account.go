@@ -15,4 +15,5 @@ func RegisterAccountRoutes(r ...*echo.Group) {
 	accountGroupV1.POST("/loginAccount", account.LoginAccount)
 	accountGroupV1.POST("/getUserProfile", account.GetUserProfile, auth_middleware.JWTMiddleware())
 	accountGroupV1.POST("/logoutAccount", account.LogoutAccount, auth_middleware.JWTMiddleware())
+	accountGroupV1.POST("/resetPassword", account.ResetPassword, auth_middleware.JWTMiddleware())
 }

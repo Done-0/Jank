@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "b0e1355c-b82b-45de-8e9b-293e9a7e46de",
+		"name": "Jank_blog",
+		"description": "Jank 博客系统接口文档",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "38426642"
+	},
+	"item": [
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "registerAccount",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"email_verification_code\": \"894783\",\r\n  \"img_verification_code\": \"O6XT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/account/registerAccount"
+					},
+					"response": []
+				},
+				{
+					"name": "getAccount",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMjk0MzksInVzZXJJRCI6OH0.wp5HN-JMfbJkWwFpajfVjjK_Z08k4_5Etzy5F0D8aFw"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/account/getAccount"
+					},
+					"response": []
+				},
+				{
+					"name": "loginAccount",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"stirng\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"img_verification_code\": \"PPKX\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/account/loginAccount"
+					},
+					"response": []
+				},
+				{
+					"name": "getUserProfile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzYwNjkxNTUsInVzZXJJZCI6MX0.jZWFgBFc_3plZyrhgGW4xknYmwcwhh1wOh6XRD_ZMG8"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/account/getUserProfile"
+					},
+					"response": []
+				},
+				{
+					"name": "logoutAccount",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/account/logoutAccount"
+					},
+					"response": []
+				},
+				{
+					"name": "resetPassword",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzU5OTM3ODgsInVzZXJJZCI6MX0.rvpWjYWCNAFQ655_LqI94YFnMUg7nAkQRtyjtoKBRtQ"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"again_new_password\": \"string\",\r\n  \"email\": \"string\",\r\n  \"email_verification_code\": \"string\",\r\n  \"new_password\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/account/resetPassword"
+					},
+					"response": []
+				}
+			],
+			"description": "账户模块"
+		},
+		{
+			"name": "post",
+			"item": [
+				{
+					"name": "GetAllPosts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/post/getAllPosts?pageSize=5&page=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"getAllPosts"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "5"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOnePost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "id",
+								"value": "2",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 2,\r\n  \"title\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/post/getOnePost"
+					},
+					"response": []
+				},
+				{
+					"name": "createOnePost",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contentMarkdown",
+									"type": "file",
+									"src": "/D:/GoSpace/yunosphere/resource-backup/免费教程/文章/Go 入门/Go 接口.md"
+								},
+								{
+									"key": "image",
+									"value": "https://haowallpaper.com/link/common/file/previewFileImg/15812051945034048",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "测试109",
+									"type": "text"
+								},
+								{
+									"key": "visibility",
+									"value": "private",
+									"type": "text"
+								}
+							]
+						},
+						"url": "127.0.0.1:9010/api/v1/post/createOnePost"
+					},
+					"response": []
+				},
+				{
+					"name": "updateOnePost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contentMarkdown\": \"string\",\r\n  \"id\": 22,\r\n  \"image\": \"string\",\r\n  \"title\": \"string\",\r\n  \"visibility\": \"private\",\r\n  \"category_ids\": [1]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/post/updateOnePost"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteOnePost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/post/deleteOnePost"
+					},
+					"response": []
+				}
+			],
+			"description": "文章模块"
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "getOneCategory",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/category/getOneCategory"
+					},
+					"response": []
+				},
+				{
+					"name": "getCategoryTree",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "127.0.0.1:9010/api/v1/category/getCategoryTree"
+					},
+					"response": []
+				},
+				{
+					"name": "createCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"测试类目2\",\r\n    \"description\": \"测试类目2\",\r\n    \"parent_id\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/category/createOneCategory"
+					},
+					"response": []
+				},
+				{
+					"name": "updateCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 16,\r\n    \"name\": \"测试类目1\",\r\n    \"description\": \"测试类目1\",\r\n    \"parent_id\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/category/updateOneCategory"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 16\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/category/deleteOneCategory"
+					},
+					"response": []
+				},
+				{
+					"name": "getCategoryChildrenTree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "127.0.0.1:9010/api/v1/category/getCategoryChildrenTree"
+					},
+					"response": []
+				}
+			],
+			"description": "类目模块"
+		},
+		{
+			"name": "verification",
+			"item": [
+				{
+					"name": "genImgVerificationCode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9010/api/v1/verification/genImgVerificationCode?email=927171598@qq.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"verification",
+								"genImgVerificationCode"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "927171598@qq.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sendEmailVerificationCode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9010/api/v1/verification/sendEmailVerificationCode?email=927171598@qq.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"verification",
+								"sendEmailVerificationCode"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "927171598@qq.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "验证码接口"
+		},
+		{
+			"name": "test",
+			"item": [
+				{
+					"name": "ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/ping"
+					},
+					"response": []
+				},
+				{
+					"name": "hello",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/hello"
+					},
+					"response": []
+				},
+				{
+					"name": "testLogger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/testLogger"
+					},
+					"response": []
+				},
+				{
+					"name": "testRedis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/testRedis"
+					},
+					"response": []
+				},
+				{
+					"name": "testSuccess",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/testSuccess"
+					},
+					"response": []
+				},
+				{
+					"name": "testErr",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/testErr"
+					},
+					"response": []
+				},
+				{
+					"name": "testErrorMiddleware",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v1/test/testErrorMiddleware"
+					},
+					"response": []
+				},
+				{
+					"name": "long",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9010/api/v2/test/long"
+					},
+					"response": []
+				}
+			],
+			"description": "测试接口"
+		}
+	]
+}
