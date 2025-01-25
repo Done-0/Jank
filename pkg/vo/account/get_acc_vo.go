@@ -1,6 +1,7 @@
 package account
 
-// GetAccountVo 获取账户信息请求体
+// GetAccountVo     获取账户信息请求体
+//
 //	@Description	请求获取账户信息时所需参数
 //	@Param			email	    body	string	true	"用户邮箱"
 //	@Param			nickname	body	string	true	"用户昵称"

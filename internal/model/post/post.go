@@ -4,7 +4,7 @@ import "jank.com/jank_blog/internal/model/base"
 
 // Post 博客文章模型
 type Post struct {
-	base.BaseModel
+	base.Base
 	Title           string `gorm:"type:varchar(255);not null;index" json:"title"`                                    // 标题
 	Image           string `gorm:"type:varchar(255)" json:"image"`                                                   // 图片
 	Visibility      string `gorm:"type:enum('public','private');not null;index" json:"visibility" default:"private"` // 可见性

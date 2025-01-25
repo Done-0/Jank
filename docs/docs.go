@@ -1070,7 +1070,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "Hello API",
                 "responses": {
                     "200": {
                         "description": "Hello, Jank 🎉!\\n",
@@ -1093,7 +1092,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "长时间请求接口",
                 "responses": {
                     "200": {
                         "description": "模拟耗时请求处理完成!\\n",
@@ -1116,7 +1114,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "Ping API",
                 "responses": {
                     "200": {
                         "description": "Pong successfully!\\n",
@@ -1139,7 +1136,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "测试错误响应接口",
                 "responses": {
                     "500": {
                         "description": "Internal Server Error",
@@ -1162,7 +1158,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "测试错误处理中间件接口",
                 "responses": {
                     "500": {
                         "description": "Internal Server Error",
@@ -1185,7 +1180,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "测试日志接口",
                 "responses": {
                     "200": {
                         "description": "测试日志成功!",
@@ -1208,7 +1202,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "测试 Redis 接口",
                 "responses": {
                     "200": {
                         "description": "测试缓存功能完成!",
@@ -1231,7 +1224,6 @@ const docTemplate = `{
                 "tags": [
                     "test"
                 ],
-                "summary": "测试成功响应接口",
                 "responses": {
                     "200": {
                         "description": "测试成功响应成功!",

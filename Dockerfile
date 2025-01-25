@@ -28,7 +28,7 @@ RUN apk --no-cache add ca-certificates tzdata
 ENV TZ=Asia/Shanghai
 
 # 设置工作目录
-WORKDIR /jank
+WORKDIR /app
 
 # 从构建阶段复制编译好的应用
 COPY --from=builder /jank/main .

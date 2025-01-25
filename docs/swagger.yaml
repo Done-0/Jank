@@ -875,7 +875,6 @@ paths:
           description: "Hello, Jank \U0001F389!\\n"
           schema:
             type: string
-      summary: Hello API
       tags:
       - test
   /test/long:
@@ -890,7 +889,6 @@ paths:
           description: 模拟耗时请求处理完成!\n
           schema:
             type: string
-      summary: 长时间请求接口
       tags:
       - test
   /test/ping:
@@ -905,7 +903,6 @@ paths:
           description: Pong successfully!\n
           schema:
             type: string
-      summary: Ping API
       tags:
       - test
   /test/testErr:
@@ -920,7 +917,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/vo.Result'
-      summary: 测试错误响应接口
       tags:
       - test
   /test/testErrorMiddleware:
@@ -935,7 +931,6 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: 测试错误处理中间件接口
       tags:
       - test
   /test/testLogger:
@@ -950,7 +945,6 @@ paths:
           description: 测试日志成功!
           schema:
             type: string
-      summary: 测试日志接口
       tags:
       - test
   /test/testRedis:
@@ -965,7 +959,6 @@ paths:
           description: 测试缓存功能完成!
           schema:
             type: string
-      summary: 测试 Redis 接口
       tags:
       - test
   /test/testSuccess:
@@ -980,7 +973,6 @@ paths:
           description: 测试成功响应成功!
           schema:
             $ref: '#/definitions/vo.Result'
-      summary: 测试成功响应接口
       tags:
       - test
   /verification/genImgVerificationCode:

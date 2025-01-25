@@ -1,6 +1,7 @@
 package dto
 
-// CreatePostRequest 发布文章的请求结构体
+// CreateOnePostRequest         发布文章的请求结构体
+//
 //	@Param	title				body	string	true	"文章标题"
 //	@Param	image				body	string	true	"文章图片(可选)"
 //	@Param	visibility			body	string	true	"文章可见性(可选,默认 private)"

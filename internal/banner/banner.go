@@ -16,5 +16,5 @@ func InitBanner() {
  ════════════════════════════════════════════
      Simplicity is the ultimate sophistication
 `
-	fmt.Println(banner)
+	fmt.Print(banner)
 }

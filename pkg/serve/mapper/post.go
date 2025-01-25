@@ -20,8 +20,8 @@ func getValidCategoryIDs(postID int64, categoryIDs string) (string, bool, error)
 	updated := false
 
 	for _, id := range ids {
-		var category category.Category
-		err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&category).Error
+		var cat category.Category
+		err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&cat).Error
 		if err == nil {
 			validIDs = append(validIDs, id)
 		} else {
@@ -62,26 +62,26 @@ func GetPostByID(id int64) (*post.Post, error) {
 		return nil, fmt.Errorf("无效文章ID: %d", id)
 	}
 
-	var post post.Post
-	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&post).Error
+	var pos post.Post
+	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&pos).Error
 	if err != nil {
 		return nil, err
 	}
 
-	validCategoryIDs, updated, err := getValidCategoryIDs(post.ID, post.CategoryIDs)
+	validCategoryIDs, updated, err := getValidCategoryIDs(pos.ID, pos.CategoryIDs)
 	if err != nil {
 		return nil, err
 	}
-	post.CategoryIDs = validCategoryIDs
+	pos.CategoryIDs = validCategoryIDs
 
 	if updated {
-		err = global.DB.Save(&post).Error
+		err = global.DB.Save(&pos).Error
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return &post, nil
+	return &pos, nil
 }
 
 // GetPostsByTitle 通过 Title 获取所有匹配的文章
@@ -138,8 +138,8 @@ func GetAllPostsWithPaging(page, pageSize int) ([]*post.Post, int64, error) {
 	}
 
 	// 文章类别 ID 列表更新
-	for i, post := range posts {
-		validCategoryIDs, updated, err := getValidCategoryIDs(post.ID, post.CategoryIDs)
+	for i, pos := range posts {
+		validCategoryIDs, updated, err := getValidCategoryIDs(pos.ID, pos.CategoryIDs)
 		if err != nil {
 			return nil, 0, err
 		}

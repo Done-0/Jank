@@ -8,6 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+
 	"jank.com/jank_blog/internal/global"
 	model "jank.com/jank_blog/internal/model/account"
 	"jank.com/jank_blog/internal/utils"
@@ -23,11 +24,8 @@ var (
 )
 
 const (
-	AccAuthTokenCachePrefix         = "ACC_AUTH_TOKEN_CACHE_PREFIX"
-	AccAuthTokenCacheExpire         = 60 * 15 // 15 分钟
-	RefreshAuthTokenCachePrefix     = "REFRESH_AUTH_TOKEN_CACHE_PREFIX"
-	RefreshAuthTokenCacheExpire     = 60 * 60 * 24 * 7 // 7 天
-	RefreshAuthTokenCacheUserExpire = 60 * 3           // 3 分钟
+	AccAuthTokenCachePrefix     = "ACC_AUTH_TOKEN_CACHE_PREFIX"
+	RefreshAuthTokenCachePrefix = "REFRESH_AUTH_TOKEN_CACHE_PREFIX"
 )
 
 // GetAccount 获取用户信息逻辑
@@ -48,7 +46,7 @@ func GetAccount(GetAccountRequest *dto.GetAccountRequest, c echo.Context) (*acco
 	return acc, nil
 }
 
-// Register 用户注册逻辑
+// RegisterUser 用户注册逻辑
 func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.Account, error) {
 	registerLock.Lock()
 	defer registerLock.Unlock()
@@ -85,14 +83,14 @@ func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.
 }
 
 // LoginUser 登录用户逻辑
-func LoginUser(email, password, imgVerificationCode string, c echo.Context) (*account.LoginVO, error) {
-	user, err := mapper.GetAccountByEmail(email)
+func LoginUser(LoginRequest *dto.LoginRequest, c echo.Context) (*account.LoginVO, error) {
+	user, err := mapper.GetAccountByEmail(LoginRequest.Email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("用户不存在: %v", err)
 		return nil, fmt.Errorf("用户不存在: %v", err)
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(LoginRequest.Password))
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码错误: %v", err)
 		return nil, fmt.Errorf("密码错误: %v", err)
@@ -112,7 +110,7 @@ func LoginUser(email, password, imgVerificationCode string, c echo.Context) (*ac
 	return response, nil
 }
 
-// RefreshToken 刷新 token 逻辑
+// LogoutUser 刷新 token 逻辑
 func LogoutUser(userId int64, c echo.Context) error {
 	logoutLock.Lock()
 	defer logoutLock.Unlock()
@@ -124,14 +122,14 @@ func LogoutUser(userId int64, c echo.Context) error {
 	ctx := context.Background()
 
 	go func() {
-		cmd := global.Redis.Do(ctx, global.DelCmd, accKey)
+		cmd := global.RedisClient.Do(ctx, global.DelCmd, accKey)
 		if cmd.Err() != nil {
 			utils.BizLogger(c).Errorf("删除鉴权 token 缓存失败: %v", cmd.Err())
 		}
 	}()
 
 	go func() {
-		cmd := global.Redis.Do(ctx, global.DelCmd, refreshKey)
+		cmd := global.RedisClient.Do(ctx, global.DelCmd, refreshKey)
 		if cmd.Err() != nil {
 			utils.BizLogger(c).Errorf("删除刷新 token 缓存失败: %v", cmd.Err())
 		}

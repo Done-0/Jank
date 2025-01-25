@@ -100,7 +100,7 @@ func processToken(c echo.Context, token *jwt.Token, tokenString string, config J
 		exp := claims["exp"].(float64)
 		expireTime := time.Until(time.Unix(int64(exp), 0))
 
-		err := global.Redis.Set(context.Background(), redisKey, tokenString, expireTime).Err()
+		err := global.RedisClient.Set(context.Background(), redisKey, tokenString, expireTime).Err()
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "无法存储 Token 到 Redis")
 		}

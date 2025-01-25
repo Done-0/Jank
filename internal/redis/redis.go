@@ -20,7 +20,7 @@ func New(config *configs.Config) {
 		global.SysLog.Errorf("Redis 连接失败: %v", err)
 		return
 	}
-	global.Redis = client
+	global.RedisClient = client
 	global.SysLog.Infof("Redis 连接成功!")
 }
 

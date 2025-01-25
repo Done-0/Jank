@@ -6,7 +6,7 @@ import (
 
 // Account 用户账户模型
 type Account struct {
-	base.BaseModel
+	base.Base
 	Phone    string `gorm:"type:varchar(32);unique;null" json:"phone"`                 // 手机号，次登录方式
 	Email    string `gorm:"type:varchar(64);unique;not null" json:"email"`             // 邮箱，主登录方式
 	Password string `gorm:"type:varchar(255);not null" json:"password"`                // 加密密码

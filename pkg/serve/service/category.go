@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
+	
 	model "jank.com/jank_blog/internal/model/category"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/mapper"
@@ -21,7 +22,7 @@ func GetCategoryByID(id int64, c echo.Context) (*model.Category, error) {
 
 // GetCategoryTree 获取类目树
 func GetCategoryTree(c echo.Context) ([]model.Category, error) {
-	categories, err := mapper.GetAllActivedCategories()
+	categories, err := mapper.GetAllActivatedCategories()
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
 		return nil, fmt.Errorf("获取类目树失败: %v", err)

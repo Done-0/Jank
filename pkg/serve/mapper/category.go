@@ -9,12 +9,12 @@ import (
 
 // GetCategoryByID 根据 ID 查找类目
 func GetCategoryByID(id int64) (*category.Category, error) {
-	var category category.Category
-	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&category).Error
+	var cat category.Category
+	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&cat).Error
 	if err != nil {
 		return nil, err
 	}
-	return &category, nil
+	return &cat, nil
 }
 
 // GetCategoriesByParentID 根据父类目 ID 查找直接子类目
@@ -50,8 +50,8 @@ func GetCategoriesByPath(path string) ([]*category.Category, error) {
 	return categories, nil
 }
 
-// GetAllCategories 获取所有未删除的类目
-func GetAllActivedCategories() ([]*category.Category, error) {
+// GetAllActivatedCategories 获取所有未删除的类目
+func GetAllActivatedCategories() ([]*category.Category, error) {
 	var categories []*category.Category
 	err := global.DB.Where("deleted = ?", 0).
 		Find(&categories).Error

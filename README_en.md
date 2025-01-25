@@ -1,10 +1,10 @@
-<p align="center">
+<p style="text-align: center;">
   <a><img src="https://s2.loli.net/2025/01/02/6F8fzMvrBDCATZk.png" alt="Jank"></a>
 </p>
-<p align="center">
-    <em>Jank is a lightweight blogging system developed using Go and the Echo framework, focusing on simplicity, low coupling, and high extensibility.</em>
+<p style="text-align: center;">
+  <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
 </p>
-<p align="center">
+<p style="text-align: center;">
   <a href="https://img.shields.io/github/stars/Done-0/Jank?style=social" target="_blank">
     <img src="https://img.shields.io/github/stars/Done-0/Jank?style=social" alt="Stars">
   </a> &nbsp;
@@ -24,7 +24,7 @@
     <img src="https://img.shields.io/github/license/Done-0/Jank" alt="License">
   </a>
 </p>
-<p align="center" style="margin: 0; padding: 0;">
+<p style="text-align: center; margin: 0; padding: 0; position: relative; top: -5px;">
   <span style="text-decoration: underline; color: grey;">English</span> | <a href="README.md" style="text-decoration: none;">简体中文</a>
 </p>
 
@@ -63,6 +63,10 @@ Jank is a lightweight blogging system developed using Go and the Echo framework,
 1. **Install Dependencies**:
 
    ```bash
+   # install swagger utils
+   go install github.com/swaggo/swag/cmd/swag@latest
+   
+   # install dependencies
    go mod tidy
    ```
 
@@ -70,7 +74,7 @@ Jank is a lightweight blogging system developed using Go and the Echo framework,
    Modify the database and email configurations in the `configs/config.yaml` file as shown below:
 
    ```yaml
-   # Database Password
+   # MySQL Database password (required)
    DB_PSW: "<DATABASE_PASSWORD>"
 
    # QQ email and SMTP authorization code (optional)
@@ -88,11 +92,14 @@ Jank is a lightweight blogging system developed using Go and the Echo framework,
    Or use Air for hot reloading:
 
    ```bash
+   # install air, requires go 1.22+
+   go install github.com/air-verse/air@latest
+   
    air -c ./configs/.air.toml
    ```
 
 4. **Access the API**:
-   Open your browser and go to [http://localhost:9010/ping](http://localhost:9010/ping).
+   Open your browser and go to [http://localhost:9010/ping](http://localhost:9010/ping) when you start the system locally.
 
 ## Docker Deployment
 
@@ -107,33 +114,13 @@ docker-compose up -d
 ## Architecture Diagram
 Architecture Diagram and Visualized API Documentation: Open the `docs/jank_blog_architecture.drawio` file in the project root directory.
 
-## Code Statistics
-
-```bash
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-Go                              74            556            566           4334
-JSON                             2              0              0           2259
-YAML                             3              7              5           1145
-Markdown                        28             76              0            257
-TOML                             1              6              0             36
--------------------------------------------------------------------------------
-TOTAL                          108            645            571           8031
--------------------------------------------------------------------------------
-```
+> note: This document is drawn by draw.io, which requires the installation of the draw.io software to view.
 
 ## Official Community
 
 If you have any questions or suggestions, feel free to join the official community for discussion.
 
-<img src="https://s2.loli.net/2025/01/04/cVqDO7a4djAPmEJ.jpg" alt="Official Community" width="300" />
-
-## Sponsorship
-
-We welcome support for the development of the Jank project. Your support is the driving force behind its progress.
-
-<img src="https://s2.loli.net/2025/01/08/8eaDgiHRGop67Ul.jpg" alt="Sponsorship" width="300" />
+<img src="https://s2.loli.net/2025/01/25/L9BspuHnrIeim7S.jpg" alt="Official Community" width="300" />
 
 ## Contact Information
 

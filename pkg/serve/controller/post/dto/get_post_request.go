@@ -1,6 +1,7 @@
 package dto
 
-// GetPostRequest 获取文章的请求结构体
+// GetOnePostRequest        获取文章的请求结构体
+//
 //	@Param	id		path	string	true	"文章 ID"
 //	@Param	title	query	string	false	"文章标题"
 type GetOnePostRequest struct {

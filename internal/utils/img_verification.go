@@ -5,20 +5,18 @@ import (
 )
 
 const (
-	CaptchaSource                  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" // 验证码字符源
-	ImgVerificationCodeCachePrefix = "IMG:VERIFICATION:CODE:CACHE:"         // 验证码存储键前缀
-	FontFile                       = "wqy-microhei.ttc"                     // 字体文件
-	ClearAfterCheck                = true                                   // 验证后是否清除验证码
-	ImgHeight                      = 80                                     // 验证码图片高度
-	ImgWidth                       = 200                                    // 验证码图片宽度
-	NoiseCount                     = 3                                      // 干扰点数量
-	CaptchaLength                  = 4                                      // 验证码字符长度
+	CaptchaSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" // 验证码字符源
+	FontFile      = "wqy-microhei.ttc"                     // 字体文件
+	ImgHeight     = 80                                     // 验证码图片高度
+	ImgWidth      = 200                                    // 验证码图片宽度
+	NoiseCount    = 3                                      // 干扰点数量
+	CaptchaLength = 4                                      // 验证码字符长度
 )
 
 var store = base64Captcha.DefaultMemStore
 
 // GenImgVerificationCode 生成图形验证码
-func GenImgVerificationCode(email string) (string, string, error) {
+func GenImgVerificationCode() (string, string, error) {
 	driver := createDriver()
 	captcha := base64Captcha.NewCaptcha(driver, store)
 

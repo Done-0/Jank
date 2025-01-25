@@ -5,12 +5,12 @@ import (
 	"jank.com/jank_blog/pkg/router/routes"
 )
 
-// @title			Jank Blog API
+// RegisterRoutes   @title			Jank Blog API
 // @version		    1.0
 // @description	    This is the API documentation for Jank Blog.
 // @host			localhost:9010
 // @BasePath		/
-// RegisterRoutes 函数用于注册应用程序的路由
+// RegisterRoutes  函数用于注册应用程序的路由
 func RegisterRoutes(app *echo.Echo) {
 	// 创建多版本 API 路由组
 	api1 := app.Group("/api/v1")

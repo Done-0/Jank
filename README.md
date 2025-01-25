@@ -1,10 +1,10 @@
-<p align="center">
+<p style="text-align: center;">
   <a><img src="https://s2.loli.net/2025/01/02/6F8fzMvrBDCATZk.png" alt="Jank"></a>
 </p>
-<p align="center">
-    <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
+<p style="text-align: center;">
+  <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
 </p>
-<p align="center">
+<p style="text-align: center;">
   <a href="https://img.shields.io/github/stars/Done-0/Jank?style=social" target="_blank">
     <img src="https://img.shields.io/github/stars/Done-0/Jank?style=social" alt="Stars">
   </a> &nbsp;
@@ -24,13 +24,15 @@
     <img src="https://img.shields.io/github/license/Done-0/Jank" alt="License">
   </a>
 </p>
-<p align="center" style="margin: 0; padding: 0; position: relative; top: -5px;">
+<p style="text-align: center; margin: 0; padding: 0; position: relative; top: -5px;">
   <span style="text-decoration: underline; color: grey;">简体中文</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
 </p>
 
 ---
 
 Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，设计理念强调极简、低耦合和高扩展，旨在为用户提供功能丰富、界面简洁、操作简单且安全可靠的博客体验。
+
+> 本项目仍处于开发阶段，欢迎提供宝贵意见！
 
 ## 技术栈
 
@@ -40,7 +42,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **Redis**：热门缓存解决方案，提供快速数据存取和持久化选项。
 - **JWT**：安全的用户身份验证机制，确保数据传输的完整性和安全性。
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
-- **前端**：Vue 3 + Nuxt + Shadcn-vue（原项目已不再维护，诚邀前端大佬加入开发）。
+- **前端**：Vue 3 + Nuxt + Shadcn-vue（原项目已不再维护，诚邀各位前端大佬共同开发）。
 
 ## 功能模块
 
@@ -54,15 +56,18 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
   - 使用 Logrus 实现日志记录
   - 支持 CORS 跨域请求
   - 提供 CSRF 和 XSS 防护
-  - 支持 Markdown 的服务端渲染
-
-> **其他模块正在开发中**，欢迎提供宝贵意见和建议！
+  - 支持 Markdown 的服务端渲染(暂停维护)
+  - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
 ## 本地开发
 
 1. **安装依赖**：
 
    ```bash
+   # 安装 swagger 工具
+   go install github.com/swaggo/swag/cmd/swag@latest
+   
+   # 安装依赖包
    go mod tidy
    ```
 
@@ -70,7 +75,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
 
    ```yaml
-   # 数据库密码
+   # mysql 数据库密码
    DB_PSW: "<DATABASE_PASSWORD>"
 
    # QQ 邮箱和 SMTP 授权码（可选）
@@ -87,12 +92,18 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
    或使用 Air 进行热重载：
 
+   > 此方法最为便捷，但提前配置环境变量 GOPATH。
+
    ```bash
+   # 安装 air，需要 go 1.22 或更高版本
+   go install github.com/air-verse/air@latest
+   
+   # 热重载启动
    air -c ./configs/.air.toml
    ```
 
 4. **访问接口**：  
-   打开浏览器，访问 [http://localhost:9010/ping](http://localhost:9010/ping)
+   本地启动应用后，浏览器访问 [http://localhost:9010/ping](http://localhost:9010/ping)
 
 ## Docker 容器部署
 
@@ -110,35 +121,15 @@ docker-compose up -d
 
 **架构图及可视化接口文档**：在项目根目录中打开 `docs/jank_blog_architecture.drawio` 文件。
 
-## 代码统计
-
-```bash
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-Go                              74            556            566           4334
-JSON                             2              0              0           2259
-YAML                             3              7              5           1145
-Markdown                        28             76              0            257
-TOML                             1              6              0             36
--------------------------------------------------------------------------------
-TOTAL                          108            645            571           8031
--------------------------------------------------------------------------------
-```
+> 注：该文档由 draw.io 绘制，需要安装 draw.io 软件查看。
 
 ## 官方社区
 
 如果有任何疑问或建议，欢迎加入官方社区交流。
 
-<img src="https://s2.loli.net/2025/01/04/cVqDO7a4djAPmEJ.jpg" alt="官方社区" width="300" />
+<img src="https://s2.loli.net/2025/01/25/L9BspuHnrIeim7S.jpg" alt="官方社区" width="300" />
 
-## 赞助
-
-欢迎支持 Jank 项目的开发，您的支持是我前进的动力。
-
-<img src="https://s2.loli.net/2025/01/08/8eaDgiHRGop67Ul.jpg" alt="赞助" width="300" />
-
-## 联系方式
+## 联系合作
 
 - **QQ**: 927171598
 - **邮箱**：<EMAIL>fenderisfine@outlook.com
@@ -149,8 +140,8 @@ TOTAL                          108            645            571           8031
 
 ## GitHub 统计
 
-<img src="https://github-readme-stats.vercel.app/api?username=Done-0&show_icons=true&hide_title=true&theme=radical" width="100%" height="65%">
+<img src="https://github-readme-stats.vercel.app/api?username=Done-0&show_icons=true&hide_title=true&theme=radical" width="100%" height="65%" alt="GitHub Stats">
 
 ## 增长趋势
 
-<img src="https://api.star-history.com/svg?repos=Done-0/Jank&type=timeline" width="100%" height="65%">
+<img src="https://api.star-history.com/svg?repos=Done-0/Jank&type=timeline" width="100%" height="65%" alt="GitHub Stats">

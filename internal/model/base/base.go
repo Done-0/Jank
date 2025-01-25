@@ -9,8 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// BaseModel 包含通用字段
-type BaseModel struct {
+// Base 包含通用字段
+type Base struct {
 	ID          int64   `gorm:"primaryKey;autoIncrement" json:"id"`       // 主键
 	GmtCreate   int64   `gorm:"type:bigint" json:"gmt_create"`            // 创建时间
 	GmtModified int64   `gorm:"type:bigint" json:"gmt_modified"`          // 更新时间
@@ -39,7 +39,7 @@ func (j JSONMap) Value() (driver.Value, error) {
 }
 
 // BeforeCreate 创建前操作，设置时间戳等
-func (m *BaseModel) BeforeCreate(db *gorm.DB) (err error) {
+func (m *Base) BeforeCreate(db *gorm.DB) (err error) {
 	currentTime := time.Now().Unix()
 	m.GmtCreate = currentTime
 	m.GmtModified = currentTime
@@ -51,7 +51,7 @@ func (m *BaseModel) BeforeCreate(db *gorm.DB) (err error) {
 }
 
 // BeforeUpdate 更新前操作，更新修改时间
-func (m *BaseModel) BeforeUpdate(db *gorm.DB) (err error) {
+func (m *Base) BeforeUpdate(db *gorm.DB) (err error) {
 	m.GmtModified = time.Now().Unix()
 	return nil
 }

@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	bizerr "jank.com/jank_blog/internal/error"
+
+	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
-	verification "jank.com/jank_blog/pkg/serve/controller/verification"
+	"jank.com/jank_blog/pkg/serve/controller/verification"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
 )
@@ -31,17 +32,17 @@ const (
 func GetAccount(c echo.Context) error {
 	req := new(dto.GetAccountRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	response, err := service.GetAccount(req, c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -63,25 +64,25 @@ func GetAccount(c echo.Context) error {
 func RegisterAcc(c echo.Context) error {
 	req := new(dto.RegisterRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	if !verification.VerificationImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
+	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
 	user, err := service.RegisterUser(req, c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(user, c))
@@ -102,25 +103,21 @@ func RegisterAcc(c echo.Context) error {
 func LoginAccount(c echo.Context) error {
 	req := new(dto.LoginRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	if !verification.VerificationImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
+	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
 	}
 
-	if errors := utils.Validator(*req); errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest, "参数验证失败"), c))
-	}
-
-	response, err := service.LoginUser(req.Email, req.Password, req.ImgVerificationCode, c)
+	response, err := service.LoginUser(req, c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizerr.New(bizerr.UnKnowErr, err.Error()), c))
+		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizErr.New(bizErr.UnKnowErr, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -158,12 +155,12 @@ func LogoutAccount(c echo.Context) error {
 	userId, ok := c.Get(LocalsUserIdKey).(int64)
 	if !ok {
 		utils.BizLogger(c).Error("用户未登录")
-		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizerr.New(bizerr.UnKnowErr, "用户未登录"), c))
+		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizErr.New(bizErr.UnKnowErr, "用户未登录"), c))
 	}
 
 	if err := service.LogoutUser(userId, c); err != nil {
 		utils.BizLogger(c).Errorf("注销登录失败：%v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizerr.New(bizerr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	utils.BizLogger(c).Infof("用户 %d 已注销登录", userId)
@@ -188,30 +185,26 @@ func ResetPassword(c echo.Context) error {
 	userId, ok := c.Get(LocalsUserIdKey).(int64)
 	if !ok {
 		utils.BizLogger(c).Errorf("%s 获取失败", LocalsUserIdKey)
-		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizerr.New(bizerr.UnKnowErr, "用户未登录"), c))
+		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizErr.New(bizErr.UnKnowErr, "用户未登录"), c))
 	}
 
 	req := new(dto.ResetPwdRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizerr.New(bizerr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
-	}
-
-	if errors := utils.Validator(*req); errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest, "参数验证失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
 	err := service.ResetPassword(userId, req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizerr.New(bizerr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("密码重置成功", c))

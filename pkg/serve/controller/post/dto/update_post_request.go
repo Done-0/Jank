@@ -1,6 +1,6 @@
 package dto
 
-// UpdatePostRequest 更新文章请求参数结构体
+// UpdateOnePostRequest       更新文章请求参数结构体
 // @Param   id   			  body    int	    	true      "文章 ID"
 // @Param   title		      body 	  string        false	  "文章标题"
 // @Param   image			  body 	  string        false     "文章图片(可选)"

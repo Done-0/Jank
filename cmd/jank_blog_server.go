@@ -13,6 +13,7 @@ import (
 	"jank.com/jank_blog/pkg/router"
 )
 
+// Start 启动服务
 func Start() {
 	config, err := configs.LoadConfig()
 	if err != nil {
@@ -20,7 +21,7 @@ func Start() {
 		return
 	}
 
-	// 创建echo实例
+	// 创建 echo 实例
 	app := echo.New()
 	app.HideBanner = true
 	banner.InitBanner()

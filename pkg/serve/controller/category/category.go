@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	bizerr "jank.com/jank_blog/internal/error"
+
+	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/category/dto"
 	"jank.com/jank_blog/pkg/serve/service"
@@ -26,17 +27,17 @@ import (
 func GetOneCategory(c echo.Context) error {
 	req := new(dto.GetOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	category, err := service.GetCategoryByID(req.ID, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(category, c))
@@ -54,7 +55,7 @@ func GetOneCategory(c echo.Context) error {
 func GetCategoryTree(c echo.Context) error {
 	categories, err := service.GetCategoryTree(c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(categories, c))
@@ -75,23 +76,23 @@ func GetCategoryTree(c echo.Context) error {
 func GetCategoryChildrenTree(c echo.Context) error {
 	req := new(dto.GetOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	childrenCategories, err := service.GetCategoryChildrenByID(req.ID, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(childrenCategories, c))
 }
 
-// createOneCategory godoc
+// CreateOneCategory     godoc
 // @Summary      创建类目
 // @Description  创建新的类目
 // @Tags         类目
@@ -105,23 +106,23 @@ func GetCategoryChildrenTree(c echo.Context) error {
 func CreateOneCategory(c echo.Context) error {
 	req := new(dto.CreateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	createdCategory, err := service.CreateCategory(req.Name, req.Description, req.ParentID, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(createdCategory, c))
 }
 
-// updateOneCategory godoc
+// UpdateOneCategory     godoc
 // @Summary      更新类目
 // @Description  更新已存在的类目信息
 // @Tags         类目
@@ -138,23 +139,23 @@ func CreateOneCategory(c echo.Context) error {
 func UpdateOneCategory(c echo.Context) error {
 	req := new(dto.UpdateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	updatedCategory, err := service.UpdateCategory(req.ID, req.Name, req.Description, req.ParentID, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(updatedCategory, c))
 }
 
-// deleteOneCategory godoc
+// DeleteOneCategory   godoc
 // @Summary      删除类目
 // @Description  根据类目 ID 删除类目
 // @Tags         类目
@@ -171,17 +172,17 @@ func DeleteOneCategory(c echo.Context) error {
 	req := new(dto.DeleteOneCategoryRequest)
 
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizerr.New(bizerr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	errors := utils.Validator(req)
+	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizerr.New(bizerr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
 	category, err := service.DeleteCategory(req.ID, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizerr.New(bizerr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(category, c))

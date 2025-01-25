@@ -1,6 +1,7 @@
 package dto
 
-// RegisterRequest 用户注册请求体
+// RegisterRequest  用户注册请求体
+//
 //	@Description	用户注册所需参数
 //	@Param			email		body	string	true	"用户邮箱"
 //	@Param			phone		body	string	true	"用户手机号"

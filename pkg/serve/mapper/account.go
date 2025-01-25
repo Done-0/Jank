@@ -13,12 +13,12 @@ func GetAccountByEmail(email string) (*account.Account, error) {
 		return nil, fmt.Errorf("邮箱不能为空")
 	}
 
-	var account account.Account
-	err := global.DB.Where("email = ? AND deleted = ?", email, 0).First(&account).Error
+	var acc account.Account
+	err := global.DB.Where("email = ? AND deleted = ?", email, 0).First(&acc).Error
 	if err != nil {
 		return nil, err
 	}
-	return &account, nil
+	return &acc, nil
 }
 
 // GetAccountByUserID 根据用户ID获取账户信息
@@ -27,12 +27,12 @@ func GetAccountByUserID(userID int64) (*account.Account, error) {
 		return nil, fmt.Errorf("无效用户ID: %d", userID)
 	}
 
-	var account account.Account
-	err := global.DB.Where("user_id = ? AND deleted = ?", userID, 0).First(&account).Error
+	var acc account.Account
+	err := global.DB.Where("user_id = ? AND deleted = ?", userID, 0).First(&acc).Error
 	if err != nil {
 		return nil, err
 	}
-	return &account, nil
+	return &acc, nil
 }
 
 // CreateAccount 创建新账户

@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/internal/global"
 )
@@ -51,7 +52,7 @@ func createDBIfNotExists(db *gorm.DB, dbName string) error {
 
 	if !exists {
 		global.SysLog.Infof("数据库 %s 不存在，正在创建...", dbName)
-		return db.Exec(fmt.Sprintf("CREATE DATABASE %s CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", dbName)).Error
+		return db.Exec(fmt.Sprintf("CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", dbName)).Error
 	}
 	return nil
 }

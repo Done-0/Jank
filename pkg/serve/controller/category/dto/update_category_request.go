@@ -4,7 +4,7 @@ import (
 	"jank.com/jank_blog/pkg/vo/category"
 )
 
-// UpdateOneCategoryRequest 更新类目请求
+// UpdateOneCategoryRequest    更新类目请求
 // @Param id          path     int64   true  "类目ID"
 // @Param name        formData string  true  "类目名称"
 // @Param description formData string  false "类目描述"

@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Xss 中间件的简便使用方式，使用默认配置
+// InitXss 返回一个 XSS 防护中间件，使用默认配置
 func InitXss() echo.MiddlewareFunc {
 	return xssWithConfig(defaultXSSConfig)
 }

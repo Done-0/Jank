@@ -5,13 +5,13 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	biz_err "jank.com/jank_blog/internal/error"
+	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/global"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/vo"
 )
 
-// @Summary      Ping API
+// Ping          @Summary       Ping API
 // @Description  测试接口
 // @Tags         test
 // @Accept       json
@@ -23,7 +23,7 @@ func Ping(c echo.Context) error {
 	return c.String(http.StatusOK, "Pong successfully!\n")
 }
 
-// @Summary      Hello API
+// Hello         @Summary       Hello API
 // @Description  测试接口
 // @Tags         test
 // @Accept       json
@@ -35,7 +35,7 @@ func Hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, Jank 🎉!\n")
 }
 
-// @Summary      测试日志接口
+// TestLogger    @Summary       测试日志接口
 // @Description  用于测试日志功能
 // @Tags         test
 // @Accept       json
@@ -47,7 +47,7 @@ func TestLogger(c echo.Context) error {
 	return c.String(http.StatusOK, "测试日志成功!")
 }
 
-// @Summary      测试 Redis 接口
+// TestRedis     @Summary      测试 Redis 接口
 // @Description  用于测试 Redis 功能
 // @Tags         test
 // @Accept       json
@@ -56,7 +56,7 @@ func TestLogger(c echo.Context) error {
 // @Router       /test/testRedis [get]
 func TestRedis(c echo.Context) error {
 	utils.BizLogger(c).Infof("开始写入缓存...")
-	err := global.Redis.Set(c.Request().Context(), "TEST:", "测试 value", 0).Err()
+	err := global.RedisClient.Set(c.Request().Context(), "TEST:", "测试 value", 0).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("测试写入缓存失败: %v", err)
 		return err
@@ -64,7 +64,7 @@ func TestRedis(c echo.Context) error {
 	utils.BizLogger(c).Infof("写入缓存成功...")
 
 	utils.BizLogger(c).Infof("开始读取缓存...")
-	articlesCache, err := global.Redis.Get(c.Request().Context(), "TEST:").Result()
+	articlesCache, err := global.RedisClient.Get(c.Request().Context(), "TEST:").Result()
 	if err != nil {
 		utils.BizLogger(c).Errorf("测试读取缓存失败: %v", err)
 		return err
@@ -73,7 +73,7 @@ func TestRedis(c echo.Context) error {
 	return c.String(http.StatusOK, "测试缓存功能完成!")
 }
 
-// @Summary      测试成功响应接口
+// TestSuccRes   @Summary       测试成功响应接口
 // @Description  用于测试成功响应
 // @Tags         test
 // @Accept       json
@@ -85,7 +85,7 @@ func TestSuccRes(c echo.Context) error {
 	return c.JSON(http.StatusOK, vo.Success("测试成功响应成功!", c))
 }
 
-// @Summary      测试错误响应接口
+// TestErrRes    @Summary      测试错误响应接口
 // @Description  用于测试错误响应
 // @Tags         test
 // @Accept       json
@@ -94,10 +94,10 @@ func TestSuccRes(c echo.Context) error {
 // @Router       /test/testErr [get]
 func TestErrRes(c echo.Context) error {
 	utils.BizLogger(c).Info("测试失败响应...")
-	return c.JSON(http.StatusInternalServerError, vo.Fail(biz_err.New(biz_err.ServerError), nil, c))
+	return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError), nil, c))
 }
 
-// @Summary      测试错误处理中间件接口
+// TestErrorMiddleware         @Summary    测试错误处理中间件接口
 // @Description  用于测试错误中间件
 // @Tags         test
 // @Accept       json
@@ -105,10 +105,11 @@ func TestErrRes(c echo.Context) error {
 // @Success      500  {string}  nil
 // @Router       /test/testErrorMiddleware [get]
 func TestErrorMiddleware(c echo.Context) error {
-	panic("测试业务异常")
+	utils.BizLogger(c).Info("测试错误处理中间件...")
+	panic("测试错误处理中间件...")
 }
 
-// @Summary      长时间请求接口
+// LongReq       @Summary       长时间请求接口
 // @Description  模拟一个耗时请求
 // @Tags         test
 // @Accept       json

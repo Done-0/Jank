@@ -1,6 +1,7 @@
 package post
 
-//  GetAllPostsVo 获取所有帖子的响应结构
+// GetAllPostsVo    获取所有帖子的响应结构
+//
 //	@Description	获取所有帖子时返回的响应数据
 //	@Param			id				body	int64	true	"帖子唯一标识"
 //	@Param			title			body	string	true	"帖子标题"
