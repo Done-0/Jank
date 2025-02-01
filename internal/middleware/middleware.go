@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/labstack/echo/v4"
-	requestMiddleware "github.com/labstack/echo/v4/middleware"
 
+	requestMiddleware "github.com/labstack/echo/v4/middleware"
 	"jank.com/jank_blog/internal/logger"
 	corsMiddleware "jank.com/jank_blog/internal/middleware/cors"
 	errorMiddleware "jank.com/jank_blog/internal/middleware/error"

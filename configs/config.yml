@@ -2,7 +2,6 @@
 app:
   APP_NAME: "JANK_BLOG"
   APP_PORT: "9010"
-  SWAGGER_HOST: "localhost:9010"
   QQ_SMTP: "<QQ_SMTP>"
   FROM_EMAIL: "<FROM_QQ_EMAIL>"
 
@@ -11,8 +10,8 @@ database:
   DB_NAME: "jank"
   DB_HOST: "127.0.0.1"
   DB_PORT: "3306"
-  DB_USER: "root"
-  DB_PSW: "Lh20230623"
+  DB_USER: "<DATABASE_USER>"
+  DB_PSW: "<DATABASE_PASSWORD>"
 
 # Redis 相关
 redis:

@@ -13,7 +13,6 @@ func RegisterAccountRoutes(r ...*echo.Group) {
 	accountGroupV1.POST("/getAccount", account.GetAccount)
 	accountGroupV1.POST("/registerAccount", account.RegisterAcc)
 	accountGroupV1.POST("/loginAccount", account.LoginAccount)
-	accountGroupV1.POST("/getUserProfile", account.GetUserProfile, auth_middleware.JWTMiddleware())
 	accountGroupV1.POST("/logoutAccount", account.LogoutAccount, auth_middleware.JWTMiddleware())
 	accountGroupV1.POST("/resetPassword", account.ResetPassword, auth_middleware.JWTMiddleware())
 }

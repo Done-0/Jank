@@ -30,7 +30,7 @@ func InitGlobalError() echo.MiddlewareFunc {
 
 				// 构建日志消息
 				logMessage := fmt.Sprintf("请求异常: %v | Method: %s | URI: %s | IP: %s | User-Agent: %s", err, requestMethod, requestURI, clientIP, userAgent)
-				global.SysLog.Errorf(logMessage)
+				global.SysLog.Error(logMessage)
 
 				return c.JSON(code, vo.Fail(nil, bizerr.New(code, err.Error()), c))
 			}

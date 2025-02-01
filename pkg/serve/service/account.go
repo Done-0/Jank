@@ -96,7 +96,7 @@ func LoginUser(LoginRequest *dto.LoginRequest, c echo.Context) (*account.LoginVO
 		return nil, fmt.Errorf("密码错误: %v", err)
 	}
 
-	accessTokenString, refreshTokenString, err := utils.GenerateJWT(uint(user.ID), user.Email)
+	accessTokenString, refreshTokenString, err := utils.GenerateJWT(uint(user.ID))
 	if err != nil {
 		utils.BizLogger(c).Errorf("生成 token 失败: %v", err)
 		return nil, fmt.Errorf("生成 token 失败: %v", err)

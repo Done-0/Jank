@@ -270,31 +270,6 @@ paths:
       summary: 获取账户信息
       tags:
       - 账户
-  /account/getUserProfile:
-    post:
-      description: 获取当前登录用户的个人信息
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/vo.Result'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-              type: object
-        "401":
-          description: 未授权
-          schema:
-            $ref: '#/definitions/vo.Result'
-      security:
-      - BearerAuth: []
-      summary: 从本地存储中获取用户信息
-      tags:
-      - 账户
   /account/loginAccount:
     post:
       consumes:

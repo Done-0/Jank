@@ -3,7 +3,7 @@
 		"_postman_id": "b0e1355c-b82b-45de-8e9b-293e9a7e46de",
 		"name": "Jank_blog",
 		"description": "Jank 博客系统接口文档",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38426642"
 	},
 	"item": [
@@ -24,7 +24,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/account/registerAccount"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/account/registerAccount",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"registerAccount"
+							]
+						}
 					},
 					"response": []
 				},
@@ -33,9 +48,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMjk0MzksInVzZXJJRCI6OH0.wp5HN-JMfbJkWwFpajfVjjK_Z08k4_5Etzy5F0D8aFw"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMjk0MzksInVzZXJJRCI6OH0.wp5HN-JMfbJkWwFpajfVjjK_Z08k4_5Etzy5F0D8aFw",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -48,7 +67,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/account/getAccount"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/account/getAccount",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"getAccount"
+							]
+						}
 					},
 					"response": []
 				},
@@ -57,9 +91,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -72,38 +110,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/account/loginAccount"
-					},
-					"response": []
-				},
-				{
-					"name": "getUserProfile",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzYwNjkxNTUsInVzZXJJZCI6MX0.jZWFgBFc_3plZyrhgGW4xknYmwcwhh1wOh6XRD_ZMG8"
-							}
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "",
-								"value": "",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "127.0.0.1:9010/api/v1/account/getUserProfile"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/account/loginAccount",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"loginAccount"
+							]
+						}
 					},
 					"response": []
 				},
@@ -121,7 +143,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/account/logoutAccount"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/account/logoutAccount",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"logoutAccount"
+							]
+						}
 					},
 					"response": []
 				},
@@ -130,9 +167,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzU5OTM3ODgsInVzZXJJZCI6MX0.rvpWjYWCNAFQ655_LqI94YFnMUg7nAkQRtyjtoKBRtQ"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzU5OTM3ODgsInVzZXJJZCI6MX0.rvpWjYWCNAFQ655_LqI94YFnMUg7nAkQRtyjtoKBRtQ",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -145,7 +186,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/account/resetPassword"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/account/resetPassword",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"resetPassword"
+							]
+						}
 					},
 					"response": []
 				}
@@ -206,9 +262,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [
@@ -228,7 +288,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/post/getOnePost"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/post/getOnePost",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"getOnePost"
+							]
+						}
 					},
 					"response": []
 				},
@@ -265,7 +340,22 @@
 								}
 							]
 						},
-						"url": "127.0.0.1:9010/api/v1/post/createOnePost"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/post/createOnePost",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"createOnePost"
+							]
+						}
 					},
 					"response": []
 				},
@@ -283,7 +373,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/post/updateOnePost"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/post/updateOnePost",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"updateOnePost"
+							]
+						}
 					},
 					"response": []
 				},
@@ -301,7 +406,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/post/deleteOnePost"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/post/deleteOnePost",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"deleteOnePost"
+							]
+						}
 					},
 					"response": []
 				}
@@ -328,7 +448,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/category/getOneCategory"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/category/getOneCategory",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"getOneCategory"
+							]
+						}
 					},
 					"response": []
 				},
@@ -337,7 +472,22 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "127.0.0.1:9010/api/v1/category/getCategoryTree"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/category/getCategoryTree",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"getCategoryTree"
+							]
+						}
 					},
 					"response": []
 				},
@@ -355,7 +505,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/category/createOneCategory"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/category/createOneCategory",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"createOneCategory"
+							]
+						}
 					},
 					"response": []
 				},
@@ -373,7 +538,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/category/updateOneCategory"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/category/updateOneCategory",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"updateOneCategory"
+							]
+						}
 					},
 					"response": []
 				},
@@ -391,7 +571,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/category/deleteOneCategory"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/category/deleteOneCategory",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"deleteOneCategory"
+							]
+						}
 					},
 					"response": []
 				},
@@ -409,7 +604,22 @@
 								}
 							}
 						},
-						"url": "127.0.0.1:9010/api/v1/category/getCategoryChildrenTree"
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/category/getCategoryChildrenTree",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"getCategoryChildrenTree"
+							]
+						}
 					},
 					"response": []
 				}
@@ -486,7 +696,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/ping"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/ping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"ping"
+							]
+						}
 					},
 					"response": []
 				},
@@ -495,7 +718,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/hello"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/hello",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"hello"
+							]
+						}
 					},
 					"response": []
 				},
@@ -504,7 +740,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/testLogger"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/testLogger",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"testLogger"
+							]
+						}
 					},
 					"response": []
 				},
@@ -513,7 +762,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/testRedis"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/testRedis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"testRedis"
+							]
+						}
 					},
 					"response": []
 				},
@@ -522,7 +784,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/testSuccess"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/testSuccess",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"testSuccess"
+							]
+						}
 					},
 					"response": []
 				},
@@ -531,7 +806,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/testErr"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/testErr",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"testErr"
+							]
+						}
 					},
 					"response": []
 				},
@@ -540,7 +828,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v1/test/testErrorMiddleware"
+						"url": {
+							"raw": "http://localhost:9010/api/v1/test/testErrorMiddleware",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"testErrorMiddleware"
+							]
+						}
 					},
 					"response": []
 				},
@@ -549,7 +850,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:9010/api/v2/test/long"
+						"url": {
+							"raw": "http://localhost:9010/api/v2/test/long",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v2",
+								"test",
+								"long"
+							]
+						}
 					},
 					"response": []
 				}

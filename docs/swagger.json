@@ -62,50 +62,6 @@
                 }
             }
         },
-        "/account/getUserProfile": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "获取当前登录用户的个人信息",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "账户"
-                ],
-                "summary": "从本地存储中获取用户信息",
-                "responses": {
-                    "200": {
-                        "description": "获取成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "additionalProperties": true
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "401": {
-                        "description": "未授权",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    }
-                }
-            }
-        },
         "/account/loginAccount": {
             "post": {
                 "description": "用户登录并获取访问令牌，支持图形验证码校验",

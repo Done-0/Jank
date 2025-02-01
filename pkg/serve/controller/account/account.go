@@ -15,7 +15,6 @@ import (
 
 const (
 	LocalsUserIdKey = "Locals_User_Id"
-	LocalsEmailKey  = "Locals_Email"
 )
 
 // GetAccount godoc
@@ -121,24 +120,6 @@ func LoginAccount(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
-}
-
-// GetUserProfile godoc
-// @Summary      从本地存储中获取用户信息
-// @Description  获取当前登录用户的个人信息
-// @Tags         账户
-// @Produce      json
-// @Success      200  {object}  vo.Result{data=map[string]interface{}}  "获取成功"
-// @Failure      401  {object}  vo.Result  "未授权"
-// @Security     BearerAuth
-// @Router       /account/getUserProfile [post]
-func GetUserProfile(c echo.Context) error {
-	userId, email := c.Get(LocalsUserIdKey), c.Get(LocalsEmailKey)
-
-	return c.JSON(http.StatusOK, vo.Success(map[string]interface{}{
-		LocalsUserIdKey: userId,
-		LocalsEmailKey:  email,
-	}, c))
 }
 
 // LogoutAccount godoc

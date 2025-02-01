@@ -31,8 +31,6 @@ func Start() {
 
 	// 初始化数据库连接并自动迁移模型
 	db.New(config)
-
-	// 自动迁移模型
 	db.AutoMigrate()
 
 	// 初始化 Redis 连接
