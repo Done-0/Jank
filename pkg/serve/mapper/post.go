@@ -32,7 +32,7 @@ func getValidCategoryIDs(postID int64, categoryIDs string) (string, bool, error)
 	newCategoryIDs := strings.Join(validIDs, ",")
 
 	if updated && postID > 0 {
-		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", newCategoryIDs).Error
+		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("categoryIds", newCategoryIDs).Error
 		if err != nil {
 			return "", false, err
 		}

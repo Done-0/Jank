@@ -10,7 +10,7 @@ type Post struct {
 	Visibility      string `gorm:"type:enum('public','private');not null;index" json:"visibility" default:"private"` // 可见性
 	ContentMarkdown string `gorm:"type:text" json:"contentMarkdown"`                                                 // Markdown 内容
 	ContentHTML     string `gorm:"type:text" json:"contentHtml"`                                                     // 渲染后的 HTML 内容
-	CategoryIDs     string `gorm:"type:text" json:"category_ids"`                                                    // 类目 ID 列表，以逗号分隔
+	CategoryIDs     string `gorm:"type:text" json:"categoryIds"`                                                     // 类目 ID 列表，以逗号分隔
 }
 
 func (Post) TableName() string {

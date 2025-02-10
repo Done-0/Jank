@@ -45,7 +45,7 @@ func initLogger() {
 
 	// 初始化 logrus
 	logger := logrus.New()
-	log.Printf(cfg.LogConfig.LogTimestampFmt)
+	log.Printf("%s", cfg.LogConfig.LogTimestampFmt)
 	logger.SetFormatter(&logrus.JSONFormatter{
 		TimestampFormat: cfg.LogConfig.LogTimestampFmt,
 	})

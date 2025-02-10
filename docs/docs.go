@@ -1416,7 +1416,7 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
-                "category_ids": {
+                "categoryIds": {
                     "type": "array",
                     "items": {
                         "type": "integer"
@@ -1580,11 +1580,11 @@ const docTemplate = `{
         "dto.UpdateOnePostRequest": {
             "type": "object",
             "required": [
-                "category_ids",
+                "categoryIds",
                 "id"
             ],
             "properties": {
-                "category_ids": {
+                "categoryIds": {
                     "type": "array",
                     "items": {
                         "type": "integer"
@@ -1614,7 +1614,7 @@ const docTemplate = `{
             "description": "获取所有帖子时返回的响应数据",
             "type": "object",
             "properties": {
-                "category_ids": {
+                "categoryIds": {
                     "type": "array",
                     "items": {
                         "type": "integer"

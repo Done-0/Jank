@@ -62,7 +62,7 @@ definitions:
     type: object
   dto.CreateOnePostRequest:
     properties:
-      category_ids:
+      categoryIds:
         items:
           type: integer
         type: array
@@ -181,7 +181,7 @@ definitions:
     type: object
   dto.UpdateOnePostRequest:
     properties:
-      category_ids:
+      categoryIds:
         items:
           type: integer
         type: array
@@ -199,13 +199,13 @@ definitions:
         default: private
         type: string
     required:
-    - category_ids
+    - categoryIds
     - id
     type: object
   post.GetAllPostsVo:
     description: 获取所有帖子时返回的响应数据
     properties:
-      category_ids:
+      categoryIds:
         items:
           type: integer
         type: array

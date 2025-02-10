@@ -366,7 +366,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"contentMarkdown\": \"string\",\r\n  \"id\": 22,\r\n  \"image\": \"string\",\r\n  \"title\": \"string\",\r\n  \"visibility\": \"private\",\r\n  \"category_ids\": [1]\r\n}",
+							"raw": "{\r\n  \"contentMarkdown\": \"string\",\r\n  \"id\": 22,\r\n  \"image\": \"string\",\r\n  \"title\": \"string\",\r\n  \"visibility\": \"private\",\r\n  \"categoryIds\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
