@@ -26,4 +26,6 @@ func RegisterRoutes(app *echo.Echo) {
 	routes.RegisterPostRoutes(api1)
 	// 注册类目相关的路由
 	routes.RegisterCategoryRoutes(api1)
+	// 注册评论相关的路由
+	routes.RegisterCommentRoutes(api1)
 }

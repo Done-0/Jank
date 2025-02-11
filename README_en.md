@@ -32,6 +32,8 @@
 
 Jank is a lightweight blogging system developed using Go and the Echo framework, with a design philosophy that emphasizes minimalism, low coupling, and high extensibility. It aims to provide users with a rich, clean, simple, and secure blogging experience.
 
+> The project is currently lacking front-end development. We welcome developers who are interested to contact me for collaboration. We look forward to your valuable input!
+
 ## Tech Stack
 
 - **Go**: A popular backend programming language suitable for building high-concurrency applications.
@@ -47,7 +49,7 @@ Jank is a lightweight blogging system developed using Go and the Echo framework,
 - **Account Module**: Implements JWT authentication, supporting user login, registration, logout, password changes, and personal information updates.
 - **Article Module**: Provides features for creating, viewing, updating, and deleting articles.
 - **Category Module**: Supports recursive category tree queries, single category queries, as well as category creation, update, and deletion.
-- **Comment Module**: Currently in development...
+- **Comment Module**: Provides functionality for comment creation, viewing, deletion, and replies, supporting the display of comment tree structures.
 - **Other Features**:
   - Provides OpenAPI documentation.
   - Integrates Air for hot reloading.

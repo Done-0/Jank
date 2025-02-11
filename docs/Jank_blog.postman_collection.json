@@ -366,7 +366,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"contentMarkdown\": \"string\",\r\n  \"id\": 22,\r\n  \"image\": \"string\",\r\n  \"title\": \"string\",\r\n  \"visibility\": \"private\",\r\n  \"categoryIds\": [1]\r\n}",
+							"raw": "{\r\n  \"contentMarkdown\": \"string\",\r\n  \"id\": 22,\r\n  \"image\": \"string\",\r\n  \"title\": \"string\",\r\n  \"visibility\": \"private\",\r\n  \"category_ids\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -869,6 +869,137 @@
 				}
 			],
 			"description": "测试接口"
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "getOneComment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/comment/getOneComment?id=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"comment",
+								"getOneComment"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCommentGraph",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/comment/getCommentGraph?post_id=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"comment",
+								"getCommentGraph"
+							],
+							"query": [
+								{
+									"key": "post_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createOneComment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"测试评论 1\",\n  \"user_id\": 1,\n  \"post_id\": 1,\n  \"reply_to_comment_id\": 0\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/comment/createOneComment",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"comment",
+								"createOneComment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteOneComment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:9010/api/v1/comment/deleteOneComment",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "9010",
+							"path": [
+								"api",
+								"v1",
+								"comment",
+								"deleteOneComment"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

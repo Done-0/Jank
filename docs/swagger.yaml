@@ -19,6 +19,9 @@ definitions:
       refresh_token:
         type: string
     type: object
+  base.JSONMap:
+    additionalProperties: true
+    type: object
   category.GetAllCategoriesVo:
     description: 获取所有类目时返回的响应数据
     properties:
@@ -45,6 +48,23 @@ definitions:
       path:
         type: string
     type: object
+  dto.CreateCommentRequest:
+    properties:
+      content:
+        maxLength: 1024
+        minLength: 1
+        type: string
+      post_id:
+        type: integer
+      reply_to_comment_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - content
+    - post_id
+    - user_id
+    type: object
   dto.CreateOneCategoryRequest:
     properties:
       description:
@@ -62,11 +82,11 @@ definitions:
     type: object
   dto.CreateOnePostRequest:
     properties:
-      categoryIds:
+      category_ids:
         items:
           type: integer
         type: array
-      contentMarkdown:
+      content_markdown:
         type: string
       image:
         type: string
@@ -78,7 +98,7 @@ definitions:
         default: private
         type: string
     required:
-    - contentMarkdown
+    - content_markdown
     - title
     type: object
   dto.DeleteOnePostRequest:
@@ -158,7 +178,7 @@ definitions:
     properties:
       children:
         items:
-          $ref: '#/definitions/category.GetOneCategoryVo'
+          $ref: '#/definitions/dto.UpdateOneCategoryRequest'
         type: array
       description:
         maxLength: 255
@@ -181,11 +201,11 @@ definitions:
     type: object
   dto.UpdateOnePostRequest:
     properties:
-      categoryIds:
+      category_ids:
         items:
           type: integer
         type: array
-      contentMarkdown:
+      content_markdown:
         type: string
       id:
         type: integer
@@ -199,19 +219,55 @@ definitions:
         default: private
         type: string
     required:
-    - categoryIds
+    - category_ids
     - id
+    type: object
+  model.Comment:
+    properties:
+      content:
+        description: 评论内容
+        type: string
+      deleted:
+        description: 逻辑删除
+        type: boolean
+      ext:
+        allOf:
+        - $ref: '#/definitions/base.JSONMap'
+        description: 扩展字段
+      gmt_create:
+        description: 创建时间
+        type: integer
+      gmt_modified:
+        description: 更新时间
+        type: integer
+      id:
+        description: 主键
+        type: integer
+      post_id:
+        description: 所属文章ID
+        type: integer
+      replies:
+        description: 子评论列表，用于构建图结构
+        items:
+          $ref: '#/definitions/model.Comment'
+        type: array
+      reply_to_comment_id:
+        description: 目标评论ID
+        type: integer
+      user_id:
+        description: 所属用户ID
+        type: integer
     type: object
   post.GetAllPostsVo:
     description: 获取所有帖子时返回的响应数据
     properties:
-      categoryIds:
+      category_ids:
         items:
           type: integer
         type: array
-      contentHtml:
+      content_html:
         type: string
-      contentMarkdown:
+      content_markdown:
         type: string
       id:
         type: integer
@@ -648,6 +704,103 @@ paths:
       summary: 更新类目
       tags:
       - 类目
+  /comment/createOneComment:
+    post:
+      consumes:
+      - application/json
+      description: 创建一条新的评论
+      parameters:
+      - description: 创建评论请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Comment'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 创建评论
+      tags:
+      - 评论
+  /comment/deleteOneComment:
+    post:
+      consumes:
+      - application/json
+      description: 通过评论 ID 进行软删除
+      parameters:
+      - description: 评论ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 软删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Comment'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "404":
+          description: 评论不存在
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 软删除评论
+      tags:
+      - 评论
+  /comment/getOneComment:
+    get:
+      consumes:
+      - application/json
+      description: 根据文章 ID 获取评论图结构
+      parameters:
+      - description: 文章ID
+        in: query
+        name: post_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Comment'
+                  type: array
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 获取评论图
+      tags:
+      - 评论
   /post/createOnePost:
     post:
       consumes:

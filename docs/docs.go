@@ -700,6 +700,167 @@ const docTemplate = `{
                 }
             }
         },
+        "/comment/createOneComment": {
+            "post": {
+                "description": "创建一条新的评论",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "评论"
+                ],
+                "summary": "创建评论",
+                "parameters": [
+                    {
+                        "description": "创建评论请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Comment"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/deleteOneComment": {
+            "post": {
+                "description": "通过评论 ID 进行软删除",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "评论"
+                ],
+                "summary": "软删除评论",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "评论ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "软删除成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Comment"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "404": {
+                        "description": "评论不存在",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/getOneComment": {
+            "get": {
+                "description": "根据文章 ID 获取评论图结构",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "评论"
+                ],
+                "summary": "获取评论图",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "文章ID",
+                        "name": "post_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/vo.Result"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/model.Comment"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
         "/post/createOnePost": {
             "post": {
                 "security": [
@@ -1349,6 +1510,10 @@ const docTemplate = `{
                 }
             }
         },
+        "base.JSONMap": {
+            "type": "object",
+            "additionalProperties": true
+        },
         "category.GetAllCategoriesVo": {
             "description": "获取所有类目时返回的响应数据",
             "type": "object",
@@ -1388,6 +1553,30 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.CreateCommentRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "post_id",
+                "user_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 1024,
+                    "minLength": 1
+                },
+                "post_id": {
+                    "type": "integer"
+                },
+                "reply_to_comment_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.CreateOneCategoryRequest": {
             "type": "object",
             "required": [
@@ -1412,17 +1601,17 @@ const docTemplate = `{
         "dto.CreateOnePostRequest": {
             "type": "object",
             "required": [
-                "contentMarkdown",
+                "content_markdown",
                 "title"
             ],
             "properties": {
-                "categoryIds": {
+                "category_ids": {
                     "type": "array",
                     "items": {
                         "type": "integer"
                     }
                 },
-                "contentMarkdown": {
+                "content_markdown": {
                     "type": "string"
                 },
                 "image": {
@@ -1553,7 +1742,7 @@ const docTemplate = `{
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/category.GetOneCategoryVo"
+                        "$ref": "#/definitions/dto.UpdateOneCategoryRequest"
                     }
                 },
                 "description": {
@@ -1580,17 +1769,17 @@ const docTemplate = `{
         "dto.UpdateOnePostRequest": {
             "type": "object",
             "required": [
-                "categoryIds",
+                "category_ids",
                 "id"
             ],
             "properties": {
-                "categoryIds": {
+                "category_ids": {
                     "type": "array",
                     "items": {
                         "type": "integer"
                     }
                 },
-                "contentMarkdown": {
+                "content_markdown": {
                     "type": "string"
                 },
                 "id": {
@@ -1610,20 +1799,72 @@ const docTemplate = `{
                 }
             }
         },
+        "model.Comment": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "评论内容",
+                    "type": "string"
+                },
+                "deleted": {
+                    "description": "逻辑删除",
+                    "type": "boolean"
+                },
+                "ext": {
+                    "description": "扩展字段",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/base.JSONMap"
+                        }
+                    ]
+                },
+                "gmt_create": {
+                    "description": "创建时间",
+                    "type": "integer"
+                },
+                "gmt_modified": {
+                    "description": "更新时间",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "主键",
+                    "type": "integer"
+                },
+                "post_id": {
+                    "description": "所属文章ID",
+                    "type": "integer"
+                },
+                "replies": {
+                    "description": "子评论列表，用于构建图结构",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Comment"
+                    }
+                },
+                "reply_to_comment_id": {
+                    "description": "目标评论ID",
+                    "type": "integer"
+                },
+                "user_id": {
+                    "description": "所属用户ID",
+                    "type": "integer"
+                }
+            }
+        },
         "post.GetAllPostsVo": {
             "description": "获取所有帖子时返回的响应数据",
             "type": "object",
             "properties": {
-                "categoryIds": {
+                "category_ids": {
                     "type": "array",
                     "items": {
                         "type": "integer"
                     }
                 },
-                "contentHtml": {
+                "content_html": {
                     "type": "string"
                 },
-                "contentMarkdown": {
+                "content_markdown": {
                     "type": "string"
                 },
                 "id": {

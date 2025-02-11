@@ -54,8 +54,8 @@ func GetAccount(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.RegisterRequest  true  "注册信息"
-// @Param        ImgVerificationCode  query   string  true  "图形验证码"  // 图形验证码（参数名称需要和请求的参数一致）
-// @Param        EmailVerificationCode  query   string  true  "邮箱验证码"  // 邮箱验证码（同样需要在请求参数中添加）
+// @Param        ImgVerificationCode  query   string  true  "图形验证码"
+// @Param        EmailVerificationCode  query   string  true  "邮箱验证码"
 // @Success      200     {object}   vo.Result{data=dto.RegisterRequest}  "注册成功"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      500     {object}   vo.Result         "服务器错误"
@@ -94,7 +94,7 @@ func RegisterAcc(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.LoginRequest  true  "登录信息"
-// @Param        ImgVerificationCode  query   string  true  "图形验证码"  // 图形验证码（参数名称需要和请求的参数一致）
+// @Param        ImgVerificationCode  query   string  true  "图形验证码"
 // @Success      200     {object}   vo.Result{data=LoginVO}  "登录成功，返回访问令牌"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "登录失败，凭证无效"
@@ -155,7 +155,7 @@ func LogoutAccount(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.ResetPwdRequest  true  "重置密码信息"
-// @Param        EmailVerificationCode  query   string  true  "邮箱验证码"  // 邮箱验证码（参数名称需要和请求的参数一致）
+// @Param        EmailVerificationCode  query   string  true  "邮箱验证码"
 // @Success      200     {object}   vo.Result{data=string}  "密码重置成功"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "未授权，用户未登录"

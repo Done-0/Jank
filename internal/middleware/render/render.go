@@ -22,7 +22,7 @@ func MarkdownRender() echo.MiddlewareFunc {
 
 // bodyParser 用于解析 JSON 请求体
 type bodyParser struct {
-	ContentMarkdown string `json:"contentMarkdown" xml:"contentMarkdown" form:"contentMarkdown" query:"contentMarkdown"`
+	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown"`
 }
 
 // MarkdownConfig 用于配置 Goldmark 渲染器
@@ -84,9 +84,9 @@ func handleMultipart(c echo.Context, md goldmark.Markdown, next echo.HandlerFunc
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "无法解析 multipart 表单"})
 	}
 
-	files := form.File["contentMarkdown"]
+	files := form.File["content_markdown"]
 	if len(files) == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "文件上传失败, 请检查 contentMarkdown 参数"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "文件上传失败, 请检查 content_markdown 参数"})
 	}
 
 	file, err := files[0].Open()
@@ -121,7 +121,7 @@ func handleJSON(c echo.Context, md goldmark.Markdown, next echo.HandlerFunc) err
 	}
 
 	if bodyParser.ContentMarkdown == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "contentMarkdown 参数缺失"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "content_markdown 参数缺失"})
 	}
 
 	return renderMarkdown(c, md, []byte(bodyParser.ContentMarkdown), next)

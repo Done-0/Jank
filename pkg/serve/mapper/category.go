@@ -27,7 +27,7 @@ func GetCategoriesByParentID(parentID int64) ([]category.Category, error) {
 	return categories, nil
 }
 
-// GetCategoriesByParentPath 根据父类目的路径查找所有子类目
+// GetCategoriesByParentPath 根据父类目路径查找所有子类目
 func GetCategoriesByParentPath(parentPath string) ([]category.Category, error) {
 	var categories []category.Category
 	err := global.DB.Where("path LIKE ? AND deleted = ?", fmt.Sprintf("%s%%", parentPath), 0).Find(&categories).Error
