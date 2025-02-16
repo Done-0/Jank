@@ -59,26 +59,13 @@ func CreatePost(newPost *post.Post) error {
 // GetPostByID 根据 ID 获取文章
 func GetPostByID(id int64) (*post.Post, error) {
 	if id <= 0 {
-		return nil, fmt.Errorf("无效文章ID: %d", id)
+		return nil, fmt.Errorf("文章 ID 无效")
 	}
 
 	var pos post.Post
 	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&pos).Error
 	if err != nil {
 		return nil, err
-	}
-
-	validCategoryIDs, updated, err := getValidCategoryIDs(pos.ID, pos.CategoryIDs)
-	if err != nil {
-		return nil, err
-	}
-	pos.CategoryIDs = validCategoryIDs
-
-	if updated {
-		err = global.DB.Save(&pos).Error
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return &pos, nil
@@ -98,6 +85,7 @@ func GetPostsByTitle(title string) ([]post.Post, error) {
 		return nil, err
 	}
 
+	// 更新类别和文章信息
 	for i := range posts {
 		validCategoryIDs, updated, err := getValidCategoryIDs(posts[i].ID, posts[i].CategoryIDs)
 		if err != nil {

@@ -30,24 +30,24 @@ const (
 
 // GetAccount 获取用户信息逻辑
 func GetAccount(GetAccountRequest *dto.GetAccountRequest, c echo.Context) (*account.GetAccountVo, error) {
+	// 获取用户信息
 	userInfo, _ := mapper.GetAccountByEmail(GetAccountRequest.Email)
 	if userInfo == nil {
 		utils.BizLogger(c).Errorf("邮箱(%s)不存在", GetAccountRequest.Email)
 		return nil, fmt.Errorf("邮箱不存在")
 	}
 
-	acc := &account.GetAccountVo{
-		Email:    userInfo.Email,
-		Nickname: userInfo.Nickname,
-		Phone:    userInfo.Phone,
-		RoleCode: userInfo.RoleCode,
+	vo, err := utils.MapModelToVO(userInfo, &account.GetAccountVo{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("获取用户信息时映射 vo 失败: %v", err)
+		return nil, fmt.Errorf("获取用户信息时映射 vo 失败: %v", err)
 	}
 
-	return acc, nil
+	return vo.(*account.GetAccountVo), nil
 }
 
 // RegisterUser 用户注册逻辑
-func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.Account, error) {
+func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVo, error) {
 	registerLock.Lock()
 	defer registerLock.Unlock()
 
@@ -57,12 +57,14 @@ func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.
 		return nil, fmt.Errorf("邮箱已被注册")
 	}
 
+	// 密码加密
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(RegisterRequest.Password), bcrypt.DefaultCost)
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码加密失败: %v", err)
 		return nil, fmt.Errorf("密码加密失败: %v", err)
 	}
 
+	// 创建账户模型
 	acc := &model.Account{
 		Email:    RegisterRequest.Email,
 		Password: string(hashedPassword),
@@ -72,6 +74,7 @@ func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.
 	}
 
 	if err := mapper.CreateAccount(acc); err != nil {
+		utils.BizLogger(c).Errorf("用户注册失败: %v", err)
 		return nil, fmt.Errorf("用户注册失败: %v", err)
 	}
 
@@ -79,7 +82,13 @@ func RegisterUser(RegisterRequest *dto.RegisterRequest, c echo.Context) (*model.
 		global.BizLog.Infof("用户注册成功: %s\n", acc.Email)
 	}()
 
-	return acc, nil
+	registerAccountVo, err := utils.MapModelToVO(acc, &account.RegisterAccountVo{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("用户注册时映射 vo 失败: %v", err)
+		return nil, fmt.Errorf("用户注册时映射 vo 失败: %v", err)
+	}
+
+	return registerAccountVo.(*account.RegisterAccountVo), nil
 }
 
 // LoginUser 登录用户逻辑
@@ -90,24 +99,32 @@ func LoginUser(LoginRequest *dto.LoginRequest, c echo.Context) (*account.LoginVO
 		return nil, fmt.Errorf("用户不存在: %v", err)
 	}
 
+	// 校验密码
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(LoginRequest.Password))
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码错误: %v", err)
 		return nil, fmt.Errorf("密码错误: %v", err)
 	}
 
+	// 生成 token
 	accessTokenString, refreshTokenString, err := utils.GenerateJWT(uint(user.ID))
 	if err != nil {
 		utils.BizLogger(c).Errorf("生成 token 失败: %v", err)
 		return nil, fmt.Errorf("生成 token 失败: %v", err)
 	}
 
-	response := &account.LoginVO{
+	loginVo := &account.LoginVO{
 		AccessToken:  accessTokenString,
 		RefreshToken: refreshTokenString,
 	}
 
-	return response, nil
+	vo, err := utils.MapModelToVO(loginVo, &account.LoginVO{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("用户登陆时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("用户登陆时映射 VO 失败: %v", err)
+	}
+
+	return vo.(*account.LoginVO), nil
 }
 
 // LogoutUser 刷新 token 逻辑

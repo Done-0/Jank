@@ -22,7 +22,7 @@ import (
 // @Produce      json
 // @Param        id       query     int     false  "文章 ID"
 // @Param        title    query     string  false  "文章标题"
-// @Success      200      {object}  vo.Result{data=post.GetAllPostsVo}  "获取成功"
+// @Success      200      {object}  vo.Result{data=post.PostsVo}  "获取成功"
 // @Failure      400      {object}  vo.Result          "请求参数错误"
 // @Failure      404      {object}  vo.Result          "文章不存在"
 // @Failure      500      {object}  vo.Result          "服务器错误"
@@ -38,10 +38,12 @@ func GetOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
+	// 至少传递 id 或 title 其中之一
 	if req.ID == 0 && req.Title == "" {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, "文章 ID 或标题不能为空"), nil, c))
 	}
 
+	// 如果同时传递了 id 和 title，优先使用 id
 	post, err := service.GetPostByIDOrTitle(req.ID, req.Title, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
@@ -58,7 +60,7 @@ func GetOnePost(c echo.Context) error {
 // @Produce      json
 // @Param        page     query    int     false  "页数"
 // @Param        pageSize query    int     false  "每页显示数量"
-// @Success      200  {object}  vo.Result{data=[]post.GetAllPostsVo}  "获取成功"
+// @Success      200  {object}  vo.Result{data=[]post.PostsVo}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /post/getAllPosts [get]
 func GetAllPosts(c echo.Context) error {
@@ -80,7 +82,7 @@ func GetAllPosts(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateOnePostRequest  true  "创建文章请求参数"
-// @Success      200     {object}   vo.Result{data=post.GetAllPostsVo}  "创建成功"
+// @Success      200     {object}   vo.Result{data=post.PostsVo}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
@@ -116,7 +118,7 @@ func CreateOnePost(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.UpdateOnePostRequest  true  "更新文章请求参数"
-// @Success      200     {object}   vo.Result{data=post.GetAllPostsVo}  "更新成功"
+// @Success      200     {object}   vo.Result{data=post.PostsVo}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "文章不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"

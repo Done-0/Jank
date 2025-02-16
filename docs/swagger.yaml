@@ -19,23 +19,12 @@ definitions:
       refresh_token:
         type: string
     type: object
-  base.JSONMap:
-    additionalProperties: true
-    type: object
-  category.GetAllCategoriesVo:
-    description: 获取所有类目时返回的响应数据
-    properties:
-      categories:
-        items:
-          $ref: '#/definitions/category.GetOneCategoryVo'
-        type: array
-    type: object
-  category.GetOneCategoryVo:
+  category.CategoriesVo:
     description: 获取类目响应
     properties:
       children:
         items:
-          $ref: '#/definitions/category.GetOneCategoryVo'
+          $ref: '#/definitions/category.CategoriesVo'
         type: array
       description:
         type: string
@@ -47,6 +36,24 @@ definitions:
         type: integer
       path:
         type: string
+    type: object
+  comment.CommentsVo:
+    description: 获取单个评论的响应
+    properties:
+      content:
+        type: string
+      id:
+        type: integer
+      post_id:
+        type: integer
+      replies:
+        items:
+          $ref: '#/definitions/comment.CommentsVo'
+        type: array
+      reply_to_comment_id:
+        type: integer
+      user_id:
+        type: integer
     type: object
   dto.CreateCommentRequest:
     properties:
@@ -222,44 +229,8 @@ definitions:
     - category_ids
     - id
     type: object
-  model.Comment:
-    properties:
-      content:
-        description: 评论内容
-        type: string
-      deleted:
-        description: 逻辑删除
-        type: boolean
-      ext:
-        allOf:
-        - $ref: '#/definitions/base.JSONMap'
-        description: 扩展字段
-      gmt_create:
-        description: 创建时间
-        type: integer
-      gmt_modified:
-        description: 更新时间
-        type: integer
-      id:
-        description: 主键
-        type: integer
-      post_id:
-        description: 所属文章ID
-        type: integer
-      replies:
-        description: 子评论列表，用于构建图结构
-        items:
-          $ref: '#/definitions/model.Comment'
-        type: array
-      reply_to_comment_id:
-        description: 目标评论ID
-        type: integer
-      user_id:
-        description: 所属用户ID
-        type: integer
-    type: object
-  post.GetAllPostsVo:
-    description: 获取所有帖子时返回的响应数据
+  post.PostsVo:
+    description: 获取帖子时返回的响应数据
     properties:
       category_ids:
         items:
@@ -507,7 +478,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/category.GetOneCategoryVo'
+                  $ref: '#/definitions/category.CategoriesVo'
               type: object
         "400":
           description: 请求参数错误
@@ -539,7 +510,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/category.GetOneCategoryVo'
+                  $ref: '#/definitions/category.CategoriesVo'
               type: object
         "400":
           description: 请求参数错误
@@ -580,7 +551,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/category.GetOneCategoryVo'
+                    $ref: '#/definitions/category.CategoriesVo'
                   type: array
               type: object
         "400":
@@ -614,7 +585,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/category.GetAllCategoriesVo'
+                    $ref: '#/definitions/category.CategoriesVo'
                   type: array
               type: object
         "500":
@@ -645,7 +616,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/category.GetOneCategoryVo'
+                  $ref: '#/definitions/category.CategoriesVo'
               type: object
         "400":
           description: 请求参数错误
@@ -685,7 +656,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/category.GetOneCategoryVo'
+                  $ref: '#/definitions/category.CategoriesVo'
               type: object
         "400":
           description: 请求参数错误
@@ -726,7 +697,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/model.Comment'
+                  $ref: '#/definitions/comment.CommentsVo'
               type: object
         "400":
           description: 请求参数错误
@@ -756,7 +727,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/model.Comment'
+                  $ref: '#/definitions/comment.CommentsVo'
               type: object
         "400":
           description: 请求参数错误
@@ -791,7 +762,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/model.Comment'
+                    $ref: '#/definitions/comment.CommentsVo'
                   type: array
               type: object
         "500":
@@ -823,7 +794,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/post.GetAllPostsVo'
+                  $ref: '#/definitions/post.PostsVo'
               type: object
         "400":
           description: 请求参数错误
@@ -899,7 +870,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/post.GetAllPostsVo'
+                    $ref: '#/definitions/post.PostsVo'
                   type: array
               type: object
         "500":
@@ -933,7 +904,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/post.GetAllPostsVo'
+                  $ref: '#/definitions/post.PostsVo'
               type: object
         "400":
           description: 请求参数错误
@@ -972,7 +943,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/post.GetAllPostsVo'
+                  $ref: '#/definitions/post.PostsVo'
               type: object
         "400":
           description: 请求参数错误
