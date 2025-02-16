@@ -376,7 +376,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.GetOneCategoryVo"
+                                            "$ref": "#/definitions/category.CategoriesVo"
                                         }
                                     }
                                 }
@@ -431,7 +431,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.GetOneCategoryVo"
+                                            "$ref": "#/definitions/category.CategoriesVo"
                                         }
                                     }
                                 }
@@ -495,7 +495,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/category.GetOneCategoryVo"
+                                                "$ref": "#/definitions/category.CategoriesVo"
                                             }
                                         }
                                     }
@@ -551,7 +551,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/category.GetAllCategoriesVo"
+                                                "$ref": "#/definitions/category.CategoriesVo"
                                             }
                                         }
                                     }
@@ -602,7 +602,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.GetOneCategoryVo"
+                                            "$ref": "#/definitions/category.CategoriesVo"
                                         }
                                     }
                                 }
@@ -672,7 +672,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.GetOneCategoryVo"
+                                            "$ref": "#/definitions/category.CategoriesVo"
                                         }
                                     }
                                 }
@@ -736,7 +736,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/model.Comment"
+                                            "$ref": "#/definitions/comment.CommentsVo"
                                         }
                                     }
                                 }
@@ -786,7 +786,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/model.Comment"
+                                            "$ref": "#/definitions/comment.CommentsVo"
                                         }
                                     }
                                 }
@@ -844,7 +844,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/model.Comment"
+                                                "$ref": "#/definitions/comment.CommentsVo"
                                             }
                                         }
                                     }
@@ -902,7 +902,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/post.GetAllPostsVo"
+                                            "$ref": "#/definitions/post.PostsVo"
                                         }
                                     }
                                 }
@@ -1022,7 +1022,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/post.GetAllPostsVo"
+                                                "$ref": "#/definitions/post.PostsVo"
                                             }
                                         }
                                     }
@@ -1078,7 +1078,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/post.GetAllPostsVo"
+                                            "$ref": "#/definitions/post.PostsVo"
                                         }
                                     }
                                 }
@@ -1147,7 +1147,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/post.GetAllPostsVo"
+                                            "$ref": "#/definitions/post.PostsVo"
                                         }
                                     }
                                 }
@@ -1510,30 +1510,14 @@ const docTemplate = `{
                 }
             }
         },
-        "base.JSONMap": {
-            "type": "object",
-            "additionalProperties": true
-        },
-        "category.GetAllCategoriesVo": {
-            "description": "获取所有类目时返回的响应数据",
-            "type": "object",
-            "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/category.GetOneCategoryVo"
-                    }
-                }
-            }
-        },
-        "category.GetOneCategoryVo": {
+        "category.CategoriesVo": {
             "description": "获取类目响应",
             "type": "object",
             "properties": {
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/category.GetOneCategoryVo"
+                        "$ref": "#/definitions/category.CategoriesVo"
                     }
                 },
                 "description": {
@@ -1550,6 +1534,33 @@ const docTemplate = `{
                 },
                 "path": {
                     "type": "string"
+                }
+            }
+        },
+        "comment.CommentsVo": {
+            "description": "获取单个评论的响应",
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "post_id": {
+                    "type": "integer"
+                },
+                "replies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/comment.CommentsVo"
+                    }
+                },
+                "reply_to_comment_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1799,60 +1810,8 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Comment": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "description": "评论内容",
-                    "type": "string"
-                },
-                "deleted": {
-                    "description": "逻辑删除",
-                    "type": "boolean"
-                },
-                "ext": {
-                    "description": "扩展字段",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/base.JSONMap"
-                        }
-                    ]
-                },
-                "gmt_create": {
-                    "description": "创建时间",
-                    "type": "integer"
-                },
-                "gmt_modified": {
-                    "description": "更新时间",
-                    "type": "integer"
-                },
-                "id": {
-                    "description": "主键",
-                    "type": "integer"
-                },
-                "post_id": {
-                    "description": "所属文章ID",
-                    "type": "integer"
-                },
-                "replies": {
-                    "description": "子评论列表，用于构建图结构",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Comment"
-                    }
-                },
-                "reply_to_comment_id": {
-                    "description": "目标评论ID",
-                    "type": "integer"
-                },
-                "user_id": {
-                    "description": "所属用户ID",
-                    "type": "integer"
-                }
-            }
-        },
-        "post.GetAllPostsVo": {
-            "description": "获取所有帖子时返回的响应数据",
+        "post.PostsVo": {
+            "description": "获取帖子时返回的响应数据",
             "type": "object",
             "properties": {
                 "category_ids": {

@@ -5,7 +5,7 @@ import (
 	"math"
 
 	"github.com/labstack/echo/v4"
-	
+
 	model "jank.com/jank_blog/internal/model/post"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/mapper"
@@ -13,7 +13,7 @@ import (
 )
 
 // CreatePost 处理文章的创建
-func CreatePost(title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*model.Post, error) {
+func CreatePost(title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*post.PostsVo, error) {
 	if visibility == "" {
 		visibility = "private"
 	}
@@ -34,16 +34,23 @@ func CreatePost(title string, image string, visibility string, contentMarkdown s
 		return nil, fmt.Errorf("创建文章失败: %v", err)
 	}
 
-	return newPost, nil
+	vo, err := utils.MapModelToVO(newPost, &post.PostsVo{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("创建文章时映射 vo 失败: %v", err)
+		return nil, fmt.Errorf("创建文章时映射 vo 失败: %v", err)
+	}
+
+	return vo.(*post.PostsVo), nil
 }
 
 // GetPostByIDOrTitle 根据 ID 或 Title 获取文章
 func GetPostByIDOrTitle(id int64, title string, c echo.Context) (interface{}, error) {
-	if id <= 0 && title == "" {
+	if id == 0 && title == "" {
 		utils.BizLogger(c).Error("参数 id 和 title 不能同时为空")
 		return nil, fmt.Errorf("参数 id 和 title 不能同时为空")
 	}
 
+	// 如果传递了 ID，优先使用 ID 查询
 	if id > 0 {
 		pos, err := mapper.GetPostByID(id)
 		if err != nil {
@@ -54,9 +61,17 @@ func GetPostByIDOrTitle(id int64, title string, c echo.Context) (interface{}, er
 			utils.BizLogger(c).Errorf("文章不存在: %v", err)
 			return nil, fmt.Errorf("文章不存在: %v", err)
 		}
-		return pos, nil
+
+		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取文章时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("获取文章时映射 vo 失败: %v", err)
+		}
+
+		return vo.(*post.PostsVo), nil
 	}
 
+	// 如果没有传 ID，使用 Title 查询
 	posts, err := mapper.GetPostsByTitle(title)
 	if err != nil {
 		utils.BizLogger(c).Errorf("根据标题获取文章失败: %v", err)
@@ -66,7 +81,18 @@ func GetPostByIDOrTitle(id int64, title string, c echo.Context) (interface{}, er
 		utils.BizLogger(c).Errorf("没有找到与标题 \"%s\" 匹配的文章", title)
 		return nil, fmt.Errorf("没有找到与标题 \"%s\" 匹配的文章", title)
 	}
-	return posts, nil
+
+	postResponse := make([]*post.PostsVo, len(posts))
+	for i, pos := range posts {
+		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取文章时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("获取文章时映射 vo 失败: %v", err)
+		}
+
+		postResponse[i] = vo.(*post.PostsVo)
+	}
+	return postResponse, nil
 }
 
 // GetAllPostsWithPagingAndFormat 获取格式化后的分页文章列表、总页数和当前页数
@@ -85,26 +111,26 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 		return nil, fmt.Errorf("获取文章列表失败: %v", err)
 	}
 
-	postResponse := make([]*post.GetAllPostsVo, len(posts))
-	for i, postItem := range posts {
-		postResponse[i] = &post.GetAllPostsVo{
-			ID:          postItem.ID,
-			Title:       postItem.Title,
-			Image:       postItem.Image,
-			Visibility:  postItem.Visibility,
-			ContentHTML: postItem.ContentHTML,
+	postResponse := make([]*post.PostsVo, len(posts))
+	for i, pos := range posts {
+		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取文章列表时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("获取文章列表时映射 vo 失败: %v", err)
 		}
+
+		postResponse[i] = vo.(*post.PostsVo)
 	}
 
 	return map[string]interface{}{
-		"posts":       postResponse,
+		"posts":       &postResponse,
 		"totalPages":  int(math.Ceil(float64(total) / float64(pageSize))),
 		"currentPage": page,
 	}, nil
 }
 
 // UpdatePost 更新文章
-func UpdatePost(id int64, title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*model.Post, error) {
+func UpdatePost(id int64, title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*post.PostsVo, error) {
 	pos, err := mapper.GetPostByID(id)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
@@ -129,7 +155,13 @@ func UpdatePost(id int64, title string, image string, visibility string, content
 		return nil, fmt.Errorf("更新文章失败: %v", err)
 	}
 
-	return pos, nil
+	vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("更新文章时映射 vo 失败: %v", err)
+		return nil, fmt.Errorf("更新文章时映射 vo 失败: %v", err)
+	}
+
+	return vo.(*post.PostsVo), nil
 }
 
 // DeletePost 删除文章
