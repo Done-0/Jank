@@ -1601,7 +1601,7 @@
         "dto.CreateOnePostRequest": {
             "type": "object",
             "required": [
-                "content_markdown",
+                "content_html",
                 "title"
             ],
             "properties": {
@@ -1611,7 +1611,7 @@
                         "type": "integer"
                     }
                 },
-                "content_markdown": {
+                "content_html": {
                     "type": "string"
                 },
                 "image": {
@@ -1812,9 +1812,6 @@
                 "content_html": {
                     "type": "string"
                 },
-                "content_markdown": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
@@ -1840,7 +1837,7 @@
                     "type": "string"
                 },
                 "requestId": {},
-                "timestamp": {}
+                "timeStamp": {}
             }
         }
     }

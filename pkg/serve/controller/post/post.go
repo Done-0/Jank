@@ -103,7 +103,7 @@ func CreateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, "渲染失败，缺少 contentHtml"), nil, c))
 	}
 
-	createdPost, err := service.CreatePost(req.Title, req.Image, req.Visibility, req.ContentMarkdown, ContentHTML, req.CategoryIDs, c)
+	createdPost, err := service.CreatePost(req.Title, req.Image, req.Visibility, ContentHTML, req.CategoryIDs, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
 	}

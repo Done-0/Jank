@@ -13,7 +13,7 @@ import (
 )
 
 // CreatePost 处理文章的创建
-func CreatePost(title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*post.PostsVo, error) {
+func CreatePost(title string, image string, visibility string, contentHTML string, categoryIDs []int64, c echo.Context) (*post.PostsVo, error) {
 	if visibility == "" {
 		visibility = "private"
 	}
@@ -21,12 +21,11 @@ func CreatePost(title string, image string, visibility string, contentMarkdown s
 	categoryIDsStr := utils.ConvertInt64SliceToString(categoryIDs)
 
 	newPost := &model.Post{
-		Title:           title,
-		Image:           image,
-		Visibility:      visibility,
-		ContentMarkdown: contentMarkdown,
-		ContentHTML:     contentHTML,
-		CategoryIDs:     categoryIDsStr,
+		Title:       title,
+		Image:       image,
+		Visibility:  visibility,
+		ContentHTML: contentHTML,
+		CategoryIDs: categoryIDsStr,
 	}
 
 	if err := mapper.CreatePost(newPost); err != nil {
@@ -119,7 +118,14 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 			return nil, fmt.Errorf("获取文章列表时映射 vo 失败: %v", err)
 		}
 
-		postResponse[i] = vo.(*post.PostsVo)
+		postVo := vo.(*post.PostsVo)
+
+		// 只保留 ContentHTML 的前 150 个字符
+		if len(postVo.ContentHTML) > 150 {
+			postVo.ContentHTML = postVo.ContentHTML[:150]
+		}
+
+		postResponse[i] = postVo
 	}
 
 	return map[string]interface{}{

@@ -93,7 +93,7 @@ definitions:
         items:
           type: integer
         type: array
-      content_markdown:
+      content_html:
         type: string
       image:
         type: string
@@ -105,7 +105,7 @@ definitions:
         default: private
         type: string
     required:
-    - content_markdown
+    - content_html
     - title
     type: object
   dto.DeleteOnePostRequest:
@@ -238,8 +238,6 @@ definitions:
         type: array
       content_html:
         type: string
-      content_markdown:
-        type: string
       id:
         type: integer
       image:
@@ -257,7 +255,7 @@ definitions:
       msg:
         type: string
       requestId: {}
-      timestamp: {}
+      timeStamp: {}
     type: object
 info:
   contact: {}

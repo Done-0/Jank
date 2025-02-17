@@ -1612,7 +1612,7 @@ const docTemplate = `{
         "dto.CreateOnePostRequest": {
             "type": "object",
             "required": [
-                "content_markdown",
+                "content_html",
                 "title"
             ],
             "properties": {
@@ -1622,7 +1622,7 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 },
-                "content_markdown": {
+                "content_html": {
                     "type": "string"
                 },
                 "image": {
@@ -1823,9 +1823,6 @@ const docTemplate = `{
                 "content_html": {
                     "type": "string"
                 },
-                "content_markdown": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
@@ -1851,7 +1848,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "requestId": {},
-                "timestamp": {}
+                "timeStamp": {}
             }
         }
     }

@@ -5,66 +5,96 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // MapModelToVO 将模型数据映射到对应的 VO，返回具体类型的指针
-func MapModelToVO(modelData interface{}, voType interface{}) (interface{}, error) {
-	modelValue := reflect.ValueOf(modelData)
-	voValue := reflect.ValueOf(voType)
+func MapModelToVO(modelData interface{}, voPtr interface{}) (interface{}, error) {
+	modelVal := reflect.ValueOf(modelData)
+	voVal := reflect.ValueOf(voPtr)
 
-	if voValue.Kind() != reflect.Ptr || voValue.IsNil() {
-		return nil, fmt.Errorf("voType 必须为指向结构体的指针")
+	// 检查 voPtr 是否为指向结构体的指针
+	if voVal.Kind() != reflect.Ptr || voVal.IsNil() {
+		return nil, fmt.Errorf("voPtr 必须为指向结构体的指针")
 	}
-	voValue = voValue.Elem()
+	voVal = voVal.Elem()
 
 	// 如果 modelData 是指针类型，解引用获取实际的结构体值
-	if modelValue.Kind() == reflect.Ptr {
-		modelValue = modelValue.Elem()
+	if modelVal.Kind() == reflect.Ptr {
+		modelVal = modelVal.Elem()
 	}
 
-	if modelValue.Kind() != reflect.Struct || voValue.Kind() != reflect.Struct {
-		return nil, fmt.Errorf("modelData 和 voType 必须为结构体类型")
+	// 确保 modelData 和 voPtr 都是结构体类型
+	if modelVal.Kind() != reflect.Struct || voVal.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("modelData 和 voPtr 必须为结构体类型")
 	}
 
-	// 遍历 modelData 中的字段
-	for i := 0; i < modelValue.NumField(); i++ {
-		modelField := modelValue.Field(i)
-		fieldType := modelValue.Type().Field(i)
+	numFields := modelVal.NumField()
+	modelType := modelVal.Type()
 
-		// 递归处理嵌入的结构体（如 BaseModel）
-		if modelField.Kind() == reflect.Struct {
-			embeddedModelType := modelField.Type()
-			for j := 0; j < embeddedModelType.NumField(); j++ {
-				embeddedField := embeddedModelType.Field(j)
-				voField := voValue.FieldByName(embeddedField.Name)
-				if voField.IsValid() && voField.CanSet() {
-					voField.Set(modelField.Field(j))
-				}
-			}
-			continue
-		}
+	// 控制并发的最大数量
+	maxConcurrency := 8
+	sem := make(chan struct{}, maxConcurrency)
 
-		// 查找对应的 VO 字段并赋值
-		voField := voValue.FieldByName(fieldType.Name)
-		if voField.IsValid() && voField.CanSet() {
-			// 赋值：如果类型兼容或是特定类型转换
-			if modelField.Type().AssignableTo(voField.Type()) {
-				voField.Set(modelField)
-			} else if modelField.Kind() == reflect.String && voField.Kind() == reflect.Slice && voField.Type().Elem().Kind() == reflect.Int64 {
-				str := modelField.String()
-				if str != "" {
-					strs := strings.Split(str, ",")
-					ints := make([]int64, len(strs))
-					for j, s := range strs {
-						if val, err := strconv.ParseInt(s, 10, 64); err == nil {
-							ints[j] = val
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+
+	// 遍历 modelData 中的字段并并行处理
+	for i := 0; i < numFields; i++ {
+		wg.Add(1)
+		sem <- struct{}{} // 控制并发
+
+		go func(i int) {
+			defer wg.Done()
+			defer func() { <-sem }() // 释放信号量
+
+			modelField := modelVal.Field(i)
+			fieldType := modelType.Field(i)
+			voField := voVal.FieldByName(fieldType.Name)
+
+			if voField.IsValid() && voField.CanSet() {
+				// 赋值操作
+				if modelField.Type().AssignableTo(voField.Type()) {
+					mu.Lock()
+					voField.Set(modelField)
+					mu.Unlock()
+				} else if modelField.Kind() == reflect.String && voField.Kind() == reflect.Slice && voField.Type().Elem().Kind() == reflect.Int64 {
+					str := modelField.String()
+					if str != "" {
+						strArray := strings.Split(str, ",")
+						intArray := make([]int64, len(strArray))
+						for j, s := range strArray {
+							if val, err := strconv.ParseInt(s, 10, 64); err == nil {
+								intArray[j] = val
+							}
 						}
+						mu.Lock()
+						voField.Set(reflect.ValueOf(intArray))
+						mu.Unlock()
 					}
-					voField.Set(reflect.ValueOf(ints))
 				}
 			}
-		}
+
+			// 处理嵌套结构体字段
+			if modelField.Kind() == reflect.Struct {
+				embeddedModelType := modelField.Type()
+				embeddedNumFields := embeddedModelType.NumField()
+
+				for j := 0; j < embeddedNumFields; j++ {
+					embeddedField := embeddedModelType.Field(j)
+					voField := voVal.FieldByName(embeddedField.Name)
+
+					if voField.IsValid() && voField.CanSet() {
+						mu.Lock()
+						voField.Set(modelField.Field(j))
+						mu.Unlock()
+					}
+				}
+			}
+		}(i)
 	}
 
-	return voValue.Addr().Interface(), nil
+	wg.Wait()
+
+	return voVal.Addr().Interface(), nil
 }

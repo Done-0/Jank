@@ -12,7 +12,7 @@ type Result struct {
 	*bizErr.Err
 	Data      interface{} `json:"data"`
 	RequestId interface{} `json:"requestId"`
-	TimeStamp interface{} `json:"timestamp"`
+	TimeStamp interface{} `json:"timeStamp"`
 }
 
 // Success 成功返回
