@@ -1,4 +1,4 @@
-package render_middleware
+package renderMiddleware
 
 import (
 	"bytes"

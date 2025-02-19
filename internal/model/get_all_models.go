@@ -9,8 +9,17 @@ import (
 // GetAllModels 获取并注册所有模型
 func GetAllModels() []interface{} {
 	return []interface{}{
-		&account.Account{},
-		&post.Post{},
-		&category.Category{},
+		// account 模块
+		&account.Account{},        // 用户账号模型
+		&account.AccountRole{},    // 用户角色模型
+		&account.Permission{},     // 权限模型
+		&account.Role{},           // 角色模型
+		&account.RolePermission{}, // 角色权限关联模型
+
+		// post 模块
+		&post.Post{}, // 帖子模型
+
+		// category 模块
+		&category.Category{}, // 分类模型
 	}
 }

@@ -1,4 +1,4 @@
-package secure_middleware
+package secureMiddleware
 
 import (
 	"crypto/rand"

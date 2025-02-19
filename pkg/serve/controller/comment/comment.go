@@ -2,7 +2,6 @@ package comment
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 
@@ -25,14 +24,19 @@ import (
 // @Failure      404   {object}  vo.Result  "评论不存在"
 // @Router       /comment/getOneComment [get]
 func GetOneComment(c echo.Context) error {
-	id, err := strconv.ParseInt(c.QueryParam("id"), 10, 64)
-	if err != nil {
+	req := new(dto.GetOneCommentRequest)
+	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	comment, err := service.GetCommentWithReplies(id, c)
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+	}
+
+	comment, err := service.GetCommentWithReplies(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(comment, c))
@@ -49,14 +53,19 @@ func GetOneComment(c echo.Context) error {
 // @Failure      500        {object} vo.Result  "服务器错误"
 // @Router       /comment/getOneComment [get]
 func GetCommentGraph(c echo.Context) error {
-	postId, err := strconv.ParseInt(c.QueryParam("post_id"), 10, 64)
-	if err != nil {
+	req := new(dto.GetCommentGraphRequest)
+	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	comments, err := service.GetCommentGraphByPostID(postId, c)
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+	}
+
+	comments, err := service.GetCommentGraphByPostID(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(comments, c))
@@ -78,13 +87,14 @@ func CreateOneComment(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	if errors := utils.Validator(*req); errors != nil {
+	errors := utils.Validator(*req)
+	if errors != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	comment, err := service.CreateComment(req.Content, req.UserId, req.PostId, req.ReplyToCommentId, c)
+	comment, err := service.CreateComment(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(comment, c))
@@ -107,9 +117,14 @@ func DeleteOneComment(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}
 
-	comment, err := service.DeleteComment(req.ID, c)
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+	}
+
+	comment, err := service.DeleteComment(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(comment, c))

@@ -1,16 +1,14 @@
 package account
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
-
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
 	"jank.com/jank_blog/pkg/serve/controller/verification"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
+	"net/http"
 )
 
 const (
@@ -36,7 +34,7 @@ func GetAccount(c echo.Context) error {
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
 	response, err := service.GetAccount(req, c)
@@ -68,7 +66,7 @@ func RegisterAcc(c echo.Context) error {
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
 	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
@@ -95,7 +93,7 @@ func RegisterAcc(c echo.Context) error {
 // @Produce      json
 // @Param        request  body      dto.LoginRequest  true  "登录信息"
 // @Param        ImgVerificationCode  query   string  true  "图形验证码"
-// @Success      200     {object}   vo.Result{data=LoginVO}  "登录成功，返回访问令牌"
+// @Success      200     {object}   vo.Result{data=account.LoginVo}  "登录成功，返回访问令牌"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "登录失败，凭证无效"
 // @Router       /account/loginAccount [post]
@@ -107,7 +105,7 @@ func LoginAccount(c echo.Context) error {
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
 	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
@@ -135,17 +133,14 @@ func LoginAccount(c echo.Context) error {
 func LogoutAccount(c echo.Context) error {
 	userId, ok := c.Get(LocalsUserIdKey).(int64)
 	if !ok {
-		utils.BizLogger(c).Error("用户未登录")
 		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizErr.New(bizErr.UnKnowErr, "用户未登录"), c))
 	}
 
 	if err := service.LogoutUser(userId, c); err != nil {
-		utils.BizLogger(c).Errorf("注销登录失败：%v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
-	utils.BizLogger(c).Infof("用户 %d 已注销登录", userId)
-	return c.JSON(http.StatusOK, vo.Success("用户注销登录成功", c))
+	return c.JSON(http.StatusOK, vo.Success("用户注销成功", c))
 }
 
 // ResetPassword godoc
@@ -165,7 +160,6 @@ func LogoutAccount(c echo.Context) error {
 func ResetPassword(c echo.Context) error {
 	userId, ok := c.Get(LocalsUserIdKey).(int64)
 	if !ok {
-		utils.BizLogger(c).Errorf("%s 获取失败", LocalsUserIdKey)
 		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizErr.New(bizErr.UnKnowErr, "用户未登录"), c))
 	}
 
@@ -176,17 +170,291 @@ func ResetPassword(c echo.Context) error {
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
-	err := service.ResetPassword(userId, req, c)
+	err := service.ResetPassword(req, userId, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("密码重置成功", c))
+}
+
+// CreateRole 创建角色
+// @Summary      创建角色
+// @Description  创建一个新的角色，角色信息包括代码和描述
+// @Tags         角色管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.CreateRoleRequest  true  "角色信息"
+// @Success      200     {object}  vo.Result{data=account.RoleVo}  "创建成功"
+// @Failure      400     {object}  vo.Result{message=string}    "参数错误"
+// @Failure      500     {object}  vo.Result{message=string}    "服务器错误"
+// @Router       /role/createOneRole [post]
+func CreateRole(c echo.Context) error {
+	req := new(dto.CreateRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	role, err := service.CreateRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success(role, c))
+}
+
+// UpdateRole 更新角色
+// @Summary      更新角色
+// @Description  更新角色的代码和描述
+// @Tags         角色管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.UpdateRoleRequest  true  "角色信息"
+// @Success      200     {object}  vo.Result{data=account.RoleVo}  "更新成功"
+// @Failure      400     {object}  vo.Result{message=string}    "参数错误"
+// @Failure      500     {object}  vo.Result{message=string}    "服务器错误"
+// @Router       /role/updateOneRole [post]
+func UpdateRole(c echo.Context) error {
+	req := new(dto.UpdateRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	role, err := service.UpdateRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success(role, c))
+}
+
+// DeleteRole 删除角色
+// @Summary      删除角色
+// @Description  根据角色ID删除角色
+// @Tags         角色管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.DeleteRoleRequest  true  "角色ID"
+// @Success      200     {object}  vo.Result{data=string}  "删除成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /role/deleteOneRole [post]
+func DeleteRole(c echo.Context) error {
+	req := new(dto.DeleteRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.DeleteRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("角色删除成功", c))
+}
+
+// ListRoles 获取所有角色
+// @Summary      获取所有角色
+// @Description  获取系统中所有角色的信息
+// @Tags         角色管理
+// @Accept       json
+// @Produce      json
+// @Success      200     {object}  vo.Result{data=[]account.RoleVo}  "获取成功"
+// @Failure      500     {object}  vo.Result{message=string}     "服务器错误"
+// @Router       /role/listAllRoles [post]
+func ListRoles(c echo.Context) error {
+	roles, err := service.ListRoles(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+	return c.JSON(http.StatusOK, vo.Success(roles, c))
+}
+
+// CreatePermission 创建权限
+// @Summary      创建权限
+// @Description  创建新的权限，权限信息包括代码和描述
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.CreatePermissionRequest  true  "权限信息"
+// @Success      200     {object}  vo.Result{data=account.PermissionVo}  "创建成功"
+// @Failure      400     {object}  vo.Result{message=string}    "参数错误"
+// @Failure      500     {object}  vo.Result{message=string}    "服务器错误"
+// @Router       /permission/createOnePermission [post]
+func CreatePermission(c echo.Context) error {
+	req := new(dto.CreatePermissionRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	permission, err := service.CreatePermission(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success(permission, c))
+}
+
+// UpdatePermission 更新权限
+// @Summary      更新权限
+// @Description  更新权限的代码和描述
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.UpdatePermissionRequest  true  "权限信息"
+// @Success      200     {object}  vo.Result{data=account.PermissionVo}  "更新成功"
+// @Failure      400     {object}  vo.Result{message=string}    "参数错误"
+// @Failure      500     {object}  vo.Result{message=string}    "服务器错误"
+// @Router       /permission/updateOnePermission [post]
+func UpdatePermission(c echo.Context) error {
+	req := new(dto.UpdatePermissionRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	permission, err := service.UpdatePermission(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success(permission, c))
+}
+
+// DeletePermission 删除权限
+// @Summary      删除权限
+// @Description  根据权限ID删除权限
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.DeletePermissionRequest  true  "权限ID"
+// @Success      200     {object}  vo.Result{data=string}  "删除成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /permission/deleteOnePermission [post]
+func DeletePermission(c echo.Context) error {
+	req := new(dto.DeletePermissionRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.DeletePermission(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("权限删除成功", c))
+}
+
+// ListPermissions 获取所有权限
+// @Summary      获取所有权限
+// @Description  获取系统中所有权限的信息
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Success      200     {object}  vo.Result{data=[]account.PermissionVo}  "获取成功"
+// @Failure      500     {object}  vo.Result{message=string}     "服务器错误"
+// @Router       /permission/listAllPermissions [post]
+func ListPermissions(c echo.Context) error {
+	permissions, err := service.ListPermissions(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+	return c.JSON(http.StatusOK, vo.Success(permissions, c))
+}
+
+// AssignRoleToUser 为用户分配角色
+// @Summary      为用户分配角色
+// @Description  根据用户ID和角色ID为用户分配角色
+// @Tags         用户管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.AssignRoleRequest  true  "分配角色信息"
+// @Success      200     {object}  vo.Result{data=string}  "角色分配成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/assignRoleToUser [post]
+func AssignRoleToUser(c echo.Context) error {
+	req := new(dto.AssignRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.AssignRoleToUser(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("角色分配成功", c))
+}
+
+// AssignPermissionToRole 为角色分配权限
+// @Summary      为角色分配权限
+// @Description  根据角色ID和权限ID为角色分配权限
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.AssignPermissionRequest  true  "分配权限信息"
+// @Success      200     {object}  vo.Result{data=string}  "权限分配成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/assignPermissionToRole [post]
+func AssignPermissionToRole(c echo.Context) error {
+	req := new(dto.AssignPermissionRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.AssignPermissionToRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("权限分配成功", c))
 }

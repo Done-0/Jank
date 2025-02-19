@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"jank.com/jank_blog/pkg/serve/controller/category/dto"
 
 	"github.com/labstack/echo/v4"
 
@@ -12,8 +13,8 @@ import (
 )
 
 // GetCategoryByID 根据 ID 获取类目
-func GetCategoryByID(id int64, c echo.Context) (*category.CategoriesVo, error) {
-	cat, err := mapper.GetCategoryByID(id)
+func GetCategoryByID(req *dto.GetOneCategoryRequest, c echo.Context) (*category.CategoriesVo, error) {
+	cat, err := mapper.GetCategoryByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
 		return nil, fmt.Errorf("获取类目失败：%v", err)
@@ -75,8 +76,8 @@ func GetCategoryTree(c echo.Context) ([]category.CategoriesVo, error) {
 }
 
 // GetCategoryChildrenByID 根据类目 ID 获取层级子类目
-func GetCategoryChildrenByID(id int64, c echo.Context) ([]category.CategoriesVo, error) {
-	cat, err := mapper.GetCategoryByID(id)
+func GetCategoryChildrenByID(req *dto.GetOneCategoryRequest, c echo.Context) ([]category.CategoriesVo, error) {
+	cat, err := mapper.GetCategoryByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
 		return nil, fmt.Errorf("获取类目失败：%v", err)
@@ -104,14 +105,14 @@ func GetCategoryChildrenByID(id int64, c echo.Context) ([]category.CategoriesVo,
 }
 
 // CreateCategory 创建类目
-func CreateCategory(name string, description string, parentID int64, c echo.Context) (*category.CategoriesVo, error) {
+func CreateCategory(req *dto.CreateOneCategoryRequest, c echo.Context) (*category.CategoriesVo, error) {
 	var newCategory *model.Category
 
 	// 创建根类目
-	if parentID == 0 {
+	if req.ParentID == 0 {
 		newCategory = &model.Category{
-			Name:        name,
-			Description: description,
+			Name:        req.Name,
+			Description: req.Description,
 			ParentID:    0,
 			Path:        "",
 		}
@@ -132,7 +133,7 @@ func CreateCategory(name string, description string, parentID int64, c echo.Cont
 	}
 
 	// 获取父类目
-	cat, err := mapper.GetCategoryByID(parentID)
+	cat, err := mapper.GetCategoryByID(req.ParentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取父类目失败：%v", err)
 		return nil, fmt.Errorf("获取父类目失败：%v", err)
@@ -140,10 +141,10 @@ func CreateCategory(name string, description string, parentID int64, c echo.Cont
 
 	// 创建子类目
 	newCategory = &model.Category{
-		Name:        name,
-		Description: description,
-		ParentID:    parentID,
-		Path:        fmt.Sprintf("%s/%d", cat.Path, parentID),
+		Name:        req.Name,
+		Description: req.Description,
+		ParentID:    req.ParentID,
+		Path:        fmt.Sprintf("%s/%d", cat.Path, req.ParentID),
 	}
 
 	if err := mapper.CreateCategory(newCategory); err != nil {
@@ -160,23 +161,23 @@ func CreateCategory(name string, description string, parentID int64, c echo.Cont
 }
 
 // UpdateCategory 更新类目
-func UpdateCategory(id int64, name string, description string, parentID int64, c echo.Context) (*category.CategoriesVo, error) {
-	existingCategory, err := mapper.GetCategoryByID(id)
+func UpdateCategory(req *dto.UpdateOneCategoryRequest, c echo.Context) (*category.CategoriesVo, error) {
+	existingCategory, err := mapper.GetCategoryByID(req.ParentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
 		return nil, fmt.Errorf("获取类目失败: %v", err)
 	}
 
-	parentPath, err := mapper.GetParentCategoryPathByID(parentID)
+	parentPath, err := mapper.GetParentCategoryPathByID(req.ParentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取[%s]父类目路径失败：%v", existingCategory.Name, err)
 		return nil, fmt.Errorf("获取[%s]父类目路径失败：%v", existingCategory.Name, err)
 	}
 
-	existingCategory.Name = name
-	existingCategory.Description = description
-	existingCategory.ParentID = parentID
-	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, parentID)
+	existingCategory.Name = req.Name
+	existingCategory.Description = req.Description
+	existingCategory.ParentID = req.ParentID
+	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, req.ParentID)
 
 	if err := mapper.UpdateCategory(existingCategory); err != nil {
 		utils.BizLogger(c).Errorf("[%s]类目更新失败：%v", existingCategory.Name, err)
@@ -198,8 +199,8 @@ func UpdateCategory(id int64, name string, description string, parentID int64, c
 }
 
 // DeleteCategory 软删除类目
-func DeleteCategory(id int64, c echo.Context) ([]category.CategoriesVo, error) {
-	cat, err := mapper.GetCategoryByID(id)
+func DeleteCategory(req *dto.DeleteOneCategoryRequest, c echo.Context) ([]category.CategoriesVo, error) {
+	cat, err := mapper.GetCategoryByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
 		return nil, fmt.Errorf("获取类目失败：%v", err)

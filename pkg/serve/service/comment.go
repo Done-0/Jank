@@ -4,19 +4,21 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
+
 	model "jank.com/jank_blog/internal/model/comment"
 	"jank.com/jank_blog/internal/utils"
+	"jank.com/jank_blog/pkg/serve/controller/comment/dto"
 	"jank.com/jank_blog/pkg/serve/mapper"
 	"jank.com/jank_blog/pkg/vo/comment"
 )
 
 // CreateComment 创建评论
-func CreateComment(content string, userId int64, postId int64, replyToCommentId int64, c echo.Context) (*comment.CommentsVo, error) {
+func CreateComment(req *dto.CreateCommentRequest, c echo.Context) (*comment.CommentsVo, error) {
 	com := &model.Comment{
-		Content:          content,
-		UserId:           userId,
-		PostId:           postId,
-		ReplyToCommentId: replyToCommentId,
+		Content:          req.Content,
+		UserId:           req.UserId,
+		PostId:           req.PostId,
+		ReplyToCommentId: req.ReplyToCommentId,
 	}
 
 	if err := mapper.CreateComment(com); err != nil {
@@ -34,15 +36,15 @@ func CreateComment(content string, userId int64, postId int64, replyToCommentId 
 }
 
 // GetCommentWithReplies 根据 ID 获取评论及其所有回复
-func GetCommentWithReplies(id int64, c echo.Context) (*comment.CommentsVo, error) {
-	com, err := mapper.GetCommentByID(id)
+func GetCommentWithReplies(req *dto.GetOneCommentRequest, c echo.Context) (*comment.CommentsVo, error) {
+	com, err := mapper.GetCommentByID(req.CommentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取评论失败：%v", err)
 		return nil, fmt.Errorf("获取评论失败：%v", err)
 	}
 
 	// 获取评论的所有回复
-	replies, err := mapper.GetReplyByCommentID(id)
+	replies, err := mapper.GetReplyByCommentID(req.CommentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取子评论失败：%v", err)
 		return nil, fmt.Errorf("获取子评论失败：%v", err)
@@ -60,8 +62,8 @@ func GetCommentWithReplies(id int64, c echo.Context) (*comment.CommentsVo, error
 }
 
 // GetCommentGraphByPostID 根据文章 ID 获取评论图结构
-func GetCommentGraphByPostID(postID int64, c echo.Context) ([]*comment.CommentsVo, error) {
-	comments, err := mapper.GetCommentsByPostID(postID)
+func GetCommentGraphByPostID(req *dto.GetCommentGraphRequest, c echo.Context) ([]*comment.CommentsVo, error) {
+	comments, err := mapper.GetCommentsByPostID(req.PostID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取评论图失败：%v", err)
 		return nil, fmt.Errorf("获取评论图失败：%v", err)
@@ -108,8 +110,8 @@ func GetCommentGraphByPostID(postID int64, c echo.Context) ([]*comment.CommentsV
 }
 
 // DeleteComment 软删除评论
-func DeleteComment(id int64, c echo.Context) (*comment.CommentsVo, error) {
-	com, err := mapper.GetCommentByID(id)
+func DeleteComment(req *dto.DeleteCommentRequest, c echo.Context) (*comment.CommentsVo, error) {
+	com, err := mapper.GetCommentByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取评论失败：%v", err)
 		return nil, fmt.Errorf("评论不存在：%v", err)

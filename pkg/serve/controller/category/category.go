@@ -35,9 +35,9 @@ func GetOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	category, err := service.GetCategoryByID(req.ID, c)
+	category, err := service.GetCategoryByID(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(category, c))
@@ -55,7 +55,7 @@ func GetOneCategory(c echo.Context) error {
 func GetCategoryTree(c echo.Context) error {
 	categories, err := service.GetCategoryTree(c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(categories, c))
@@ -84,9 +84,9 @@ func GetCategoryChildrenTree(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	childrenCategories, err := service.GetCategoryChildrenByID(req.ID, c)
+	childrenCategories, err := service.GetCategoryChildrenByID(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(childrenCategories, c))
@@ -114,9 +114,9 @@ func CreateOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	createdCategory, err := service.CreateCategory(req.Name, req.Description, req.ParentID, c)
+	createdCategory, err := service.CreateCategory(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(createdCategory, c))
@@ -147,9 +147,9 @@ func UpdateOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	updatedCategory, err := service.UpdateCategory(req.ID, req.Name, req.Description, req.ParentID, c)
+	updatedCategory, err := service.UpdateCategory(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(updatedCategory, c))
@@ -180,9 +180,9 @@ func DeleteOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	category, err := service.DeleteCategory(req.ID, c)
+	category, err := service.DeleteCategory(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.UnKnowErr, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(category, c))

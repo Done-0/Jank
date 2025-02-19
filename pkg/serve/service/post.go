@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
-	"math"
-
 	"github.com/labstack/echo/v4"
+	"jank.com/jank_blog/pkg/serve/controller/post/dto"
+	"math"
 
 	model "jank.com/jank_blog/internal/model/post"
 	"jank.com/jank_blog/internal/utils"
@@ -12,20 +12,19 @@ import (
 	"jank.com/jank_blog/pkg/vo/post"
 )
 
-// CreatePost 处理文章的创建
-func CreatePost(title string, image string, visibility string, contentHTML string, categoryIDs []int64, c echo.Context) (*post.PostsVo, error) {
-	if visibility == "" {
-		visibility = "private"
+// CreatePost 创建文章页
+func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
+	ContentHTML, ok := c.Get("contentHtml").(string)
+	if !ok {
+		return nil, fmt.Errorf("获取文章内容失败: %v", ContentHTML)
 	}
 
-	categoryIDsStr := utils.ConvertInt64SliceToString(categoryIDs)
-
 	newPost := &model.Post{
-		Title:       title,
-		Image:       image,
-		Visibility:  visibility,
-		ContentHTML: contentHTML,
-		CategoryIDs: categoryIDsStr,
+		Title:       req.Title,
+		Image:       req.Image,
+		Visibility:  req.Visibility,
+		ContentHTML: ContentHTML,
+		CategoryIDs: utils.ConvertInt64SliceToString(req.CategoryIDs),
 	}
 
 	if err := mapper.CreatePost(newPost); err != nil {
@@ -43,15 +42,15 @@ func CreatePost(title string, image string, visibility string, contentHTML strin
 }
 
 // GetPostByIDOrTitle 根据 ID 或 Title 获取文章
-func GetPostByIDOrTitle(id int64, title string, c echo.Context) (interface{}, error) {
-	if id == 0 && title == "" {
+func GetPostByIDOrTitle(req *dto.GetOnePostRequest, c echo.Context) (interface{}, error) {
+	if req.ID == 0 && req.Title == "" {
 		utils.BizLogger(c).Error("参数 id 和 title 不能同时为空")
 		return nil, fmt.Errorf("参数 id 和 title 不能同时为空")
 	}
 
 	// 如果传递了 ID，优先使用 ID 查询
-	if id > 0 {
-		pos, err := mapper.GetPostByID(id)
+	if req.ID > 0 {
+		pos, err := mapper.GetPostByID(req.ID)
 		if err != nil {
 			utils.BizLogger(c).Errorf("根据 ID 获取文章失败: %v", err)
 			return nil, fmt.Errorf("根据 ID 获取文章失败: %v", err)
@@ -71,14 +70,14 @@ func GetPostByIDOrTitle(id int64, title string, c echo.Context) (interface{}, er
 	}
 
 	// 如果没有传 ID，使用 Title 查询
-	posts, err := mapper.GetPostsByTitle(title)
+	posts, err := mapper.GetPostsByTitle(req.Title)
 	if err != nil {
 		utils.BizLogger(c).Errorf("根据标题获取文章失败: %v", err)
 		return nil, fmt.Errorf("根据标题获取文章失败: %v", err)
 	}
 	if len(posts) == 0 {
-		utils.BizLogger(c).Errorf("没有找到与标题 \"%s\" 匹配的文章", title)
-		return nil, fmt.Errorf("没有找到与标题 \"%s\" 匹配的文章", title)
+		utils.BizLogger(c).Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
+		return nil, fmt.Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
 	}
 
 	postResponse := make([]*post.PostsVo, len(posts))
@@ -136,8 +135,13 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 }
 
 // UpdatePost 更新文章
-func UpdatePost(id int64, title string, image string, visibility string, contentMarkdown string, contentHTML string, categoryIDs []int64, c echo.Context) (*post.PostsVo, error) {
-	pos, err := mapper.GetPostByID(id)
+func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
+	ContentHTML, ok := c.Get("contentHtml").(string)
+	if !ok {
+		return nil, fmt.Errorf("获取文章内容失败: %v", ContentHTML)
+	}
+
+	pos, err := mapper.GetPostByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
 		return nil, fmt.Errorf("获取文章失败: %v", err)
@@ -147,16 +151,16 @@ func UpdatePost(id int64, title string, image string, visibility string, content
 		return nil, fmt.Errorf("文章不存在")
 	}
 
-	categoryIDsStr := utils.ConvertInt64SliceToString(categoryIDs)
+	categoryIDsStr := utils.ConvertInt64SliceToString(req.CategoryIDs)
 
-	pos.Title = title
-	pos.Image = image
-	pos.Visibility = visibility
-	pos.ContentMarkdown = contentMarkdown
-	pos.ContentHTML = contentHTML
+	pos.Title = req.Title
+	pos.Image = req.Image
+	pos.Visibility = req.Visibility
+	pos.ContentMarkdown = req.ContentMarkdown
+	pos.ContentHTML = ContentHTML
 	pos.CategoryIDs = categoryIDsStr
 
-	if err := mapper.UpdateOnePostByID(id, pos); err != nil {
+	if err := mapper.UpdateOnePostByID(req.ID, pos); err != nil {
 		utils.BizLogger(c).Errorf("更新文章失败: %v", err)
 		return nil, fmt.Errorf("更新文章失败: %v", err)
 	}
@@ -171,8 +175,8 @@ func UpdatePost(id int64, title string, image string, visibility string, content
 }
 
 // DeletePost 删除文章
-func DeletePost(id int64, c echo.Context) error {
-	pos, err := mapper.GetPostByID(id)
+func DeletePost(req *dto.DeleteOnePostRequest, c echo.Context) error {
+	pos, err := mapper.GetPostByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
 		return fmt.Errorf("获取文章失败: %v", err)
@@ -182,7 +186,7 @@ func DeletePost(id int64, c echo.Context) error {
 		return fmt.Errorf("文章不存在")
 	}
 
-	if err := mapper.DeleteOnePostByID(id); err != nil {
+	if err := mapper.DeleteOnePostByID(req.ID); err != nil {
 		utils.BizLogger(c).Errorf("删除文章失败: %v", err)
 		return fmt.Errorf("删除文章失败: %v", err)
 	}

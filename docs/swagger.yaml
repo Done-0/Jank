@@ -11,13 +11,33 @@ definitions:
       role_code:
         type: string
     type: object
-  account.LoginVO:
+  account.LoginVo:
     description: 登录成功后返回的访问令牌和刷新令牌
     properties:
       access_token:
         type: string
       refresh_token:
         type: string
+    type: object
+  account.PermissionVo:
+    description: 权限信息的返回结构
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+    type: object
+  account.RoleVo:
+    description: 角色信息的返回结构
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
     type: object
   category.CategoriesVo:
     description: 获取类目响应
@@ -55,6 +75,28 @@ definitions:
       user_id:
         type: integer
     type: object
+  dto.AssignPermissionRequest:
+    description: 分配权限给角色的请求结构
+    properties:
+      permission_id:
+        type: integer
+      role_id:
+        type: integer
+    required:
+    - permission_id
+    - role_id
+    type: object
+  dto.AssignRoleRequest:
+    description: 用户分配角色的请求结构
+    properties:
+      permission_ids:
+        type: integer
+      role_id:
+        type: integer
+    required:
+    - permission_ids
+    - role_id
+    type: object
   dto.CreateCommentRequest:
     properties:
       content:
@@ -75,17 +117,15 @@ definitions:
   dto.CreateOneCategoryRequest:
     properties:
       description:
-        maxLength: 225
-        minLength: 0
         type: string
       name:
-        maxLength: 255
         minLength: 1
         type: string
       parent_id:
         type: integer
     required:
     - name
+    - parent_id
     type: object
   dto.CreateOnePostRequest:
     properties:
@@ -108,7 +148,45 @@ definitions:
     - content_html
     - title
     type: object
+  dto.CreatePermissionRequest:
+    description: 创建权限时的请求结构
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+    required:
+    - code
+    - description
+    type: object
+  dto.CreateRoleRequest:
+    description: 创建角色时的请求结构
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+    required:
+    - code
+    - description
+    type: object
   dto.DeleteOnePostRequest:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.DeletePermissionRequest:
+    description: 删除权限时的请求结构
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  dto.DeleteRoleRequest:
+    description: 删除角色时的请求结构
     properties:
       id:
         type: integer
@@ -122,6 +200,17 @@ definitions:
         type: string
     required:
     - email
+    type: object
+  dto.GetOnePostRequest:
+    properties:
+      id:
+        default: 0
+        type: integer
+      title:
+        maxLength: 225
+        type: string
+    required:
+    - id
     type: object
   dto.LoginRequest:
     description: 用户登录请求所需参数
@@ -147,6 +236,7 @@ definitions:
       img_verification_code:
         type: string
       nickname:
+        minLength: 1
         type: string
       password:
         minLength: 6
@@ -159,6 +249,7 @@ definitions:
     - img_verification_code
     - nickname
     - password
+    - phone
     type: object
   dto.ResetPwdRequest:
     description: 用户重置密码所需参数
@@ -188,8 +279,6 @@ definitions:
           $ref: '#/definitions/dto.UpdateOneCategoryRequest'
         type: array
       description:
-        maxLength: 255
-        minLength: 0
         type: string
       id:
         type: integer
@@ -202,9 +291,9 @@ definitions:
       path:
         type: string
     required:
-    - description
     - id
     - name
+    - parent_id
     type: object
   dto.UpdateOnePostRequest:
     properties:
@@ -227,6 +316,34 @@ definitions:
         type: string
     required:
     - category_ids
+    - id
+    type: object
+  dto.UpdatePermissionRequest:
+    description: 更新权限时的请求结构
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+    required:
+    - code
+    - description
+    - id
+    type: object
+  dto.UpdateRoleRequest:
+    description: 更新角色时的请求结构
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+    required:
+    - code
+    - description
     - id
     type: object
   post.PostsVo:
@@ -260,6 +377,96 @@ definitions:
 info:
   contact: {}
 paths:
+  /account/assignPermissionToRole:
+    post:
+      consumes:
+      - application/json
+      description: 根据角色ID和权限ID为角色分配权限
+      parameters:
+      - description: 分配权限信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignPermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 权限分配成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 为角色分配权限
+      tags:
+      - 权限管理
+  /account/assignRoleToUser:
+    post:
+      consumes:
+      - application/json
+      description: 根据用户ID和角色ID为用户分配角色
+      parameters:
+      - description: 分配角色信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 角色分配成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 为用户分配角色
+      tags:
+      - 用户管理
   /account/getAccount:
     post:
       consumes:
@@ -322,7 +529,7 @@ paths:
             - $ref: '#/definitions/vo.Result'
             - properties:
                 data:
-                  $ref: '#/definitions/account.LoginVO'
+                  $ref: '#/definitions/account.LoginVo'
               type: object
         "400":
           description: 参数错误，验证码校验失败
@@ -770,6 +977,172 @@ paths:
       summary: 获取评论图
       tags:
       - 评论
+  /permission/createOnePermission:
+    post:
+      consumes:
+      - application/json
+      description: 创建新的权限，权限信息包括代码和描述
+      parameters:
+      - description: 权限信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/account.PermissionVo'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 创建权限
+      tags:
+      - 权限管理
+  /permission/deleteOnePermission:
+    post:
+      consumes:
+      - application/json
+      description: 根据权限ID删除权限
+      parameters:
+      - description: 权限ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeletePermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 删除权限
+      tags:
+      - 权限管理
+  /permission/listAllPermissions:
+    post:
+      consumes:
+      - application/json
+      description: 获取系统中所有权限的信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/account.PermissionVo'
+                  type: array
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 获取所有权限
+      tags:
+      - 权限管理
+  /permission/updateOnePermission:
+    post:
+      consumes:
+      - application/json
+      description: 更新权限的代码和描述
+      parameters:
+      - description: 权限信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/account.PermissionVo'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 更新权限
+      tags:
+      - 权限管理
   /post/createOnePost:
     post:
       consumes:
@@ -849,7 +1222,7 @@ paths:
       - application/json
       description: 获取所有的文章列表，按创建时间倒序排序
       parameters:
-      - description: 页数
+      - description: 页码
         in: query
         name: page
         type: integer
@@ -884,14 +1257,12 @@ paths:
       - application/json
       description: 根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数
       parameters:
-      - description: 文章 ID
-        in: query
-        name: id
-        type: integer
-      - description: 文章标题
-        in: query
-        name: title
-        type: string
+      - description: 获取文章请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetOnePostRequest'
       produces:
       - application/json
       responses:
@@ -960,6 +1331,172 @@ paths:
       summary: 更新文章
       tags:
       - 文章
+  /role/createOneRole:
+    post:
+      consumes:
+      - application/json
+      description: 创建一个新的角色，角色信息包括代码和描述
+      parameters:
+      - description: 角色信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/account.RoleVo'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 创建角色
+      tags:
+      - 角色管理
+  /role/deleteOneRole:
+    post:
+      consumes:
+      - application/json
+      description: 根据角色ID删除角色
+      parameters:
+      - description: 角色ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 删除角色
+      tags:
+      - 角色管理
+  /role/listAllRoles:
+    post:
+      consumes:
+      - application/json
+      description: 获取系统中所有角色的信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/account.RoleVo'
+                  type: array
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 获取所有角色
+      tags:
+      - 角色管理
+  /role/updateOneRole:
+    post:
+      consumes:
+      - application/json
+      description: 更新角色的代码和描述
+      parameters:
+      - description: 角色信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  $ref: '#/definitions/account.RoleVo'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 更新角色
+      tags:
+      - 角色管理
   /test/hello:
     get:
       consumes:

@@ -34,7 +34,9 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 > 注：本项目当前缺少前端部分，在此诚邀有志于前端开发的开发者加入，共同参与开发工作，期待您的宝贵意见和贡献！
 
-## 预览图
+## 预览
+
+👉[【b站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
 ![home-white.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-white.png)
 ![home-black.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-black.png)
@@ -48,11 +50,11 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **JWT**：安全的用户身份验证机制，确保数据传输的完整性和安全性。
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
 - **前端**：Vue 3 + Nuxt + Shadcn-vue（原项目已不再维护）。
-  > 注：目前正在使用 react + umi + shadcn/ui 进行重构，欢迎提供宝贵意见！
+  > 注：正在使用 react + umi + shadcn/ui 重构，欢迎提供宝贵意见！
 
 ## 功能模块
 
-- **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
+- **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新，支持 RBAC 角色权限控制。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
 - **分类模块**：支持类目树及子类目树递归查询，单一类目查询，以及类目的创建、更新和删除。
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。

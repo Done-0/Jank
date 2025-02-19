@@ -1,4 +1,4 @@
-package swagger_middleware
+package swaggerMiddleware
 
 import (
 	"log"
