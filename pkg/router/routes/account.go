@@ -34,15 +34,17 @@ func RegisterRolePermissionRoutes(r ...*echo.Group) {
 	permissionGroup.POST("/deleteOnePermission", account.DeletePermission)
 	permissionGroup.GET("/listAllPermissions", account.ListPermissions)
 
-	// 用户 -> 角色
-	apiV1.POST("/assignRoleToUser", account.AssignRoleToUser)
-	apiV1.POST("/updateRoleForUser", account.UpdateRoleForUser)
-	apiV1.POST("/deleteRoleFromUser", account.DeleteRoleFromUser)
-	apiV1.GET("/getRolesByUser/:userId", account.GetRolesByUser)
+	// 用户角色管理
+	accRoleGroup := apiV1.Group("/acc-role")
+	accRoleGroup.POST("/assignRoleToAcc", account.AssignRoleToAcc)
+	accRoleGroup.POST("/updateRoleForAcc", account.UpdateRoleForAcc)
+	accRoleGroup.POST("/deleteRoleFromAcc", account.DeleteRoleFromAcc)
+	accRoleGroup.POST("/getRolesByAcc", account.GetRolesByAcc)
 
-	// 角色 -> 权限
-	apiV1.POST("/assignPermissionToRole", account.AssignPermissionToRole)
-	apiV1.POST("/updatePermissionForRole", account.UpdatePermissionForRole)
-	apiV1.POST("/deletePermissionFromRole", account.DeletePermissionFromRole)
-	apiV1.GET("/getPermissionsByRole/:roleId", account.GetPermissionsByRole)
+	// 角色权限管理
+	rolePermissionGroup := apiV1.Group("/role-permission")
+	rolePermissionGroup.POST("/assignPermissionToRole", account.AssignPermissionToRole)
+	rolePermissionGroup.POST("/updatePermissionForRole", account.UpdatePermissionForRole)
+	rolePermissionGroup.POST("/deletePermissionFromRole", account.DeletePermissionFromRole)
+	rolePermissionGroup.POST("/getPermissionsByRole", account.GetPermissionsByRole)
 }

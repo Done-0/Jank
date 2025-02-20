@@ -88,7 +88,7 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 		role = defaultRole
 	}
 
-	if err := mapper.AssignRoleToUser(acc.ID, role.ID); err != nil {
+	if err := mapper.AssignRoleToAcc(acc.ID, role.ID); err != nil {
 		utils.BizLogger(c).Errorf("给用户分配角色失败: %v", err)
 		return nil, fmt.Errorf("给用户分配角色失败: %v", err)
 	}
@@ -164,7 +164,7 @@ func LogoutUser(userId int64, c echo.Context) error {
 }
 
 // ResetPassword 重置密码逻辑
-func ResetPassword(req *dto.ResetPwdRequest, userId int64, c echo.Context) error {
+func ResetPassword(req *dto.ResetPwdRequest, accountID int64, c echo.Context) error {
 	passwordResetLock.Lock()
 	defer passwordResetLock.Unlock()
 
@@ -173,7 +173,7 @@ func ResetPassword(req *dto.ResetPwdRequest, userId int64, c echo.Context) error
 		return fmt.Errorf("两次密码输入不一致")
 	}
 
-	acc, err := mapper.GetAccountByUserID(userId)
+	acc, err := mapper.GetAccountByUserID(accountID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("用户不存在: %v", err)
 		return fmt.Errorf("用户不存在: %v", err)
@@ -262,13 +262,17 @@ func ListRoles(c echo.Context) ([]*account.RoleVo, error) {
 		return nil, fmt.Errorf("获取所有角色失败: %v", err)
 	}
 
-	vo, err := utils.MapModelToVO(roles, &account.RoleVo{})
-	if err != nil {
-		utils.BizLogger(c).Errorf("角色更新时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("角色更新时映射 vo 失败: %v", err)
+	var roleVos []*account.RoleVo
+	for _, role := range roles {
+		roleVo, err := utils.MapModelToVO(role, &account.RoleVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取所有角色时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("获取所有时映射 vo 失败: %v", err)
+		}
+		roleVos = append(roleVos, roleVo.(*account.RoleVo))
 	}
 
-	return vo.([]*account.RoleVo), nil
+	return roleVos, nil
 }
 
 // CreatePermission 创建权限
@@ -329,25 +333,29 @@ func DeletePermission(req *dto.DeletePermissionRequest, c echo.Context) error {
 }
 
 // ListPermissions 获取所有权限
-func ListPermissions(c echo.Context) ([]*model.Permission, error) {
+func ListPermissions(c echo.Context) ([]*account.PermissionVo, error) {
 	permissions, err := mapper.GetAllPermissions()
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取所有权限失败: %v", err)
 		return nil, fmt.Errorf("获取所有权限失败: %v", err)
 	}
 
-	vo, err := utils.MapModelToVO(permissions, &account.PermissionVo{})
-	if err != nil {
-		utils.BizLogger(c).Errorf("权限更新时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("权限更新时映射 vo 失败: %v", err)
+	var permissionVos []*account.PermissionVo
+	for _, permission := range permissions {
+		permissionVo, err := utils.MapModelToVO(permission, &account.PermissionVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取所有权限时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("获取所有权限时映射 vo 失败: %v", err)
+		}
+		permissionVos = append(permissionVos, permissionVo.(*account.PermissionVo))
 	}
 
-	return vo.([]*model.Permission), nil
+	return permissionVos, nil
 }
 
-// AssignRoleToUser 为用户分配角色
-func AssignRoleToUser(req *dto.AssignRoleRequest, c echo.Context) error {
-	if err := mapper.AssignRoleToUser(req.RoleID, req.PermissionID); err != nil {
+// AssignRoleToAcc 为用户分配角色
+func AssignRoleToAcc(req *dto.AssignRoleRequest, c echo.Context) error {
+	if err := mapper.AssignRoleToAcc(req.AccountID, req.RoleID); err != nil {
 		utils.BizLogger(c).Errorf("为用户分配角色失败: %v", err)
 		return fmt.Errorf("为用户分配角色失败: %v", err)
 	}
@@ -365,9 +373,9 @@ func AssignPermissionToRole(req *dto.AssignPermissionRequest, c echo.Context) er
 	return nil
 }
 
-// RemoveRoleFromUser 移除用户角色
-func RemoveRoleFromUser(req *dto.AssignRoleRequest, c echo.Context) error {
-	if err := mapper.DeleteRoleFromUserSoftly(req.RoleID, req.PermissionID); err != nil {
+// RemoveRoleFromAcc 移除用户角色
+func RemoveRoleFromAcc(req *dto.AssignRoleRequest, c echo.Context) error {
+	if err := mapper.DeleteRoleFromAccSoftly(req.AccountID, req.RoleID); err != nil {
 		utils.BizLogger(c).Errorf("移除用户角色失败: %v", err)
 		return fmt.Errorf("移除用户角色失败: %v", err)
 	}
@@ -383,9 +391,9 @@ func RemovePermissionFromRole(req *dto.AssignPermissionRequest, c echo.Context) 
 	return nil
 }
 
-// UpdateRoleForUser 更新用户角色
-func UpdateRoleForUser(req *dto.AssignRoleRequest, c echo.Context) error {
-	if err := mapper.UpdateRoleForUser(req.RoleID, req.PermissionID); err != nil {
+// UpdateRoleForAcc 更新用户角色
+func UpdateRoleForAcc(req *dto.AssignRoleRequest, c echo.Context) error {
+	if err := mapper.UpdateRoleForAcc(req.AccountID, req.RoleID); err != nil {
 		utils.BizLogger(c).Errorf("更新用户角色失败: %v", err)
 		return fmt.Errorf("更新用户角色失败: %v", err)
 	}
@@ -401,21 +409,25 @@ func UpdatePermissionForRole(req *dto.AssignPermissionRequest, c echo.Context) e
 	return nil
 }
 
-// GetRolesByUser 获取用户的所有角色
-func GetRolesByUser(req *dto.GetRolesByUserRequest, c echo.Context) ([]*account.RoleVo, error) {
-	roles, err := mapper.GetRolesByUser(strconv.FormatInt(req.UserID, 10))
+// GetRolesByAcc 获取用户的所有角色
+func GetRolesByAcc(req *dto.GetRolesByAccRequest, c echo.Context) ([]*account.RoleVo, error) {
+	roles, err := mapper.GetRolesByAcc(strconv.FormatInt(req.AccountID, 10))
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取用户角色失败: %v", err)
 		return nil, fmt.Errorf("获取用户角色失败: %v", err)
 	}
 
-	vo, err := utils.MapModelToVO(roles, &account.RoleVo{})
-	if err != nil {
-		utils.BizLogger(c).Errorf("角色更新时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("角色更新时映射 vo 失败: %v", err)
+	var roleVos []*account.RoleVo
+	for _, role := range roles {
+		roleVo, err := utils.MapModelToVO(role, &account.RoleVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("角色更新时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("角色更新时映射 vo 失败: %v", err)
+		}
+		roleVos = append(roleVos, roleVo.(*account.RoleVo))
 	}
 
-	return vo.([]*account.RoleVo), nil
+	return roleVos, nil
 }
 
 // GetPermissionsByRole 获取角色的所有权限
@@ -426,11 +438,15 @@ func GetPermissionsByRole(req *dto.GetPermissionsByRoleRequest, c echo.Context) 
 		return nil, fmt.Errorf("获取角色权限失败: %v", err)
 	}
 
-	vo, err := utils.MapModelToVO(permissions, &account.PermissionVo{})
-	if err != nil {
-		utils.BizLogger(c).Errorf("权限更新时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("权限更新时映射 vo 失败: %v", err)
+	var permissionVos []*account.PermissionVo
+	for _, permission := range permissions {
+		permissionVo, err := utils.MapModelToVO(permission, &account.PermissionVo{})
+		if err != nil {
+			utils.BizLogger(c).Errorf("权限更新时映射 vo 失败: %v", err)
+			return nil, fmt.Errorf("权限更新时映射 vo 失败: %v", err)
+		}
+		permissionVos = append(permissionVos, permissionVo.(*account.PermissionVo))
 	}
 
-	return vo.([]*account.PermissionVo), nil
+	return permissionVos, nil
 }

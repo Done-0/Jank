@@ -9,10 +9,10 @@ package category
 // @Property		path		body	string	true	"类目路径"
 // @Property		children	body	[]CategoriesVo	true	"子类目列表"
 type CategoriesVo struct {
-	ID          int64           `json:"id" xml:"id" form:"id" query:"id"`
-	Name        string          `json:"name" xml:"name" form:"name" query:"name"`
-	Description string          `json:"description" xml:"description" form:"description" query:"description"`
-	ParentID    int64           `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id"`
-	Path        string          `json:"path" xml:"path" form:"path" query:"path"`
-	Children    []*CategoriesVo `json:"children" xml:"children" form:"children" query:"children"`
+	ID          int64           `json:"id"`
+	Name        string          `json:"name"`
+	Description string          `json:"description"`
+	ParentID    int64           `json:"parent_id"`
+	Path        string          `json:"path"`
+	Children    []*CategoriesVo `json:"children"`
 }

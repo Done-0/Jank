@@ -6,5 +6,5 @@ package dto
 // @Param   Description string "权限描述"
 type CreatePermissionRequest struct {
 	Code        string `json:"code" xml:"code" form:"code" query:"code" validate:"required"`
-	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required,default:''"`
+	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required"`
 }

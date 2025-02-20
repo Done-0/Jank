@@ -7,8 +7,8 @@ package account
 // @Property			phone	    body	string	true	"用户手机号"
 // @Property			role_code	body	string	true	"用户角色编码"
 type GetAccountVo struct {
-	Email    string `json:"email" xml:"email" form:"email" query:"email"`
-	Nickname string `json:"nickname" xml:"nickname" form:"nickname" query:"nickname"`
-	Phone    string `json:"phone" xml:"phone" form:"phone" query:"phone"`
-	RoleCode string `json:"role_code" xml:"role_code" form:"role_code" query:"role_code"`
+	Email    string `json:"email"`
+	Nickname string `json:"nickname"`
+	Phone    string `json:"phone"`
+	RoleCode string `json:"role_code"`
 }

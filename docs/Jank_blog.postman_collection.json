@@ -11,199 +11,746 @@
 			"name": "account",
 			"item": [
 				{
-					"name": "registerAccount",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"email_verification_code\": \"894783\",\r\n  \"img_verification_code\": \"O6XT\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "account",
+					"item": [
+						{
+							"name": "registerAccount",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"email_verification_code\": \"894783\",\r\n  \"img_verification_code\": \"O6XT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/account/registerAccount",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"account",
+										"registerAccount"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "127.0.0.1:9010/api/v1/account/registerAccount",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "9010",
-							"path": [
-								"api",
-								"v1",
-								"account",
-								"registerAccount"
-							]
+						{
+							"name": "getAccount",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMjk0MzksInVzZXJJRCI6OH0.wp5HN-JMfbJkWwFpajfVjjK_Z08k4_5Etzy5F0D8aFw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/account/getAccount",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"account",
+										"getAccount"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "loginAccount",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"stirng\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"img_verification_code\": \"PPKX\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/account/loginAccount",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"account",
+										"loginAccount"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logoutAccount",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/account/logoutAccount",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"account",
+										"logoutAccount"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "resetPassword",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzU5OTM3ODgsInVzZXJJZCI6MX0.rvpWjYWCNAFQ655_LqI94YFnMUg7nAkQRtyjtoKBRtQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"again_new_password\": \"string\",\r\n  \"email\": \"string\",\r\n  \"email_verification_code\": \"string\",\r\n  \"new_password\": \"string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/account/resetPassword",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"account",
+										"resetPassword"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "getAccount",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMjk0MzksInVzZXJJRCI6OH0.wp5HN-JMfbJkWwFpajfVjjK_Z08k4_5Etzy5F0D8aFw",
-									"type": "string"
+					"name": "role",
+					"item": [
+						{
+							"name": "createOneRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"2\",\n  \"description\": \"超级管理员\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role/createOneRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role",
+										"createOneRole"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"string\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "updateOneRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"1\",\n  \"description\": \"牛马1\",\n  \"id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role/updateOneRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role",
+										"updateOneRole"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "127.0.0.1:9010/api/v1/account/getAccount",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "9010",
-							"path": [
-								"api",
-								"v1",
-								"account",
-								"getAccount"
-							]
+						{
+							"name": "deleteOneRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role/deleteOneRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role",
+										"deleteOneRole"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "listAllRoles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role/listAllRoles",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role",
+										"listAllRoles"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "loginAccount",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpcnN0OTI3MTcxNTk4QDE2My5jb20iLCJleHAiOjE3MzExMzQzMzksInVzZXJJZCI6OH0.yNW9rAK1CeTiZPL-XugCJOKowfe4oQOvYk9mXRR9Kds",
-									"type": "string"
+					"name": "permission",
+					"item": [
+						{
+							"name": "createOnePermission",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"2\",\n  \"description\": \"超级管理员2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/permission/createOnePermission",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"permission",
+										"createOnePermission"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"stirng\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"img_verification_code\": \"PPKX\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "updateOnePermission",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"1\",\n  \"description\": \"牛马1\",\n  \"id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/permission/updateOnePermission",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"permission",
+										"updateOnePermission"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "127.0.0.1:9010/api/v1/account/loginAccount",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "9010",
-							"path": [
-								"api",
-								"v1",
-								"account",
-								"loginAccount"
-							]
+						{
+							"name": "deleteOnePermission",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/permission/deleteOnePermission",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"permission",
+										"deleteOnePermission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "listAllPermissions",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/permission/listAllPermissions",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"permission",
+										"listAllPermissions"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "logoutAccount",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "acc-role",
+					"item": [
+						{
+							"name": "assignRoleToAcc",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"account_id\": 1,\n  \"role_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/acc-role/assignRoleToAcc",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"acc-role",
+										"assignRoleToAcc"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "127.0.0.1:9010/api/v1/account/logoutAccount",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "9010",
-							"path": [
-								"api",
-								"v1",
-								"account",
-								"logoutAccount"
-							]
+						{
+							"name": "deleteRoleFromAcc",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"account_id\": 0,\n  \"role_id\": 0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/acc-role/deleteRoleFromAcc",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"acc-role",
+										"deleteRoleFromAcc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getRolesByAcc",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"account_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/acc-role/getRolesByAcc",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"acc-role",
+										"getRolesByAcc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateRoleForAcc",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"account_id\": 1,\n  \"role_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/acc-role/updateRoleForAcc",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"acc-role",
+										"updateRoleForAcc"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "resetPassword",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzU5OTM3ODgsInVzZXJJZCI6MX0.rvpWjYWCNAFQ655_LqI94YFnMUg7nAkQRtyjtoKBRtQ",
-									"type": "string"
+					"name": "role-permission",
+					"item": [
+						{
+							"name": "assignPermissionToRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"role_id\": 1,\n  \"permission_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role-permission/assignPermissionToRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role-permission",
+										"assignPermissionToRole"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"again_new_password\": \"string\",\r\n  \"email\": \"string\",\r\n  \"email_verification_code\": \"string\",\r\n  \"new_password\": \"string\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "updatePermissionForRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"role_id\": 0,\n  \"permission_id\": 0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role-permission/updatePermissionForRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role-permission",
+										"updatePermissionForRole"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "127.0.0.1:9010/api/v1/account/resetPassword",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "9010",
-							"path": [
-								"api",
-								"v1",
-								"account",
-								"resetPassword"
-							]
+						{
+							"name": "deletePermissionFromRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"role_id\": 0,\n  \"permission_id\": 0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role-permission/deletePermissionFromRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role-permission",
+										"deletePermissionFromRole"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getPermissionsByRole",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"role_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "127.0.0.1:9010/api/v1/role-permission/getPermissionsByRole",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "9010",
+									"path": [
+										"api",
+										"v1",
+										"role-permission",
+										"getPermissionsByRole"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			],
 			"description": "账户模块"

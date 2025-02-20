@@ -5,6 +5,6 @@ package dto
 // @Param   RoleID       int64  "角色ID"
 // @Param   PermissionID int64  "权限ID"
 type AssignRoleRequest struct {
-	RoleID       int64 `json:"role_id" xml:"role_id" form:"role_id" query:"role_id" validate:"required"`
-	PermissionID int64 `json:"permission_ids" xml:"permission_ids" form:"permission_ids" query:"permission_ids" validate:"required"`
+	AccountID int64 `json:"account_id" xml:"account_id" form:"account_id,gt=0"`
+	RoleID    int64 `json:"role_id" xml:"role_id" form:"role_id" query:"role_id" validate:"required,gt=0"`
 }

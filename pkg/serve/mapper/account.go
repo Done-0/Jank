@@ -16,25 +16,25 @@ func GetAccountByEmail(email string) (*account.Account, error) {
 }
 
 // GetAccountByUserID 根据用户ID获取账户信息
-func GetAccountByUserID(userID int64) (*account.Account, error) {
+func GetAccountByUserID(accountID int64) (*account.Account, error) {
 	var user account.Account
-	if err := global.DB.Where("id = ? AND deleted = ?", userID, 0).First(&user).Error; err != nil {
+	if err := global.DB.Where("id = ? AND deleted = ?", accountID, 0).First(&user).Error; err != nil {
 		return nil, fmt.Errorf("获取用户失败: %v", err)
 	}
 	return &user, nil
 }
 
 // CreateAccount 创建新用户
-func CreateAccount(user *account.Account) error {
-	if err := global.DB.Create(user).Error; err != nil {
+func CreateAccount(acc *account.Account) error {
+	if err := global.DB.Create(acc).Error; err != nil {
 		return fmt.Errorf("创建用户失败: %v", err)
 	}
 	return nil
 }
 
 // UpdateAccount 更新账户信息
-func UpdateAccount(account *account.Account) error {
-	if err := global.DB.Save(account).Error; err != nil {
+func UpdateAccount(acc *account.Account) error {
+	if err := global.DB.Save(acc).Error; err != nil {
 		return fmt.Errorf("更新账户失败: %v", err)
 	}
 	return nil
@@ -131,10 +131,10 @@ func GetAllPermissions() ([]*account.Permission, error) {
 	return permissions, nil
 }
 
-// AssignRoleToUser 为用户分配角色
-func AssignRoleToUser(userID, roleID int64) error {
+// AssignRoleToAcc 为用户分配角色
+func AssignRoleToAcc(accountID, roleID int64) error {
 	accountRole := &account.AccountRole{
-		AccountID: userID,
+		AccountID: accountID,
 		RoleID:    roleID,
 	}
 	if err := global.DB.Create(accountRole).Error; err != nil {
@@ -155,10 +155,10 @@ func AssignPermissionToRole(roleID, permissionID int64) error {
 	return nil
 }
 
-// DeleteRoleFromUserSoftly 移除用户角色
-func DeleteRoleFromUserSoftly(roleID, userID int64) error {
+// DeleteRoleFromAccSoftly 移除用户角色
+func DeleteRoleFromAccSoftly(accountID int64, roleID int64) error {
 	return global.DB.Model(&account.AccountRole{}).
-		Where("role_id = ? AND account_id = ?", roleID, userID).
+		Where("account_id = ? AND role_id = ?", accountID, roleID).
 		Update("deleted", 1).Error
 }
 
@@ -169,10 +169,10 @@ func DeletePermissionFromRoleSoftly(roleID, permissionID int64) error {
 		Update("deleted", 1).Error
 }
 
-// UpdateRoleForUser 更新用户角色
-func UpdateRoleForUser(roleID, userID int64) error {
+// UpdateRoleForAcc 更新用户角色
+func UpdateRoleForAcc(AccountID, roleID int64) error {
 	if err := global.DB.Model(&account.AccountRole{}).
-		Where("account_id = ? AND role_id = ? AND deleted = ?", userID, roleID, 0).
+		Where("account_id = ? AND role_id = ? AND deleted = ?", AccountID, roleID, 0).
 		Update("role_id", roleID).Error; err != nil {
 		return fmt.Errorf("更新用户角色失败: %v", err)
 	}
@@ -190,18 +190,18 @@ func UpdatePermissionForRole(roleID, permissionID int64) error {
 	return nil
 }
 
-// GetRolesByUser 根据用户ID获取所有角色
-func GetRolesByUser(userID string) ([]*account.Role, error) {
-	var roles []*account.Role
-	if err := global.DB.Where("user_id = ? AND deleted = ?", userID, 0).Find(&roles).Error; err != nil {
+// GetRolesByAcc 根据用户ID获取所有角色
+func GetRolesByAcc(accountID string) ([]*account.AccountRole, error) {
+	var roles []*account.AccountRole
+	if err := global.DB.Where("account_id = ? AND deleted = ?", accountID, 0).Find(&roles).Error; err != nil {
 		return nil, fmt.Errorf("查询角色失败: %v", err)
 	}
 	return roles, nil
 }
 
 // GetPermissionsByRole 根据角色ID获取所有权限
-func GetPermissionsByRole(roleID string) ([]*account.Permission, error) {
-	var permissions []*account.Permission
+func GetPermissionsByRole(roleID string) ([]*account.RolePermission, error) {
+	var permissions []*account.RolePermission
 	if err := global.DB.Where("role_id = ? AND deleted = ?", roleID, 0).Find(&permissions).Error; err != nil {
 		return nil, fmt.Errorf("查询权限失败: %v", err)
 	}

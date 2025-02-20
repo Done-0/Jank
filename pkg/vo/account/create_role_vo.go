@@ -6,7 +6,7 @@ package account
 // @Property   Code         string "角色编码"
 // @Property   Description  string "角色描述"
 type CreateRoleVo struct {
-	ID          int64  `json:"id" xml:"id" form:"id" query:"id"`
-	Code        string `json:"code" xml:"code" form:"code" query:"code"`
-	Description string `json:"description" xml:"description" form:"description" query:"description"`
+	ID          int64  `json:"id"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
 }

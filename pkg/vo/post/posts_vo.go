@@ -9,10 +9,10 @@ package post
 // @Property			content_html		body	string	true	"帖子 HTML 格式内容"
 // @Property			category_ids	    body	[]int64	true	"帖子所属分类 ID 列表"
 type PostsVo struct {
-	ID          int64   `json:"id" xml:"id" form:"id" query:"id"`
-	Title       string  `json:"title" xml:"title" form:"title" query:"title"`
-	Image       string  `json:"image" xml:"image" form:"image" query:"image"`
-	Visibility  string  `json:"visibility" xml:"visibility" form:"visibility" query:"visibility"`
-	ContentHTML string  `json:"content_html" xml:"content_html" form:"content_html" query:"content_html"`
-	CategoryIDs []int64 `json:"category_ids" xml:"category_ids" form:"category_ids" query:"category_ids"`
+	ID          int64   `json:"id"`
+	Title       string  `json:"title"`
+	Image       string  `json:"image"`
+	Visibility  string  `json:"visibility"`
+	ContentHTML string  `json:"content_html"`
+	CategoryIDs []int64 `json:"category_ids"`
 }

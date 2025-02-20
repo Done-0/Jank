@@ -6,5 +6,5 @@ package dto
 // @Param   Description string "角色描述"
 type CreateRoleRequest struct {
 	Code        string `json:"code" xml:"code" form:"code" query:"code" validate:"required"`
-	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required,default:''"`
+	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required"`
 }

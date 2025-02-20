@@ -8,5 +8,5 @@ package dto
 type UpdateRoleRequest struct {
 	ID          int64  `json:"id" xml:"id" form:"id" query:"id" validate:"required"`
 	Code        string `json:"code" xml:"code" form:"code" query:"code" validate:"required"`
-	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required,default:''"`
+	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required"`
 }
