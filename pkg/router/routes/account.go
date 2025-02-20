@@ -36,7 +36,13 @@ func RegisterRolePermissionRoutes(r ...*echo.Group) {
 
 	// 用户 -> 角色
 	apiV1.POST("/assignRoleToUser", account.AssignRoleToUser)
+	apiV1.POST("/updateRoleForUser", account.UpdateRoleForUser)
+	apiV1.POST("/deleteRoleFromUser", account.DeleteRoleFromUser)
+	apiV1.GET("/getRolesByUser/:userId", account.GetRolesByUser)
 
 	// 角色 -> 权限
 	apiV1.POST("/assignPermissionToRole", account.AssignPermissionToRole)
+	apiV1.POST("/updatePermissionForRole", account.UpdatePermissionForRole)
+	apiV1.POST("/deletePermissionFromRole", account.DeletePermissionFromRole)
+	apiV1.GET("/getPermissionsByRole/:roleId", account.GetPermissionsByRole)
 }

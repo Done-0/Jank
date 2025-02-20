@@ -212,6 +212,22 @@ definitions:
     required:
     - id
     type: object
+  dto.GetPermissionsByRoleRequest:
+    description: 获取角色权限请求所需参数
+    properties:
+      role_id:
+        type: integer
+    required:
+    - role_id
+    type: object
+  dto.GetRolesByUserRequest:
+    description: 获取角色请求所需参数
+    properties:
+      user_id:
+        type: integer
+    required:
+    - user_id
+    type: object
   dto.LoginRequest:
     description: 用户登录请求所需参数
     properties:
@@ -467,6 +483,96 @@ paths:
       summary: 为用户分配角色
       tags:
       - 用户管理
+  /account/deletePermissionFromRole:
+    post:
+      consumes:
+      - application/json
+      description: 根据角色ID和权限ID移除角色的权限
+      parameters:
+      - description: 移除权限信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignPermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 权限移除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 移除角色权限
+      tags:
+      - 权限管理
+  /account/deleteRoleFromUser:
+    post:
+      consumes:
+      - application/json
+      description: 根据用户ID和角色ID移除用户的角色
+      parameters:
+      - description: 移除角色信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 角色移除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 移除用户角色
+      tags:
+      - 用户管理
   /account/getAccount:
     post:
       consumes:
@@ -502,6 +608,100 @@ paths:
       summary: 获取账户信息
       tags:
       - 账户
+  /account/getPermissionsByRole:
+    get:
+      consumes:
+      - application/json
+      description: 根据角色ID获取角色的所有权限
+      parameters:
+      - description: 获取角色权限信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetPermissionsByRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 权限列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/account.PermissionVo'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 获取角色权限
+      tags:
+      - 权限管理
+  /account/getRolesByUser:
+    get:
+      consumes:
+      - application/json
+      description: 根据用户ID获取用户的所有角色
+      parameters:
+      - description: 获取用户角色信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetRolesByUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 角色列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/account.RoleVo'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 获取用户角色
+      tags:
+      - 用户管理
   /account/loginAccount:
     post:
       consumes:
@@ -661,6 +861,96 @@ paths:
       summary: 重置密码
       tags:
       - 账户
+  /account/updatePermissionForRole:
+    post:
+      consumes:
+      - application/json
+      description: 根据角色ID和权限ID更新角色权限
+      parameters:
+      - description: 更新权限信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignPermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 权限更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 更新角色权限
+      tags:
+      - 权限管理
+  /account/updateRoleForUser:
+    post:
+      consumes:
+      - application/json
+      description: 根据用户ID和角色ID更新用户角色
+      parameters:
+      - description: 更新角色信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 角色更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "500":
+          description: 服务器错误
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.Result'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: 更新用户角色
+      tags:
+      - 用户管理
   /category/createOneCategory:
     post:
       consumes:

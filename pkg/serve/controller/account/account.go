@@ -458,3 +458,183 @@ func AssignPermissionToRole(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, vo.Success("权限分配成功", c))
 }
+
+// DeleteRoleFromUser 移除用户角色
+// @Summary      移除用户角色
+// @Description  根据用户ID和角色ID移除用户的角色
+// @Tags         用户管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.AssignRoleRequest  true  "移除角色信息"
+// @Success      200     {object}  vo.Result{data=string}  "角色移除成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/deleteRoleFromUser [post]
+func DeleteRoleFromUser(c echo.Context) error {
+	req := new(dto.AssignRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.RemoveRoleFromUser(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("角色移除成功", c))
+}
+
+// DeletePermissionFromRole 移除角色权限
+// @Summary      移除角色权限
+// @Description  根据角色ID和权限ID移除角色的权限
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.AssignPermissionRequest  true  "移除权限信息"
+// @Success      200     {object}  vo.Result{data=string}  "权限移除成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/deletePermissionFromRole [post]
+func DeletePermissionFromRole(c echo.Context) error {
+	req := new(dto.AssignPermissionRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.RemovePermissionFromRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("权限移除成功", c))
+}
+
+// UpdateRoleForUser 更新用户角色
+// @Summary      更新用户角色
+// @Description  根据用户ID和角色ID更新用户角色
+// @Tags         用户管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.AssignRoleRequest  true  "更新角色信息"
+// @Success      200     {object}  vo.Result{data=string}  "角色更新成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/updateRoleForUser [post]
+func UpdateRoleForUser(c echo.Context) error {
+	req := new(dto.AssignRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.UpdateRoleForUser(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("用户角色更新成功", c))
+}
+
+// UpdatePermissionForRole 更新角色权限
+// @Summary      更新角色权限
+// @Description  根据角色ID和权限ID更新角色权限
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.AssignPermissionRequest  true  "更新权限信息"
+// @Success      200     {object}  vo.Result{data=string}  "权限更新成功"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/updatePermissionForRole [post]
+func UpdatePermissionForRole(c echo.Context) error {
+	req := new(dto.AssignPermissionRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	err := service.UpdatePermissionForRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success("角色权限更新成功", c))
+}
+
+// GetRolesByUser 获取用户的角色
+// @Summary      获取用户角色
+// @Description  根据用户ID获取用户的所有角色
+// @Tags         用户管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.GetRolesByUserRequest  true  "获取用户角色信息"
+// @Success      200     {object}  vo.Result{data=[]account.RoleVo}  "角色列表"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/getRolesByUser [get]
+func GetRolesByUser(c echo.Context) error {
+	req := new(dto.GetRolesByUserRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	roles, err := service.GetRolesByUser(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success(roles, c))
+}
+
+// GetPermissionsByRole 获取角色的权限
+// @Summary      获取角色权限
+// @Description  根据角色ID获取角色的所有权限
+// @Tags         权限管理
+// @Accept       json
+// @Produce      json
+// @Param        request  body      dto.GetPermissionsByRoleRequest  true  "获取角色权限信息"
+// @Success      200     {object}  vo.Result{data=[]account.PermissionVo}  "权限列表"
+// @Failure      400     {object}  vo.Result{message=string} "参数错误"
+// @Failure      500     {object}  vo.Result{message=string} "服务器错误"
+// @Router       /account/getPermissionsByRole [get]
+func GetPermissionsByRole(c echo.Context) error {
+	req := new(dto.GetPermissionsByRoleRequest)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+	}
+
+	errors := utils.Validator(*req)
+	if errors != nil {
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+	}
+
+	permissions, err := service.GetPermissionsByRole(req, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+	}
+
+	return c.JSON(http.StatusOK, vo.Success(permissions, c))
+}
