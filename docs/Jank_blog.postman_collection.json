@@ -20,7 +20,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"email_verification_code\": \"894783\",\r\n  \"img_verification_code\": \"O6XT\"\r\n}",
+									"raw": "{\r\n  \"email\": \"927171598@qq.com\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"110\",\r\n  \"email_verification_code\": \"513362\",\r\n  \"img_verification_code\": \"5T3P\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -63,7 +63,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"email\": \"string\"\r\n}",
+									"raw": "{\r\n  \"email\": \"927171598@qq.com\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -173,7 +173,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjkyNzE3MTU5OEBxcS5jb20iLCJleHAiOjE3MzU5OTM3ODgsInVzZXJJZCI6MX0.rvpWjYWCNAFQ655_LqI94YFnMUg7nAkQRtyjtoKBRtQ",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoyLCJleHAiOjE3NDAwNzA4NDZ9.tyrGxWzwGZ8C5tM1qC2pYYf0D5jRGzPknrh5pzuTaJ4",
 											"type": "string"
 										}
 									]
@@ -182,7 +182,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"again_new_password\": \"string\",\r\n  \"email\": \"string\",\r\n  \"email_verification_code\": \"string\",\r\n  \"new_password\": \"string\"\r\n}",
+									"raw": "{\r\n  \"new_password\": \"1234567\",\r\n  \"again_new_password\": \"1234567\",\r\n  \"email\": \"927171598@qq.com\",\r\n  \"email_verification_code\": \"296564\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -381,7 +381,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"code\": \"1\",\n  \"description\": \"牛马1\",\n  \"id\": 1\n}",
+									"raw": "{\n      \"id\": 1\n  \"code\": \"1\",\n  \"description\": \"牛马1\",\n\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -776,7 +776,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:9010/api/v1/post/getAllPosts?pageSize=5&page=1",
+							"raw": "127.0.0.1:9010/api/v1/post/getAllPosts?pageSize=5&page=2",
 							"host": [
 								"127",
 								"0",
@@ -797,7 +797,7 @@
 								},
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						}
@@ -828,7 +828,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 2,\r\n  \"title\": \"string\"\r\n}",
+							"raw": "{\r\n  \"id\": 6,\r\n  \"title\": \"string\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -866,23 +866,28 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "contentMarkdown",
-									"type": "file",
-									"src": "/D:/GoSpace/yunosphere/resource-backup/免费教程/文章/Go 入门/Go 接口.md"
-								},
-								{
-									"key": "image",
-									"value": "https://haowallpaper.com/link/common/file/previewFileImg/15812051945034048",
+									"key": "title",
+									"value": "第3个Markdown文件",
 									"type": "text"
 								},
 								{
-									"key": "title",
-									"value": "测试109",
+									"key": "image",
+									"value": "https://haowallpaper.com/link/common/file/previewFileImg/16288183061564800",
 									"type": "text"
 								},
 								{
 									"key": "visibility",
-									"value": "private",
+									"value": "public",
+									"type": "text"
+								},
+								{
+									"key": "content_markdown",
+									"type": "file",
+									"src": "/Users/fender/Documents/WorkSpace/GoSpace/www/jank.com/docs/README.md"
+								},
+								{
+									"key": "category_ids",
+									"value": "[1,2]",
 									"type": "text"
 								}
 							]
@@ -912,13 +917,42 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"contentMarkdown\": \"string\",\r\n  \"id\": 22,\r\n  \"image\": \"string\",\r\n  \"title\": \"string\",\r\n  \"visibility\": \"private\",\r\n  \"category_ids\": [1]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "8",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "第二个Markdown文件",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"value": "https://haowallpaper.com/link/common/file/previewFileImg/16288183061564800",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "visibility",
+									"value": "public",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "content_markdown",
+									"type": "file",
+									"src": "/Users/fender/Documents/WorkSpace/GoSpace/www/jank.com/docs/README.md"
+								},
+								{
+									"key": "category_ids",
+									"value": "",
+									"type": "text",
+									"disabled": true
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "127.0.0.1:9010/api/v1/post/updateOnePost",
@@ -946,7 +980,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 7\r\n}",
+							"raw": "{\r\n  \"id\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1045,7 +1079,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"测试类目2\",\r\n    \"description\": \"测试类目2\",\r\n    \"parent_id\": 0\r\n}",
+							"raw": "{\r\n    \"name\": \"测试类目4\",\r\n    \"description\": \"测试类目4\",\r\n    \"parent_id\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1177,12 +1211,12 @@
 			"name": "verification",
 			"item": [
 				{
-					"name": "genImgVerificationCode",
+					"name": "sendImgVerificationCode",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9010/api/v1/verification/genImgVerificationCode?email=927171598@qq.com",
+							"raw": "http://localhost:9010/api/v1/verification/sendImgVerificationCode?email=927171598@qq.com",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1192,7 +1226,7 @@
 								"api",
 								"v1",
 								"verification",
-								"genImgVerificationCode"
+								"sendImgVerificationCode"
 							],
 							"query": [
 								{

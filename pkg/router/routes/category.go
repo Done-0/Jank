@@ -11,7 +11,7 @@ func RegisterCategoryRoutes(r ...*echo.Group) {
 	categoryGroupV1 := apiV1.Group("/category")
 	categoryGroupV1.GET("/getOneCategory", category.GetOneCategory)
 	categoryGroupV1.GET("/getCategoryTree", category.GetCategoryTree)
-	categoryGroupV1.POST("/getCategoryChildrenTree", category.GetCategoryChildrenTree)
+	categoryGroupV1.GET("/getCategoryChildrenTree", category.GetCategoryChildrenTree)
 	categoryGroupV1.POST("/createOneCategory", category.CreateOneCategory)
 	categoryGroupV1.POST("/updateOneCategory", category.UpdateOneCategory)
 	categoryGroupV1.POST("/deleteOneCategory", category.DeleteOneCategory)

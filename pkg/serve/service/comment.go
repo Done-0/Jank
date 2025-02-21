@@ -69,41 +69,51 @@ func GetCommentGraphByPostID(req *dto.GetCommentGraphRequest, c echo.Context) ([
 		return nil, fmt.Errorf("获取评论图失败：%v", err)
 	}
 
-	commentMap := make(map[int64]*model.Comment)
-	var rootComments []*model.Comment
-
-	// 将评论添加到映射
-	for i := range comments {
-		commentMap[comments[i].ID] = comments[i]
-	}
-
-	// 构建图结构
-	for i := range comments {
-		com := comments[i]
-		if com.ReplyToCommentId == 0 {
-			// 根评论
-			rootComments = append(rootComments, com)
-		} else {
-			// 回复评论
-			if parentComment, exists := commentMap[com.ReplyToCommentId]; exists {
-				// 直接将回复加入父评论的回复列表
-				if parentComment.Reply == nil {
-					parentComment.Reply = make([]*model.Comment, 0)
-				}
-				// 添加回复
-				parentComment.Reply = append(parentComment.Reply, com)
-			}
-		}
-	}
-
+	commentMap := make(map[int64]*comment.CommentsVo)
 	var rootCommentsVo []*comment.CommentsVo
-	for _, rootComment := range rootComments {
-		commentVo, err := utils.MapModelToVO(rootComment, &comment.CommentsVo{})
+
+	for _, com := range comments {
+		commentVo, err := utils.MapModelToVO(com, &comment.CommentsVo{})
 		if err != nil {
 			utils.BizLogger(c).Errorf("获取评论图时映射 vo 失败：%v", err)
 			return nil, fmt.Errorf("获取评论图时映射 vo 失败：%v", err)
 		}
-		rootCommentsVo = append(rootCommentsVo, commentVo.(*comment.CommentsVo))
+		vo := commentVo.(*comment.CommentsVo)
+		vo.Replies = make([]*comment.CommentsVo, 0)
+		commentMap[com.ID] = vo
+
+		if com.ReplyToCommentId == 0 {
+			rootCommentsVo = append(rootCommentsVo, vo)
+		}
+	}
+
+	for _, com := range comments {
+		if com.ReplyToCommentId != 0 {
+			if parentVo, exists := commentMap[com.ReplyToCommentId]; exists {
+				parentVo.Replies = append(parentVo.Replies, commentMap[com.ID])
+			}
+		}
+	}
+
+	// 处理循环引用和确保完整性
+	processed := make(map[int64]bool)
+	var processComment func(*comment.CommentsVo) *comment.CommentsVo
+	processComment = func(vo *comment.CommentsVo) *comment.CommentsVo {
+		if processed[vo.ID] {
+			newVo := *vo
+			newVo.Replies = make([]*comment.CommentsVo, 0)
+			return &newVo
+		}
+		processed[vo.ID] = true
+
+		for i, reply := range vo.Replies {
+			vo.Replies[i] = processComment(reply)
+		}
+		return vo
+	}
+
+	for i, rootVo := range rootCommentsVo {
+		rootCommentsVo[i] = processComment(rootVo)
 	}
 
 	return rootCommentsVo, nil

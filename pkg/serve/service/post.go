@@ -14,17 +14,18 @@ import (
 
 // CreatePost 创建文章页
 func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
-	ContentHTML, ok := c.Get("contentHtml").(string)
+	ContentHTML, ok := c.Get("content_html").(string)
 	if !ok {
 		return nil, fmt.Errorf("获取文章内容失败: %v", ContentHTML)
 	}
 
 	newPost := &model.Post{
-		Title:       req.Title,
-		Image:       req.Image,
-		Visibility:  req.Visibility,
-		ContentHTML: ContentHTML,
-		CategoryIDs: utils.ConvertInt64SliceToString(req.CategoryIDs),
+		Title:           req.Title,
+		Image:           req.Image,
+		Visibility:      req.Visibility,
+		ContentMarkdown: req.ContentMarkdown,
+		ContentHTML:     ContentHTML,
+		CategoryIDs:     utils.ConvertInt64SliceToString(req.CategoryIDs),
 	}
 
 	if err := mapper.CreatePost(newPost); err != nil {
@@ -136,7 +137,7 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 
 // UpdatePost 更新文章
 func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
-	ContentHTML, ok := c.Get("contentHtml").(string)
+	ContentHTML, ok := c.Get("content_html").(string)
 	if !ok {
 		return nil, fmt.Errorf("获取文章内容失败: %v", ContentHTML)
 	}

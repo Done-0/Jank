@@ -3,6 +3,7 @@ package model
 import (
 	account "jank.com/jank_blog/internal/model/account"
 	category "jank.com/jank_blog/internal/model/category"
+	comment "jank.com/jank_blog/internal/model/comment"
 	post "jank.com/jank_blog/internal/model/post"
 )
 
@@ -17,9 +18,12 @@ func GetAllModels() []interface{} {
 		&account.RolePermission{}, // 角色权限关联模型
 
 		// post 模块
-		&post.Post{}, // 帖子模型
+		&post.Post{},
 
 		// category 模块
-		&category.Category{}, // 分类模型
+		&category.Category{},
+
+		// comment 模块
+		&comment.Comment{},
 	}
 }

@@ -23,7 +23,7 @@ const (
 
 var ctx = context.Background()
 
-// GenImgVerificationCode godoc
+// SendImgVerificationCode godoc
 // @Summary      生成图形验证码并返回Base64编码
 // @Description  生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。
 // @Tags         账户
@@ -33,8 +33,8 @@ var ctx = context.Background()
 // @Success      200   {object} vo.Result{data=map[string]string} "成功返回验证码的Base64编码"
 // @Failure      400   {object} vo.Result{data=string} "请求参数错误，邮箱地址为空"
 // @Failure      500   {object} vo.Result{data=string} "服务器错误，生成验证码失败"
-// @Router       /verification/genImgVerificationCode [get]
-func GenImgVerificationCode(c echo.Context) error {
+// @Router       /verification/sendImgVerificationCode [get]
+func SendImgVerificationCode(c echo.Context) error {
 	email := c.QueryParam("email")
 	if email == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")

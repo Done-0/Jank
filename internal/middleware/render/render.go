@@ -22,7 +22,7 @@ func MarkdownRender() echo.MiddlewareFunc {
 
 // bodyParser 用于解析 JSON 请求体
 type bodyParser struct {
-	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown"`
+	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown" validator:"required" default:""`
 }
 
 // MarkdownConfig 用于配置 Goldmark 渲染器
@@ -134,7 +134,7 @@ func renderMarkdown(c echo.Context, md goldmark.Markdown, markdown []byte, next 
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Markdown 渲染失败"})
 	}
 
-	c.Set("contentHtml", buf.String())
+	c.Set("content_html", buf.String())
 
 	return next(c)
 }

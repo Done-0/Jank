@@ -8,8 +8,6 @@ definitions:
         type: string
       phone:
         type: string
-      role_code:
-        type: string
     type: object
   account.LoginVo:
     description: 登录成功后返回的访问令牌和刷新令牌
@@ -94,6 +92,7 @@ definitions:
       role_id:
         type: integer
     required:
+    - account_id
     - role_id
     type: object
   dto.CreateCommentRequest:
@@ -121,10 +120,10 @@ definitions:
         minLength: 1
         type: string
       parent_id:
+        minimum: 0
         type: integer
     required:
     - name
-    - parent_id
     type: object
   dto.CreateOnePostRequest:
     properties:
@@ -132,7 +131,7 @@ definitions:
         items:
           type: integer
         type: array
-      content_html:
+      content_markdown:
         type: string
       image:
         type: string
@@ -144,7 +143,6 @@ definitions:
         default: private
         type: string
     required:
-    - content_html
     - title
     type: object
   dto.CreatePermissionRequest:
@@ -251,9 +249,11 @@ definitions:
       img_verification_code:
         type: string
       nickname:
+        maxLength: 20
         minLength: 1
         type: string
       password:
+        maxLength: 20
         minLength: 6
         type: string
       phone:
@@ -264,7 +264,6 @@ definitions:
     - img_verification_code
     - nickname
     - password
-    - phone
     type: object
   dto.ResetPwdRequest:
     description: 用户重置密码所需参数
@@ -289,10 +288,6 @@ definitions:
     type: object
   dto.UpdateOneCategoryRequest:
     properties:
-      children:
-        items:
-          $ref: '#/definitions/dto.UpdateOneCategoryRequest'
-        type: array
       description:
         type: string
       id:
@@ -302,13 +297,11 @@ definitions:
         minLength: 1
         type: string
       parent_id:
+        minimum: 0
         type: integer
-      path:
-        type: string
     required:
     - id
     - name
-    - parent_id
     type: object
   dto.UpdateOnePostRequest:
     properties:
@@ -330,7 +323,6 @@ definitions:
         default: private
         type: string
     required:
-    - category_ids
     - id
     type: object
   dto.UpdatePermissionRequest:
@@ -370,6 +362,8 @@ definitions:
         type: array
       content_html:
         type: string
+      content_markdown:
+        type: string
       id:
         type: integer
       image:
@@ -408,7 +402,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 角色分配成功
+          description: 用户角色分配成功
           schema:
             allOf:
             - $ref: '#/definitions/vo.Result'
@@ -453,7 +447,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 角色移除成功
+          description: 角色删除成功
           schema:
             allOf:
             - $ref: '#/definitions/vo.Result'
@@ -734,11 +728,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/dto.ResetPwdRequest'
-      - description: 邮箱验证码
-        in: query
-        name: EmailVerificationCode
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -1454,7 +1443,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 权限分配成功
+          description: 角色权限分配成功
           schema:
             allOf:
             - $ref: '#/definitions/vo.Result'
@@ -1499,7 +1488,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: 权限移除成功
+          description: 角色权限删除成功
           schema:
             allOf:
             - $ref: '#/definitions/vo.Result'
@@ -1898,7 +1887,36 @@ paths:
             $ref: '#/definitions/vo.Result'
       tags:
       - test
-  /verification/genImgVerificationCode:
+  /verification/sendEmailVerificationCode:
+    get:
+      consumes:
+      - application/json
+      description: 向指定邮箱发送验证码，验证码有效期为3分钟
+      parameters:
+      - description: 邮箱地址，用于发送验证码
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 验证码发送成功, 请注意查收邮件
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "400":
+          description: 请求参数错误，邮箱地址为空
+          schema:
+            $ref: '#/definitions/vo.Result'
+        "500":
+          description: 服务器错误，验证码发送失败
+          schema:
+            $ref: '#/definitions/vo.Result'
+      summary: 发送邮箱验证码
+      tags:
+      - 账户
+  /verification/sendImgVerificationCode:
     get:
       consumes:
       - application/json
@@ -1942,35 +1960,6 @@ paths:
                   type: string
               type: object
       summary: 生成图形验证码并返回Base64编码
-      tags:
-      - 账户
-  /verification/sendEmailVerificationCode:
-    get:
-      consumes:
-      - application/json
-      description: 向指定邮箱发送验证码，验证码有效期为3分钟
-      parameters:
-      - description: 邮箱地址，用于发送验证码
-        in: query
-        name: email
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 验证码发送成功, 请注意查收邮件
-          schema:
-            $ref: '#/definitions/vo.Result'
-        "400":
-          description: 请求参数错误，邮箱地址为空
-          schema:
-            $ref: '#/definitions/vo.Result'
-        "500":
-          description: 服务器错误，验证码发送失败
-          schema:
-            $ref: '#/definitions/vo.Result'
-      summary: 发送邮箱验证码
       tags:
       - 账户
 swagger: "2.0"

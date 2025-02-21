@@ -18,19 +18,9 @@ func GetCategoryByID(id int64) (*category.Category, error) {
 }
 
 // GetCategoriesByParentID 根据父类目 ID 查找直接子类目
-func GetCategoriesByParentID(parentID int64) ([]category.Category, error) {
-	var categories []category.Category
+func GetCategoriesByParentID(parentID int64) ([]*category.Category, error) {
+	var categories []*category.Category
 	err := global.DB.Where("parent_id = ? AND deleted = ?", parentID, 0).Find(&categories).Error
-	if err != nil {
-		return nil, err
-	}
-	return categories, nil
-}
-
-// GetCategoriesByParentPath 根据父类目路径查找所有子类目
-func GetCategoriesByParentPath(parentPath string) ([]category.Category, error) {
-	var categories []category.Category
-	err := global.DB.Where("path LIKE ? AND deleted = ?", fmt.Sprintf("%s%%", parentPath), 0).Find(&categories).Error
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +77,14 @@ func UpdateCategory(category *category.Category) error {
 }
 
 // DeleteCategoriesByPathSoftly 软删除类目及其子类目
-func DeleteCategoriesByPathSoftly(path string) error {
+func DeleteCategoriesByPathSoftly(path string, id int64) error {
+	if err := global.DB.Model(&category.Category{}).
+		Where("id = ? AND deleted = ?", id, 0).
+		Update("deleted", 1).Error; err != nil {
+		return err
+	}
+
 	return global.DB.Model(&category.Category{}).
-		Where("path LIKE ? AND deleted = ?", fmt.Sprintf("%s%%", path), 0).
+		Where("path LIKE ? AND deleted = ? AND path != ?", fmt.Sprintf("%s%%", path), 0, path).
 		Update("deleted", 1).Error
 }

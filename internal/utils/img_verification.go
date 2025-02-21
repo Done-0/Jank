@@ -5,12 +5,12 @@ import (
 )
 
 const (
-	CaptchaSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" // 验证码字符源
-	FontFile      = "wqy-microhei.ttc"                                               // 字体文件
-	ImgHeight     = 80                                                               // 验证码图片高度
-	ImgWidth      = 200                                                              // 验证码图片宽度
-	NoiseCount    = 0                                                                // 干扰点数量
-	CaptchaLength = 4                                                                // 验证码字符长度
+	CaptchaSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" // 验证码字符源
+	FontFile      = "wqy-microhei.ttc"                     // 字体文件
+	ImgHeight     = 80                                     // 验证码图片高度
+	ImgWidth      = 200                                    // 验证码图片宽度
+	NoiseCount    = 0                                      // 干扰点数量
+	CaptchaLength = 4                                      // 验证码字符长度
 )
 
 var store = base64Captcha.DefaultMemStore

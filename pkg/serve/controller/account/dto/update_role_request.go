@@ -6,7 +6,7 @@ package dto
 // @Param   Code        string "角色编码"
 // @Param   Description string "角色描述"
 type UpdateRoleRequest struct {
-	ID          int64  `json:"id" xml:"id" form:"id" query:"id" validate:"required"`
+	ID          int64  `json:"id" xml:"id" form:"id" query:"id" validate:"required,gt=0"`
 	Code        string `json:"code" xml:"code" form:"code" query:"code" validate:"required"`
 	Description string `json:"description" xml:"description" form:"description" query:"description" validate:"required"`
 }

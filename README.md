@@ -54,7 +54,8 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 功能模块
 
-- **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新，支持 RBAC 角色权限控制。
+- **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
+- **权限模块**：实现 RBAC（Role-Based Access Control）角色权限管理，支持用户-角色-权限的增删改查。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
 - **分类模块**：支持类目树及子类目树递归查询，单一类目查询，以及类目的创建、更新和删除。
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
@@ -62,10 +63,10 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **其他功能**：
   - 提供 OpenAPI 接口文档
   - 集成 Air 实现热重载
-  - 使用 Logrus 实现日志记录
+  - 提供 Logrus 实现日志记录
   - 支持 CORS 跨域请求
   - 提供 CSRF 和 XSS 防护
-  - 支持 Markdown 的服务端渲染(暂停维护)
+  - 支持 Markdown 的服务端渲染
   - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
 ## 本地开发
@@ -125,9 +126,11 @@ docker-compose up -d
 
 1. **本地启动查看 swagger 文档**：本地启动应用后，通过浏览器访问 [http://localhost:9010/swagger/index.html](http://localhost:9010/swagger/index.html)
 
-2. **postman 文档**：在项目根目录下，导入 `docs/Jank_blog.postman_collection.json` 至 Postman 查看。
+2. **README.md 文档**：在 `docs` 目录下，打开 `README.md` 文件查看。
 
-## 架构图
+3. **postman 文档**：在 `docs` 目录下，导入 `docs/Jank_blog.postman_collection.json` 至 Postman 查看。
+
+## 架构图（待更新）
 
 **架构图及可视化接口文档**：在项目根目录中打开 `docs/jank_blog_architecture.drawio` 文件。
 
@@ -138,6 +141,14 @@ docker-compose up -d
 如果有任何疑问或建议，欢迎加入官方社区交流。
 
 <img src="https://s2.loli.net/2025/01/25/L9BspuHnrIeim7S.jpg" alt="官方社区" width="300" />
+
+## 特别鸣谢
+
+感谢各位对本项目的支持！
+
+<div style="display: flex; flex-wrap: wrap;">
+  <img src="https://s2.loli.net/2025/02/21/B6Aq9HVOGvJzEyI.jpg" alt="c" style="border-radius: 50%; width: 150px; height: 150px; margin: 10px;" />
+</div>
 
 ## 联系合作
 

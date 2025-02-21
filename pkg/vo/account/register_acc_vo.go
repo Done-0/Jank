@@ -6,7 +6,6 @@ package account
 // @Property			nickname	body	string	true	"用户昵称"
 // @Property			role_code	body	string	true	"用户角色编码"
 type RegisterAccountVo struct {
-	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
-	RoleCode string `json:"role_code"`
+	Email    string `json:"email"`
 }

@@ -43,10 +43,6 @@ func getValidCategoryIDs(postID int64, categoryIDs string) (string, bool, error)
 
 // CreatePost 将文章保存到数据库
 func CreatePost(newPost *post.Post) error {
-	if newPost == nil {
-		return fmt.Errorf("文章不能为空")
-	}
-
 	validCategoryIDs, _, err := getValidCategoryIDs(0, newPost.CategoryIDs)
 	if err != nil {
 		return err
@@ -58,10 +54,6 @@ func CreatePost(newPost *post.Post) error {
 
 // GetPostByID 根据 ID 获取文章
 func GetPostByID(id int64) (*post.Post, error) {
-	if id <= 0 {
-		return nil, fmt.Errorf("文章 ID 无效")
-	}
-
 	var pos post.Post
 	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&pos).Error
 	if err != nil {

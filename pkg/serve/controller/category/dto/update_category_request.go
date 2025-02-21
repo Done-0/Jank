@@ -8,10 +8,8 @@ package dto
 // @Param path        body     string  false "类目路径"
 // @Param children    body     array   false "子类目"
 type UpdateOneCategoryRequest struct {
-	ID          int64                       `json:"id" xml:"id" form:"id" query:"id" validate:"required,gt=0"`
-	Name        string                      `json:"name" xml:"name" form:"name" query:"name" validate:"required,min=1,max=255"`
-	Description string                      `json:"description" xml:"description" form:"description" query:"description" default:""`
-	ParentID    int64                       `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id" validate:"required,gt=0"`
-	Path        string                      `json:"path" xml:"path" form:"path" query:"path"`
-	Children    []*UpdateOneCategoryRequest `json:"children" xml:"children" form:"children" query:"children"`
+	ID          int64  `json:"id" xml:"id" form:"id" query:"id" validate:"required,gt=0"`
+	Name        string `json:"name" xml:"name" form:"name" query:"name" validate:"required,min=1,max=255"`
+	Description string `json:"description" xml:"description" form:"description" query:"description" default:""`
+	ParentID    int64  `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id" validate:"gte=0"`
 }

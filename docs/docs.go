@@ -41,7 +41,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "角色分配成功",
+                        "description": "用户角色分配成功",
                         "schema": {
                             "allOf": [
                                 {
@@ -123,7 +123,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "角色移除成功",
+                        "description": "角色删除成功",
                         "schema": {
                             "allOf": [
                                 {
@@ -617,13 +617,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/dto.ResetPwdRequest"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "邮箱验证码",
-                        "name": "EmailVerificationCode",
-                        "in": "query",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1831,7 +1824,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "权限分配成功",
+                        "description": "角色权限分配成功",
                         "schema": {
                             "allOf": [
                                 {
@@ -1913,7 +1906,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "权限移除成功",
+                        "description": "角色权限删除成功",
                         "schema": {
                             "allOf": [
                                 {
@@ -2614,7 +2607,51 @@ const docTemplate = `{
                 }
             }
         },
-        "/verification/genImgVerificationCode": {
+        "/verification/sendEmailVerificationCode": {
+            "get": {
+                "description": "向指定邮箱发送验证码，验证码有效期为3分钟",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "账户"
+                ],
+                "summary": "发送邮箱验证码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "邮箱地址，用于发送验证码",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "验证码发送成功, 请注意查收邮件",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误，邮箱地址为空",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误，验证码发送失败",
+                        "schema": {
+                            "$ref": "#/definitions/vo.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/verification/sendImgVerificationCode": {
             "get": {
                 "description": "生成单个图形验证码并将其返回为Base64编码字符串，用户可以用该验证码进行校验。",
                 "consumes": [
@@ -2696,50 +2733,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/verification/sendEmailVerificationCode": {
-            "get": {
-                "description": "向指定邮箱发送验证码，验证码有效期为3分钟",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "账户"
-                ],
-                "summary": "发送邮箱验证码",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "邮箱地址，用于发送验证码",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "验证码发送成功, 请注意查收邮件",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    },
-                    "400": {
-                        "description": "请求参数错误，邮箱地址为空",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误，验证码发送失败",
-                        "schema": {
-                            "$ref": "#/definitions/vo.Result"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -2754,9 +2747,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "phone": {
-                    "type": "string"
-                },
-                "role_code": {
                     "type": "string"
                 }
             }
@@ -2877,6 +2867,7 @@ const docTemplate = `{
             "description": "用户分配角色的请求结构",
             "type": "object",
             "required": [
+                "account_id",
                 "role_id"
             ],
             "properties": {
@@ -2915,8 +2906,7 @@ const docTemplate = `{
         "dto.CreateOneCategoryRequest": {
             "type": "object",
             "required": [
-                "name",
-                "parent_id"
+                "name"
             ],
             "properties": {
                 "description": {
@@ -2927,14 +2917,14 @@ const docTemplate = `{
                     "minLength": 1
                 },
                 "parent_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "minimum": 0
                 }
             }
         },
         "dto.CreateOnePostRequest": {
             "type": "object",
             "required": [
-                "content_html",
                 "title"
             ],
             "properties": {
@@ -2944,7 +2934,7 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 },
-                "content_html": {
+                "content_markdown": {
                     "type": "string"
                 },
                 "image": {
@@ -3108,8 +3098,7 @@ const docTemplate = `{
                 "email_verification_code",
                 "img_verification_code",
                 "nickname",
-                "password",
-                "phone"
+                "password"
             ],
             "properties": {
                 "email": {
@@ -3123,10 +3112,12 @@ const docTemplate = `{
                 },
                 "nickname": {
                     "type": "string",
+                    "maxLength": 20,
                     "minLength": 1
                 },
                 "password": {
                     "type": "string",
+                    "maxLength": 20,
                     "minLength": 6
                 },
                 "phone": {
@@ -3166,16 +3157,9 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "id",
-                "name",
-                "parent_id"
+                "name"
             ],
             "properties": {
-                "children": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.UpdateOneCategoryRequest"
-                    }
-                },
                 "description": {
                     "type": "string"
                 },
@@ -3188,17 +3172,14 @@ const docTemplate = `{
                     "minLength": 1
                 },
                 "parent_id": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "string"
+                    "type": "integer",
+                    "minimum": 0
                 }
             }
         },
         "dto.UpdateOnePostRequest": {
             "type": "object",
             "required": [
-                "category_ids",
                 "id"
             ],
             "properties": {
@@ -3279,6 +3260,9 @@ const docTemplate = `{
                     }
                 },
                 "content_html": {
+                    "type": "string"
+                },
+                "content_markdown": {
                     "type": "string"
                 },
                 "id": {

@@ -14,5 +14,5 @@ type CommentsVo struct {
 	UserId           int64         `json:"user_id"`
 	PostId           int64         `json:"post_id"`
 	ReplyToCommentId int64         `json:"reply_to_comment_id"`
-	Reply            []*CommentsVo `json:"replies"`
+	Replies          []*CommentsVo `json:"replies"`
 }

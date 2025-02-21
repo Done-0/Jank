@@ -11,10 +11,6 @@ import (
 	"net/http"
 )
 
-const (
-	LocalsUserIdKey = "Locals_User_Id"
-)
-
 // GetAccount godoc
 // @Summary      获取账户信息
 // @Description  根据提供的邮箱获取对应用户的详细信息
@@ -114,7 +110,7 @@ func LoginAccount(c echo.Context) error {
 
 	response, err := service.LoginUser(req, c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizErr.New(bizErr.UnKnowErr, err.Error()), c))
+		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -131,12 +127,7 @@ func LoginAccount(c echo.Context) error {
 // @Security     BearerAuth
 // @Router       /account/logoutAccount [post]
 func LogoutAccount(c echo.Context) error {
-	userId, ok := c.Get(LocalsUserIdKey).(int64)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizErr.New(bizErr.UnKnowErr, "用户未登录"), c))
-	}
-
-	if err := service.LogoutUser(userId, c); err != nil {
+	if err := service.LogoutUser(c); err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
@@ -150,7 +141,6 @@ func LogoutAccount(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.ResetPwdRequest  true  "重置密码信息"
-// @Param        EmailVerificationCode  query   string  true  "邮箱验证码"
 // @Success      200     {object}   vo.Result{data=string}  "密码重置成功"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "未授权，用户未登录"
@@ -158,11 +148,6 @@ func LogoutAccount(c echo.Context) error {
 // @security     BearerAuth
 // @Router       /account/resetPassword [post]
 func ResetPassword(c echo.Context) error {
-	accountID, ok := c.Get(LocalsUserIdKey).(int64)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, vo.Fail(nil, bizErr.New(bizErr.UnKnowErr, "用户未登录"), c))
-	}
-
 	req := new(dto.ResetPwdRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
@@ -177,7 +162,7 @@ func ResetPassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
-	err := service.ResetPassword(req, accountID, c)
+	err := service.ResetPassword(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -406,7 +391,7 @@ func ListPermissions(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.AssignRoleRequest  true  "分配角色信息"
-// @Success      200     {object}  vo.Result{data=string}  "角色分配成功"
+// @Success      200     {object}  vo.Result{data=string}  "用户角色分配成功"
 // @Failure      400     {object}  vo.Result{message=string} "参数错误"
 // @Failure      500     {object}  vo.Result{message=string} "服务器错误"
 // @Router       /acc-role/assignRoleToAcc [post]
@@ -426,7 +411,7 @@ func AssignRoleToAcc(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("角色分配成功", c))
+	return c.JSON(http.StatusOK, vo.Success("用户角色分配成功", c))
 }
 
 // AssignPermissionToRole 为角色分配权限
@@ -436,7 +421,7 @@ func AssignRoleToAcc(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.AssignPermissionRequest  true  "分配权限信息"
-// @Success      200     {object}  vo.Result{data=string}  "权限分配成功"
+// @Success      200     {object}  vo.Result{data=string}  "角色权限分配成功"
 // @Failure      400     {object}  vo.Result{message=string} "参数错误"
 // @Failure      500     {object}  vo.Result{message=string} "服务器错误"
 // @Router       /role-permission/assignPermissionToRole [post]
@@ -456,7 +441,7 @@ func AssignPermissionToRole(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("权限分配成功", c))
+	return c.JSON(http.StatusOK, vo.Success("角色权限分配成功", c))
 }
 
 // DeleteRoleFromAcc 移除用户角色
@@ -466,7 +451,7 @@ func AssignPermissionToRole(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.AssignRoleRequest  true  "移除角色信息"
-// @Success      200     {object}  vo.Result{data=string}  "角色移除成功"
+// @Success      200     {object}  vo.Result{data=string}  "角色删除成功"
 // @Failure      400     {object}  vo.Result{message=string} "参数错误"
 // @Failure      500     {object}  vo.Result{message=string} "服务器错误"
 // @Router       /acc-role/deleteRoleFromAcc [post]
@@ -486,7 +471,7 @@ func DeleteRoleFromAcc(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("角色移除成功", c))
+	return c.JSON(http.StatusOK, vo.Success("角色权限删除成功", c))
 }
 
 // DeletePermissionFromRole 移除角色权限
@@ -496,7 +481,7 @@ func DeleteRoleFromAcc(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.AssignPermissionRequest  true  "移除权限信息"
-// @Success      200     {object}  vo.Result{data=string}  "权限移除成功"
+// @Success      200     {object}  vo.Result{data=string}  "角色权限删除成功"
 // @Failure      400     {object}  vo.Result{message=string} "参数错误"
 // @Failure      500     {object}  vo.Result{message=string} "服务器错误"
 // @Router       /role-permission/deletePermissionFromRole [post]
@@ -516,7 +501,7 @@ func DeletePermissionFromRole(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("权限移除成功", c))
+	return c.JSON(http.StatusOK, vo.Success("角色权限删除成功", c))
 }
 
 // UpdateRoleForAcc 更新用户角色

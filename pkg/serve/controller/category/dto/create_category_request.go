@@ -7,5 +7,5 @@ package dto
 type CreateOneCategoryRequest struct {
 	Name        string `json:"name" xml:"name" form:"name" query:"name" validate:"required,min=1"`
 	Description string `json:"description" xml:"description" form:"description" query:"description" default:""`
-	ParentID    int64  `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id" validate:"required,gt=0"`
+	ParentID    int64  `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id" validate:"gte=0"`
 }

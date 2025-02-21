@@ -15,8 +15,8 @@ func GetAccountByEmail(email string) (*account.Account, error) {
 	return &user, nil
 }
 
-// GetAccountByUserID 根据用户ID获取账户信息
-func GetAccountByUserID(accountID int64) (*account.Account, error) {
+// GetAccountByAccountID 根据用户ID获取账户信息
+func GetAccountByAccountID(accountID int64) (*account.Account, error) {
 	var user account.Account
 	if err := global.DB.Where("id = ? AND deleted = ?", accountID, 0).First(&user).Error; err != nil {
 		return nil, fmt.Errorf("获取用户失败: %v", err)
@@ -165,7 +165,7 @@ func DeleteRoleFromAccSoftly(accountID int64, roleID int64) error {
 // DeletePermissionFromRoleSoftly 移除角色权限
 func DeletePermissionFromRoleSoftly(roleID, permissionID int64) error {
 	return global.DB.Model(&account.RolePermission{}).
-		Where("role_id = ? AND permission = ?", roleID, permissionID).
+		Where("role_id = ? AND permission_id = ?", roleID, permissionID).
 		Update("deleted", 1).Error
 }
 
