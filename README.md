@@ -61,13 +61,13 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
 - **插件系统**：正在开发中...
 - **其他功能**：
-  - 提供 OpenAPI 接口文档
-  - 集成 Air 实现热重载
-  - 提供 Logrus 实现日志记录
-  - 支持 CORS 跨域请求
-  - 提供 CSRF 和 XSS 防护
-  - 支持 Markdown 的服务端渲染
-  - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
+    - 提供 OpenAPI 接口文档
+    - 集成 Air 实现热重载
+    - 提供 Logrus 实现日志记录
+    - 支持 CORS 跨域请求
+    - 提供 CSRF 和 XSS 防护
+    - 支持 Markdown 的服务端渲染
+    - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
 ## 本地开发
 
@@ -118,9 +118,31 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## Docker 容器部署
 
-```bash
-docker-compose up -d
-```
+1. 修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
+
+   ```yaml
+   # mysql 数据库配置
+    DB_USER: "<DATABASE_USER>"
+    DB_PSW: "<DATABASE_PASSWORD>"
+
+   # QQ 邮箱和 SMTP 授权码（可选）
+   QQ_SMTP: "<QQ_SMTP>"
+   FROM_EMAIL: "<FROM_QQ_EMAIL>"
+   ```
+
+2. 修改 `docker-compose.yaml` 文件中的环境变量，示例如下：
+
+   ```yaml
+   environment:
+      - MYSQL_USER=<DATABASE_USER>
+      - MYSQL_PASSWORD=<DATABASE_PASSWORD>
+   ```
+
+3. 启动容器：
+
+    ```bash
+    docker-compose up -d
+    ```
 
 ## 接口文档
 

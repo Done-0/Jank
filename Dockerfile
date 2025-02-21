@@ -1,5 +1,5 @@
 # 第一阶段：构建阶段
-FROM golang:1.23 AS builder
+FROM golang:1.23.0 AS builder
 
 # 设置环境变量，确保 Go 编译时设置为 Linux 环境，禁用 CGO
 ENV CGO_ENABLED=0 GOOS=linux
@@ -19,7 +19,7 @@ COPY . .
 RUN go build -o main .
 
 # 第二阶段：生产镜像
-FROM alpine:latest
+FROM alpine:3.18
 
 # 安装基础依赖，如 CA 证书和时区
 RUN apk --no-cache add ca-certificates tzdata

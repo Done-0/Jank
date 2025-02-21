@@ -1,6 +1,7 @@
 # 应用相关
 app:
   APP_NAME: "JANK_BLOG"
+  APP_HOST: "localhost"
   APP_PORT: "9010"
   QQ_SMTP: "<QQ_SMTP>"
   FROM_EMAIL: "<FROM_QQ_EMAIL>"
@@ -8,14 +9,14 @@ app:
 # 数据库相关
 database:
   DB_NAME: "jank"
-  DB_HOST: "127.0.0.1"
+  DB_HOST: "127.0.0.1" # 如果是 docker 部署，则改为 mysql 容器的名称，如 mysql_db
   DB_PORT: "3306"
   DB_USER: "<DATABASE_USER>"
   DB_PSW: "<DATABASE_PASSWORD>"
 
 # Redis 相关
 redis:
-  REDIS_HOST: "127.0.0.1"
+  REDIS_HOST: "127.0.0.1" # 如果是 docker 部署，则改为 redis 容器的名称, 如 redis_db
   REDIS_DB: "0"
   REDIS_PSW: ""
 
