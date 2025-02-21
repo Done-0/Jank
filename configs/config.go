@@ -9,6 +9,7 @@ import (
 // AppConfig 存储应用相关配置
 type AppConfig struct {
 	AppName   string `mapstructure:"APP_NAME"`
+	AppHost   string `mapstructure:"APP_HOST"`
 	AppPort   string `mapstructure:"APP_PORT"`
 	QqSmtp    string `mapstructure:"QQ_SMTP"`
 	FromEmail string `mapstructure:"FROM_EMAIL"`

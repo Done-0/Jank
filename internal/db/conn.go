@@ -12,7 +12,7 @@ import (
 )
 
 func New(config *configs.Config) {
-	tempDB, err := connectDB(config, "mysql")
+	tempDB, err := connectDB(config, config.DBConfig.DBName)
 	if err != nil {
 		log.Fatalf("MySQL 连接失败: %v", err)
 	}

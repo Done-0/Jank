@@ -14,8 +14,3 @@ tmp/
 # 忽略 ci.yml 文件
 ci.yml
 
-# 忽略配置文件
-.configs/conf.yaml
-
-# 忽略 docs 目录
-.docs/

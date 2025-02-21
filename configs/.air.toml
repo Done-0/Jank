@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   bin = "./tmp/main.exe"
   cmd = "go build -o ./tmp/main.exe ."
-  delay = 1000
+  delay = 500
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "docs", ".git", ".idea"]
   exclude_file = []
   exclude_regex = ["_test.go"]

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/internal/banner"
 	"jank.com/jank_blog/internal/db"
@@ -40,5 +41,5 @@ func Start() {
 	router.RegisterRoutes(app)
 
 	// 启动服务
-	app.Logger.Fatal(app.Start(fmt.Sprintf("%s:%s", config.DBConfig.DBHost, config.AppConfig.AppPort)))
+	app.Logger.Fatal(app.Start(fmt.Sprintf("%s:%s", config.AppConfig.AppHost, config.AppConfig.AppPort)))
 }
