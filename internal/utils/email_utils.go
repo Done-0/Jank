@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jordan-wright/email"
+
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/internal/global"
 )
