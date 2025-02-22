@@ -436,7 +436,7 @@
         "image": "string",
         "visibility": "string",
         "content_html": "string",
-        "category_ids": int64[]
+        "category_ids": []int64
     },
     "requestId": "string",
     "timeStamp": number
@@ -464,7 +464,9 @@
                 "visibility": "public",
                 "content_markdown": "",
                 "content_html": "<h1>Markdown 格式示例</h1>\n\n<h2>1. 标题</h2>\n<h1>这是一级标题</h1>\n<h2>这是二级标题</h2>\n<h3>这是三级标题</h3>\n<h4>这是四��",
-                "category_ids": [1,2]
+                "category_ids": [
+                  13
+                ]
               }
             ],
             "totalPages": 2
@@ -492,7 +494,9 @@
           "visibility": "public",
           "content_markdown": "",
           "content_html": "<p>文章内容 1</p>",
-          "category_ids": null
+          "category_ids": [
+            12
+          ]
         },
           "requestId": "YWOzpncbNgdQINiDMPcYpwvtaFFQrAPI",
           "timeStamp": 1740043295
@@ -503,12 +507,12 @@
 3. **createOnePost** 创建文章：
    - 请求方式：POST
    - 请求路径：/api/v1/post/createOnePost
-   - 请求参数 form-data/json：
+   - 请求参数 json：
       - title：string 类型，文章标题
       - image：string 类型，文章图片 URL
       - visibility：string 类型，文章可见性，取值："public" 或 "private"
-      - content_markdown: file/string 类型，文章内容的 Markdown 格式
-      - category_ids：int64[] 类型，文章所属类目 ID 列表
+      - content_markdown: string 类型，文章内容的 Markdown 格式，支持文件路径和直接输入 markdown 文件内容
+      - category_ids：[]int64 类型，文章所属类目 ID 列表
    - 响应示例：
         ```json
         {
@@ -519,7 +523,9 @@
             "visibility": "public",
             "content_markdown": "",
             "content_html": "<h1>Markdown 格式示例</h1>\n\n<h2>1. 标题</h2>\n<h1>这是一级标题</h1>\n<h2>这是二级标题</h2>\n<h3>这是三级标题</h3>\n<h4>这是四��",
-            "category_ids": [1,2]
+            "category_ids": [
+                13
+            ]
           },
           "requestId": "VjDkicQKtuIJGoDUCzwGiAkLgVpxSgvW",
           "timeStamp": 1740042288
@@ -529,12 +535,12 @@
 4. **updateOnePost** 更新文章：
    - 请求方式：POST
    - 请求路径：/api/v1/post/updateOnePost
-   - 请求参数 form-data/json：
+   - 请求参数 json：
        - title：string 类型，文章标题
        - image：string 类型，文章图片 URL
        - visibility：string 类型，文章可见性，取值："public" 或 "private"
-       - content_markdown: file/string 类型，文章内容的 Markdown 格式
-       - category_ids：int64[] 类型，文章所属类目 ID 列表
+       - content_markdown: string 类型，文章内容的 Markdown 格式，支持文件路径和直接输入 markdown 文件内容
+       - category_ids：[]int64 类型，文章所属类目 ID 列表
    - 响应示例：
         ```json
         {
@@ -545,7 +551,9 @@
             "visibility": "public",
             "content_markdown": "",
             "content_html": "<p>文章内容 1</p>",
-            "category_ids": null
+            "category_ids": [
+                12
+            ]
           },
           "requestId": "YWOzpncbNgdQINiDMPcYpwvtaFFQrAPI",
           "timeStamp": 1740043295
@@ -578,7 +586,7 @@
     "description": "string",
     "parent_id": number,
     "path": "string",
-    "children": int64[]
+    "children": []int64
   },
   "requestId": "string",
   "timeStamp": number
