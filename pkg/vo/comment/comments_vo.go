@@ -7,7 +7,7 @@ package comment
 // @Property user_id             body int64             true  "评论所属用户ID"
 // @Property post_id             body int64             true  "评论所属文章ID"
 // @Property reply_to_comment_id body int64             false "回复的目标评论ID"
-// @Property replies             body []CommentsVo true  "子评论列表"
+// @Property replies             body []*CommentsVo true  "子评论列表"
 type CommentsVo struct {
 	ID               int64         `json:"id"`
 	Content          string        `json:"content"`

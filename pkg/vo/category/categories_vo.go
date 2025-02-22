@@ -7,7 +7,7 @@ package category
 // @Property		description	body	string	true	"类目描述"
 // @Property		parent_id	body	int64	true	"父类目ID"
 // @Property		path		body	string	true	"类目路径"
-// @Property		children	body	[]CategoriesVo	true	"子类目列表"
+// @Property		children	body	[]*CategoriesVo	true	"子类目列表"
 type CategoriesVo struct {
 	ID          int64           `json:"id"`
 	Name        string          `json:"name"`

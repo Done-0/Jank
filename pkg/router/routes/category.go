@@ -2,6 +2,8 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
+
+	authMiddleware "jank.com/jank_blog/internal/middleware/auth"
 	"jank.com/jank_blog/pkg/serve/controller/category"
 )
 
@@ -12,7 +14,7 @@ func RegisterCategoryRoutes(r ...*echo.Group) {
 	categoryGroupV1.GET("/getOneCategory", category.GetOneCategory)
 	categoryGroupV1.GET("/getCategoryTree", category.GetCategoryTree)
 	categoryGroupV1.GET("/getCategoryChildrenTree", category.GetCategoryChildrenTree)
-	categoryGroupV1.POST("/createOneCategory", category.CreateOneCategory)
-	categoryGroupV1.POST("/updateOneCategory", category.UpdateOneCategory)
-	categoryGroupV1.POST("/deleteOneCategory", category.DeleteOneCategory)
+	categoryGroupV1.POST("/createOneCategory", category.CreateOneCategory, authMiddleware.JWTMiddleware())
+	categoryGroupV1.POST("/updateOneCategory", category.UpdateOneCategory, authMiddleware.JWTMiddleware())
+	categoryGroupV1.POST("/deleteOneCategory", category.DeleteOneCategory, authMiddleware.JWTMiddleware())
 }

@@ -3,10 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
 	"sync"
+
+	"github.com/labstack/echo/v4"
 
 	"jank.com/jank_blog/internal/global"
 	model "jank.com/jank_blog/internal/model/account"
@@ -32,8 +33,8 @@ const (
 func GetAccount(req *dto.GetAccountRequest, c echo.Context) (*account.GetAccountVo, error) {
 	userInfo, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
-		utils.BizLogger(c).Errorf("邮箱(%s)不存在", req.Email)
-		return nil, fmt.Errorf("邮箱不存在")
+		utils.BizLogger(c).Errorf("「%s」邮箱不存在", req.Email)
+		return nil, fmt.Errorf("「%s」邮箱不存在", req.Email)
 	}
 
 	vo, err := utils.MapModelToVO(userInfo, &account.GetAccountVo{})
@@ -52,14 +53,14 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 
 	existingUser, _ := mapper.GetAccountByEmail(req.Email)
 	if existingUser != nil {
-		utils.BizLogger(c).Errorf("邮箱已被注册: %v", req.Email)
-		return nil, fmt.Errorf("邮箱已被注册")
+		utils.BizLogger(c).Errorf("「%s」邮箱已被注册", req.Email)
+		return nil, fmt.Errorf("「%s」邮箱已被注册", req.Email)
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		utils.BizLogger(c).Errorf("密码加密失败: %v", err)
-		return nil, fmt.Errorf("密码加密失败: %v", err)
+		utils.BizLogger(c).Errorf("哈希加密失败: %v", err)
+		return nil, fmt.Errorf("哈希加密失败: %v", err)
 	}
 
 	acc := &model.Account{
@@ -70,8 +71,8 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 	}
 
 	if err := mapper.CreateAccount(acc); err != nil {
-		utils.BizLogger(c).Errorf("用户注册失败: %v", err)
-		return nil, fmt.Errorf("用户注册失败: %v", err)
+		utils.BizLogger(c).Errorf("「%s」用户注册失败: %v", req.Email, err)
+		return nil, fmt.Errorf("「%s」用户注册失败: %v", req.Email, err)
 	}
 
 	// 获取并分配默认角色，如果没有则自动创建
@@ -106,20 +107,20 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
 	acc, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
-		utils.BizLogger(c).Errorf("用户不存在: %v", err)
-		return nil, fmt.Errorf("用户不存在: %v", err)
+		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
+		return nil, fmt.Errorf("「%s」用户不存在: %v", req.Email, err)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.Password))
 	if err != nil {
-		utils.BizLogger(c).Errorf("密码错误: %v", err)
-		return nil, fmt.Errorf("密码错误: %v", err)
+		utils.BizLogger(c).Errorf("密码输入错误: %v", err)
+		return nil, fmt.Errorf("密码输入错误: %v", err)
 	}
 
 	accessTokenString, refreshTokenString, err := utils.GenerateJWT(uint(acc.ID))
 	if err != nil {
-		utils.BizLogger(c).Errorf("生成 token 失败: %v", err)
-		return nil, fmt.Errorf("生成 token 失败: %v", err)
+		utils.BizLogger(c).Errorf("token 生成失败: %v", err)
+		return nil, fmt.Errorf("token 生成失败: %v", err)
 	}
 
 	token := &account.LoginVo{
@@ -156,21 +157,21 @@ func LogoutUser(c echo.Context) error {
 	go func() {
 		cmd := global.RedisClient.Do(ctx, global.DelCmd, accessTokenKey)
 		if cmd.Err() != nil {
-			utils.BizLogger(c).Errorf("删除鉴权 token 缓存失败: %v", cmd.Err())
+			utils.BizLogger(c).Errorf("删除 acess token 缓存失败: %v", cmd.Err())
 		}
 	}()
 
 	go func() {
 		cmd := global.RedisClient.Do(ctx, global.DelCmd, refreshTokenKey)
 		if cmd.Err() != nil {
-			utils.BizLogger(c).Errorf("删除刷新 token 缓存失败: %v", cmd.Err())
+			utils.BizLogger(c).Errorf("删除 refresh token 缓存失败: %v", cmd.Err())
 		}
 	}()
 
 	go func() {
 		cmd := global.RedisClient.Do(ctx, global.DelCmd, accountIdKey)
 		if cmd.Err() != nil {
-			utils.BizLogger(c).Errorf("删除账号 ID 缓存失败: %v", cmd.Err())
+			utils.BizLogger(c).Errorf("删除 accountID 缓存失败: %v", cmd.Err())
 		}
 	}()
 
@@ -195,14 +196,14 @@ func ResetPassword(req *dto.ResetPwdRequest, c echo.Context) error {
 
 	acc, err := mapper.GetAccountByAccountID(int64(accountID))
 	if err != nil {
-		utils.BizLogger(c).Errorf("用户不存在: %v", err)
-		return fmt.Errorf("用户不存在: %v", err)
+		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
+		return fmt.Errorf("「%s」用户不存在: %v", req.Email, err)
 	}
 
 	newPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
 	if err != nil {
-		utils.BizLogger(c).Errorf("密码加密失败")
-		return fmt.Errorf("密码加密失败")
+		utils.BizLogger(c).Errorf("密码加密失败: %v", err)
+		return fmt.Errorf("密码加密失败: %v", err)
 	}
 	acc.Password = string(newPassword)
 
@@ -323,7 +324,6 @@ func UpdatePermission(req *dto.UpdatePermissionRequest, c echo.Context) (*accoun
 	permission.Code = req.Code
 	permission.Description = req.Description
 
-	// 更新权限
 	if err := mapper.UpdatePermission(permission); err != nil {
 		utils.BizLogger(c).Errorf("更新权限失败: %v", err)
 		return nil, fmt.Errorf("更新权限失败: %v", err)
@@ -375,7 +375,6 @@ func AssignRoleToAcc(req *dto.AssignRoleRequest, c echo.Context) error {
 		utils.BizLogger(c).Errorf("为用户分配角色失败: %v", err)
 		return fmt.Errorf("为用户分配角色失败: %v", err)
 	}
-
 	return nil
 }
 
@@ -395,6 +394,7 @@ func RemoveRoleFromAcc(req *dto.AssignRoleRequest, c echo.Context) error {
 		utils.BizLogger(c).Errorf("移除用户角色失败: %v", err)
 		return fmt.Errorf("移除用户角色失败: %v", err)
 	}
+
 	return nil
 }
 
@@ -404,6 +404,7 @@ func RemovePermissionFromRole(req *dto.AssignPermissionRequest, c echo.Context) 
 		utils.BizLogger(c).Errorf("移除角色权限失败: %v", err)
 		return fmt.Errorf("移除角色权限失败: %v", err)
 	}
+
 	return nil
 }
 
@@ -413,6 +414,7 @@ func UpdateRoleForAcc(req *dto.AssignRoleRequest, c echo.Context) error {
 		utils.BizLogger(c).Errorf("更新用户角色失败: %v", err)
 		return fmt.Errorf("更新用户角色失败: %v", err)
 	}
+
 	return nil
 }
 
@@ -422,6 +424,7 @@ func UpdatePermissionForRole(req *dto.AssignPermissionRequest, c echo.Context) e
 		utils.BizLogger(c).Errorf("更新角色权限失败: %v", err)
 		return fmt.Errorf("更新角色权限失败: %v", err)
 	}
+
 	return nil
 }
 

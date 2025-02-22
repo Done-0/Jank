@@ -4,12 +4,11 @@ import (
 	"github.com/labstack/echo/v4"
 
 	requestMiddleware "github.com/labstack/echo/v4/middleware"
-	"jank.com/jank_blog/internal/logger"
+	loggerMiddleware "jank.com/jank_blog/internal/logger"
 	corsMiddleware "jank.com/jank_blog/internal/middleware/cors"
 	errorMiddleware "jank.com/jank_blog/internal/middleware/error"
 	recoverMiddleware "jank.com/jank_blog/internal/middleware/recover"
 	secureMiddleware "jank.com/jank_blog/internal/middleware/secure"
-	// swaggerMiddleware "jank.com/jank_blog/internal/middleware/swagger"
 )
 
 func InitMiddleware(app *echo.Echo) {
@@ -17,12 +16,10 @@ func InitMiddleware(app *echo.Echo) {
 	app.Use(errorMiddleware.InitGlobalError())
 	// 配置 CORS 中间件
 	app.Use(corsMiddleware.InitCORS())
-	// 初始化 Swagger 中间件
-	// app.Use(swaggerMiddleware.InitSwagger())
 	// 全局请求 ID 中间件
 	app.Use(requestMiddleware.RequestID())
 	// 日志中间件
-	app.Use(logger.New())
+	app.Use(loggerMiddleware.New())
 	// 配置 xss 防御中间件
 	app.Use(secureMiddleware.InitXss())
 	// 配置 csrf 防御中间件

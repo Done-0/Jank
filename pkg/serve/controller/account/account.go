@@ -1,14 +1,16 @@
 package account
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
 	"jank.com/jank_blog/pkg/serve/controller/verification"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
-	"net/http"
 )
 
 // GetAccount godoc

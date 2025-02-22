@@ -118,9 +118,11 @@ func handleJSON(c echo.Context, md goldmark.Markdown, next echo.HandlerFunc) err
 		content = bodyParser.ContentMarkdown
 	}
 
+	// 使用自定义上下文键以避免命名冲突
 	c.Set("_temp_content_markdown", content)
 	err := renderMarkdown(c, md, []byte(content), next)
 
+	// 清理临时数据
 	c.Set("_temp_content_markdown", nil)
 
 	return err
