@@ -3,12 +3,6 @@ package renderMiddleware
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/labstack/echo/v4"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/renderer"
-	"github.com/yuin/goldmark/renderer/html"
 	"io"
 	"net/http"
 	"os"
@@ -16,6 +10,13 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+
+	"github.com/labstack/echo/v4"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 // bodyParser 用于解析 JSON 请求体

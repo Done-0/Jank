@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+
 	"jank.com/jank_blog/pkg/serve/controller/category/dto"
 
 	"github.com/labstack/echo/v4"
@@ -208,8 +209,8 @@ func UpdateCategory(req *dto.UpdateOneCategoryRequest, c echo.Context) (*categor
 
 	parentPath, err := mapper.GetParentCategoryPathByID(req.ParentID)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取[%s]父类目路径失败：%v", existingCategory.Name, err)
-		return nil, fmt.Errorf("获取[%s]父类目路径失败：%v", existingCategory.Name, err)
+		utils.BizLogger(c).Errorf("获取「%v」父类目路径失败：%v", existingCategory.Name, err)
+		return nil, fmt.Errorf("获取「%v」父类目路径失败：%v", existingCategory.Name, err)
 	}
 
 	existingCategory.Name = req.Name
@@ -218,13 +219,13 @@ func UpdateCategory(req *dto.UpdateOneCategoryRequest, c echo.Context) (*categor
 	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, req.ParentID)
 
 	if err := mapper.UpdateCategory(existingCategory); err != nil {
-		utils.BizLogger(c).Errorf("[%s]类目更新失败：%v", existingCategory.Name, err)
-		return nil, fmt.Errorf("[%s]类目更新失败: %v", existingCategory.Name, err)
+		utils.BizLogger(c).Errorf("「%v」类目更新失败：%v", existingCategory.Name, err)
+		return nil, fmt.Errorf("「%v」类目更新失败: %v", existingCategory.Name, err)
 	}
 
 	if err := recursivelyUpdateChildrenPaths(existingCategory, c); err != nil {
-		utils.BizLogger(c).Errorf("递归更新[%s]类目失败: %v", existingCategory.Name, err)
-		return nil, fmt.Errorf("递归更新[%s]类目失败: %v", existingCategory.Name, err)
+		utils.BizLogger(c).Errorf("递归更新「%v」类目失败: %v", existingCategory.Name, err)
+		return nil, fmt.Errorf("递归更新「%v」类目失败: %v", existingCategory.Name, err)
 	}
 
 	var convert func(cat *model.Category) (*category.CategoriesVo, error)
@@ -265,13 +266,13 @@ func DeleteCategory(req *dto.DeleteOneCategoryRequest, c echo.Context) ([]*categ
 
 	deletedCategories, err := mapper.GetCategoriesByPath(cat.Path)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取[%s]下所有子类目失败：%v", cat.Name, err)
-		return nil, fmt.Errorf("获取[%s]下所有子类目失败：%v", cat.Name, err)
+		utils.BizLogger(c).Errorf("获取「%v」下所有子类目失败：%v", cat.Name, err)
+		return nil, fmt.Errorf("获取「%v」下所有子类目失败：%v", cat.Name, err)
 	}
 
 	if err := mapper.DeleteCategoriesByPathSoftly(cat.Path, req.ID); err != nil {
-		utils.BizLogger(c).Errorf("软删除[%s]下所有子类目失败：%v", cat.Name, err)
-		return nil, fmt.Errorf("软删除[%s]下所有子类目失败：%v", cat.Name, err)
+		utils.BizLogger(c).Errorf("软删除「%v」下所有子类目失败：%v", cat.Name, err)
+		return nil, fmt.Errorf("软删除「%v」下所有子类目失败：%v", cat.Name, err)
 	}
 
 	var convert func(cat *model.Category) (*category.CategoriesVo, error)
@@ -313,8 +314,8 @@ func DeleteCategory(req *dto.DeleteOneCategoryRequest, c echo.Context) ([]*categ
 func recursivelyUpdateChildrenPaths(parentCategory *model.Category, c echo.Context) error {
 	children, err := mapper.GetCategoriesByParentID(parentCategory.ID)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取[%s]子类目失败：%v", parentCategory.Name, err)
-		utils.BizLogger(c).Errorf("递归时获取[%s]父类目失败：%v", parentCategory.Name, err)
+		utils.BizLogger(c).Errorf("获取「%v」子类目失败：%v", parentCategory.Name, err)
+		utils.BizLogger(c).Errorf("递归时获取「%v」父类目失败：%v", parentCategory.Name, err)
 		return nil
 	}
 
@@ -323,13 +324,13 @@ func recursivelyUpdateChildrenPaths(parentCategory *model.Category, c echo.Conte
 		child.Path = fmt.Sprintf("%s/%d", parentCategory.Path, child.ID)
 
 		if err := mapper.UpdateCategory(child); err != nil {
-			utils.BizLogger(c).Errorf("更新[%s]子类目失败：%v", child.Name, err)
-			return fmt.Errorf("更新[%s]子类目失败：%v", child.Name, err)
+			utils.BizLogger(c).Errorf("更新「%v」子类目失败：%v", child.Name, err)
+			return fmt.Errorf("更新「%v」子类目失败：%v", child.Name, err)
 		}
 
 		if err := recursivelyUpdateChildrenPaths(child, c); err != nil {
-			utils.BizLogger(c).Errorf("递归更新[%s]子类目失败：%v", child.Name, err)
-			return fmt.Errorf("递归更新[%s]子类目失败：%v", child.Name, err)
+			utils.BizLogger(c).Errorf("递归更新「%v」子类目失败：%v", child.Name, err)
+			return fmt.Errorf("递归更新「%v」子类目失败：%v", child.Name, err)
 		}
 	}
 

@@ -10,7 +10,6 @@ import (
 	"jank.com/jank_blog/pkg/serve/controller/category/dto"
 	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
-	_ "jank.com/jank_blog/pkg/vo/category"
 )
 
 // GetOneCategory godoc

@@ -25,7 +25,6 @@ func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, e
 		return nil, fmt.Errorf("获取渲染后的 HTML 内容失败")
 	}
 
-	// 创建文章对象
 	newPost := &model.Post{
 		Title:           req.Title,
 		Image:           req.Image,
@@ -149,9 +148,9 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 
 // UpdatePost 更新文章
 func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
-	ContentHTML, ok := c.Get("content_html").(string)
+	ContentHTML, ok := c.Get("_temp_content_html").(string)
 	if !ok {
-		return nil, fmt.Errorf("获取文章内容失败: %v", ContentHTML)
+		return nil, fmt.Errorf("获取渲染后的 HTML 内容失败")
 	}
 
 	pos, err := mapper.GetPostByID(req.ID)

@@ -1,7 +1,7 @@
 package swaggerMiddleware
 
 import (
-	"log"
+	"fmt"
 	"os/exec"
 	"strings"
 	"sync"
@@ -9,8 +9,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
+
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/docs"
+	"jank.com/jank_blog/internal/global"
 )
 
 var swaggerOnce sync.Once
@@ -34,7 +36,7 @@ func initSwagger() {
 		time.Sleep(2 * time.Second)
 		config, err := configs.LoadConfig()
 		if err != nil {
-			log.Fatalf("配置加载失败: %v", err)
+			global.SysLog.Fatalf("配置加载失败: %v", err)
 		}
 
 		docs.SwaggerInfo.Title = "Jank Blog API"
@@ -51,9 +53,9 @@ func initSwagger() {
 		cmd := exec.Command("swag", "init")
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			log.Fatalf("初始化 Swagger 文档失败，错误: %v\n输出信息: %s", err, string(output))
+			global.SysLog.Fatalf("初始化 Swagger 文档失败，错误: %v\n输出信息: %s", err, string(output))
 		}
 
-		log.Printf("Swagger service started on: http://%s/swagger/index.html", docs.SwaggerInfo.Host)
+		fmt.Printf("Swagger service started on: http://%s/swagger/index.html\n", docs.SwaggerInfo.Host)
 	})
 }

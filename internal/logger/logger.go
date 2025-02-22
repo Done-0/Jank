@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
-	logrus "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/internal/global"
 )

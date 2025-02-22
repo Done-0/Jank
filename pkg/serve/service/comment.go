@@ -43,14 +43,13 @@ func GetCommentWithReplies(req *dto.GetOneCommentRequest, c echo.Context) (*comm
 		return nil, fmt.Errorf("获取评论失败：%v", err)
 	}
 
-	// 获取评论的所有回复
 	replies, err := mapper.GetReplyByCommentID(req.CommentID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取子评论失败：%v", err)
 		return nil, fmt.Errorf("获取子评论失败：%v", err)
 	}
 
-	com.Reply = replies
+	com.Replies = replies
 
 	commentVo, err := utils.MapModelToVO(com, &comment.CommentsVo{})
 	if err != nil {
@@ -95,7 +94,6 @@ func GetCommentGraphByPostID(req *dto.GetCommentGraphRequest, c echo.Context) ([
 		}
 	}
 
-	// 处理循环引用和确保完整性
 	processed := make(map[int64]bool)
 	var processComment func(*comment.CommentsVo) *comment.CommentsVo
 	processComment = func(vo *comment.CommentsVo) *comment.CommentsVo {
