@@ -2,24 +2,22 @@ package mapper
 
 import (
 	"fmt"
-	"strings"
-
 	"jank.com/jank_blog/internal/global"
 	category "jank.com/jank_blog/internal/model/category"
 	post "jank.com/jank_blog/internal/model/post"
 )
 
 // getValidCategoryIDs 获取未删除的分类 ID 列表并更新数据库
-func getValidCategoryIDs(postID int64, categoryIDs string) (string, bool, error) {
-	if categoryIDs == "" {
-		return "", false, nil
+func getValidCategoryIDs(postID int64, categoryIDs []int64) ([]int64, bool, error) {
+	if len(categoryIDs) == 0 {
+		return nil, false, nil
 	}
 
-	ids := strings.Split(categoryIDs, ",")
-	var validIDs []string
+	var validIDs []int64
 	updated := false
 
-	for _, id := range ids {
+	// 执行数据库查询时，使用 int64 类型的 ID
+	for _, id := range categoryIDs {
 		var cat category.Category
 		err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&cat).Error
 		if err == nil {
@@ -29,16 +27,15 @@ func getValidCategoryIDs(postID int64, categoryIDs string) (string, bool, error)
 		}
 	}
 
-	newCategoryIDs := strings.Join(validIDs, ",")
-
+	// 如果分类 ID 被更新，更新数据库中的记录
 	if updated && postID > 0 {
-		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("categoryIds", newCategoryIDs).Error
+		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", validIDs).Error
 		if err != nil {
-			return "", false, err
+			return nil, false, err
 		}
 	}
 
-	return newCategoryIDs, updated, nil
+	return validIDs, updated, nil
 }
 
 // CreatePost 将文章保存到数据库

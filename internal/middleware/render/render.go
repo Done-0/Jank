@@ -3,26 +3,31 @@ package renderMiddleware
 import (
 	"bytes"
 	"encoding/json"
-	"io"
-	"net/http"
-	"strings"
-
 	"github.com/labstack/echo/v4"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"sync"
 )
-
-// MarkdownRender 返回 Markdown 渲染中间件
-func MarkdownRender() echo.MiddlewareFunc {
-	return MarkdownRenderWithConfig(defaultMarkdownConfig())
-}
 
 // bodyParser 用于解析 JSON 请求体
 type bodyParser struct {
-	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown" validator:"required" default:""`
+	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" query:"content_markdown" validator:"required" default:""`
+}
+
+// 使用sync.Pool来复用buffer
+var bufferPool = sync.Pool{
+	New: func() interface{} {
+		return new(bytes.Buffer)
+	},
 }
 
 // MarkdownConfig 用于配置 Goldmark 渲染器
@@ -32,6 +37,12 @@ type MarkdownConfig struct {
 	RendererOptions []renderer.Option
 }
 
+// MarkdownRender 返回 Markdown 渲染中间件
+func MarkdownRender() echo.MiddlewareFunc {
+	return MarkdownRenderWithConfig(defaultMarkdownConfig())
+}
+
+// defaultMarkdownConfig 返回默认的 Markdown 配置
 func defaultMarkdownConfig() MarkdownConfig {
 	return MarkdownConfig{
 		Extensions: []goldmark.Extender{
@@ -66,49 +77,23 @@ func MarkdownRenderWithConfig(config MarkdownConfig) echo.MiddlewareFunc {
 				return c.JSON(http.StatusBadRequest, map[string]string{"error": "Content-Type 缺失"})
 			}
 
-			if strings.HasPrefix(contentType, "multipart/form-data") {
-				return handleMultipart(c, md, next)
-			} else if contentType == "application/json" {
+			if contentType == "application/json" {
 				return handleJSON(c, md, next)
-			} else {
-				return c.JSON(http.StatusBadRequest, map[string]string{"error": "Content-Type 错误"})
 			}
+
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Content-Type 错误"})
 		}
 	}
 }
 
-// handleMultipart 处理表单上传文件
-func handleMultipart(c echo.Context, md goldmark.Markdown, next echo.HandlerFunc) error {
-	form, err := c.MultipartForm()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "无法解析 multipart 表单"})
-	}
-
-	files := form.File["content_markdown"]
-	if len(files) == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "文件上传失败, 请检查 content_markdown 参数"})
-	}
-
-	file, err := files[0].Open()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "无法读取上传的文件"})
-	}
-	defer file.Close()
-
-	var buf bytes.Buffer
-	_, err = io.Copy(&buf, file)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "无法读取文件内容"})
-	}
-
-	return renderMarkdown(c, md, buf.Bytes(), next)
-}
-
 // handleJSON 处理 JSON 请求
 func handleJSON(c echo.Context, md goldmark.Markdown, next echo.HandlerFunc) error {
+	body := bufferPool.Get().(*bytes.Buffer)
+	body.Reset()
+	defer bufferPool.Put(body)
+
 	// 限制请求体大小为 20MB
 	limitedReader := io.LimitReader(c.Request().Body, 20<<20)
-	body := new(bytes.Buffer)
 	if _, err := body.ReadFrom(limitedReader); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "读取请求体失败"})
 	}
@@ -116,25 +101,63 @@ func handleJSON(c echo.Context, md goldmark.Markdown, next echo.HandlerFunc) err
 	c.Request().Body = io.NopCloser(bytes.NewReader(body.Bytes()))
 
 	var bodyParser bodyParser
-	if err := json.Unmarshal(body.Bytes(), &bodyParser); err != nil {
+	if err := json.NewDecoder(bytes.NewReader(body.Bytes())).Decode(&bodyParser); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "无法解析 JSON 数据"})
 	}
 
-	if bodyParser.ContentMarkdown == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "content_markdown 参数缺失"})
+	// 判断内容是否为文件路径
+	var content string
+	if isFilePath(bodyParser.ContentMarkdown) {
+		fileContent, err := readFileContent(bodyParser.ContentMarkdown)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "读取文件失败"})
+		}
+		content = fileContent
+	} else {
+		content = bodyParser.ContentMarkdown
 	}
 
-	return renderMarkdown(c, md, []byte(bodyParser.ContentMarkdown), next)
+	// 使用自定义上下文键以避免命名冲突
+	c.Set("_temp_content_markdown", content)
+	err := renderMarkdown(c, md, []byte(content), next)
+
+	// 清理临时数据
+	c.Set("_temp_content_markdown", nil)
+
+	return err
 }
 
 // renderMarkdown 将 Markdown 渲染为 HTML 并返回结果
-func renderMarkdown(c echo.Context, md goldmark.Markdown, markdown []byte, next echo.HandlerFunc) error {
-	var buf bytes.Buffer
-	if err := md.Convert(markdown, &buf); err != nil {
+func renderMarkdown(c echo.Context, md goldmark.Markdown, content []byte, next echo.HandlerFunc) error {
+	buf := bufferPool.Get().(*bytes.Buffer)
+	buf.Reset()
+	defer bufferPool.Put(buf)
+
+	if err := md.Convert(content, buf); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Markdown 渲染失败"})
 	}
 
-	c.Set("content_html", buf.String())
+	// 使用自定义上下文键存储HTML内容
+	c.Set("_temp_content_html", buf.String())
 
 	return next(c)
+}
+
+// isFilePath 判断是否为文件路径
+func isFilePath(content string) bool {
+	osType := runtime.GOOS
+	if osType == "windows" {
+		return (strings.Contains(content, ":\\") && len(content) > 3 && filepath.Ext(content) != "") ||
+			(strings.HasPrefix(content, "\\") && len(content) > 1 && filepath.Ext(content) != "")
+	}
+	return strings.HasPrefix(content, "/") && len(content) > 1 && filepath.Ext(content) != ""
+}
+
+// readFileContent 读取文件内容
+func readFileContent(filePath string) (string, error) {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
 }
