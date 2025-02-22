@@ -170,7 +170,6 @@ func UpdateOneCategory(c echo.Context) error {
 // @Router       /category/deleteOneCategory [post]
 func DeleteOneCategory(c echo.Context) error {
 	req := new(dto.DeleteOneCategoryRequest)
-
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
 	}

@@ -2,31 +2,43 @@ package service
 
 import (
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"jank.com/jank_blog/pkg/serve/controller/post/dto"
 	"math"
+
+	"github.com/labstack/echo/v4"
 
 	model "jank.com/jank_blog/internal/model/post"
 	"jank.com/jank_blog/internal/utils"
+	"jank.com/jank_blog/pkg/serve/controller/post/dto"
 	"jank.com/jank_blog/pkg/serve/mapper"
 	"jank.com/jank_blog/pkg/vo/post"
 )
 
 // CreatePost 创建文章页
 func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
-	ContentHTML, ok := c.Get("content_html").(string)
+	ContentMarkdown, ok := c.Get("_temp_content_markdown").(string)
 	if !ok {
-		return nil, fmt.Errorf("获取文章内容失败: %v", ContentHTML)
+		return nil, fmt.Errorf("获取渲染前的 Markdown 内容失败")
 	}
 
+	ContentHTML, ok := c.Get("_temp_content_html").(string)
+	if !ok {
+		return nil, fmt.Errorf("获取渲染后的 HTML 内容失败")
+	}
+
+	// 创建文章对象
 	newPost := &model.Post{
 		Title:           req.Title,
 		Image:           req.Image,
 		Visibility:      req.Visibility,
-		ContentMarkdown: req.ContentMarkdown,
+		ContentMarkdown: ContentMarkdown,
 		ContentHTML:     ContentHTML,
-		CategoryIDs:     utils.ConvertInt64SliceToString(req.CategoryIDs),
+		CategoryIDs:     req.CategoryIDs,
 	}
+
+	defer func() {
+		c.Set("_temp_content_markdown", nil)
+		c.Set("_temp_content_html", nil)
+	}()
 
 	if err := mapper.CreatePost(newPost); err != nil {
 		utils.BizLogger(c).Errorf("创建文章失败: %v", err)
@@ -152,14 +164,12 @@ func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, e
 		return nil, fmt.Errorf("文章不存在")
 	}
 
-	categoryIDsStr := utils.ConvertInt64SliceToString(req.CategoryIDs)
-
 	pos.Title = req.Title
 	pos.Image = req.Image
 	pos.Visibility = req.Visibility
 	pos.ContentMarkdown = req.ContentMarkdown
 	pos.ContentHTML = ContentHTML
-	pos.CategoryIDs = categoryIDsStr
+	pos.CategoryIDs = req.CategoryIDs
 
 	if err := mapper.UpdateOnePostByID(req.ID, pos); err != nil {
 		utils.BizLogger(c).Errorf("更新文章失败: %v", err)
