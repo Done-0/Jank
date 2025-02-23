@@ -1,8 +1,13 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"math"
+	"mime/multipart"
+	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 
@@ -13,16 +18,60 @@ import (
 	"jank.com/jank_blog/pkg/vo/post"
 )
 
-// CreatePost 创建文章页
+// CreatePost 创建文章
 func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
-	ContentMarkdown, ok := c.Get("_temp_content_markdown").(string)
-	if !ok {
-		return nil, fmt.Errorf("获取渲染前的 Markdown 内容失败")
+	var ContentMarkdown string
+	var CategoryIDs []int64
+
+	contentType := c.Request().Header.Get("Content-Type")
+	switch {
+	case contentType == "application/json":
+		ContentMarkdown = req.ContentMarkdown
+	case strings.HasPrefix(contentType, "multipart/form-data"):
+		file, err := c.FormFile("content_markdown")
+		if err != nil {
+			return nil, fmt.Errorf("获取上传文件失败: %v", err)
+		}
+		src, err := file.Open()
+		if err != nil {
+			return nil, fmt.Errorf("打开上传文件失败: %v", err)
+		}
+		defer func(src multipart.File) {
+			err := src.Close()
+			if err != nil {
+				utils.BizLogger(c).Errorf("关闭上传文件失败: %v", err)
+			}
+		}(src)
+		content, err := io.ReadAll(src)
+		if err != nil {
+			return nil, fmt.Errorf("读取上传文件内容失败: %v", err)
+		}
+		ContentMarkdown = string(content)
+	default:
+		return nil, fmt.Errorf("不支持的 Content-Type: %s", contentType)
 	}
 
-	ContentHTML, ok := c.Get("_temp_content_html").(string)
-	if !ok {
-		return nil, fmt.Errorf("获取渲染后的 HTML 内容失败")
+	categoryIDsStr := req.CategoryIDs
+	if categoryIDsStr == "" {
+		categoryIDsStr = c.FormValue("category_ids")
+	}
+	if categoryIDsStr != "" {
+		if err := json.Unmarshal([]byte(categoryIDsStr), &CategoryIDs); err != nil {
+			categoryIDsStr = strings.Trim(categoryIDsStr, "[]")
+			categoryIDStrs := strings.Split(categoryIDsStr, ",")
+			for _, idStr := range categoryIDStrs {
+				id, err := strconv.ParseInt(idStr, 10, 64)
+				if err != nil {
+					return nil, fmt.Errorf("category_ids 格式错误: %w", err)
+				}
+				CategoryIDs = append(CategoryIDs, id)
+			}
+		}
+	}
+
+	ContentHTML, err := utils.RenderMarkdown([]byte(ContentMarkdown))
+	if err != nil {
+		return nil, fmt.Errorf("渲染 Markdown 失败: %v", err)
 	}
 
 	newPost := &model.Post{
@@ -31,13 +80,8 @@ func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, e
 		Visibility:      req.Visibility,
 		ContentMarkdown: ContentMarkdown,
 		ContentHTML:     ContentHTML,
-		CategoryIDs:     req.CategoryIDs,
+		CategoryIDs:     CategoryIDs,
 	}
-
-	defer func() {
-		c.Set("_temp_content_markdown", nil)
-		c.Set("_temp_content_html", nil)
-	}()
 
 	if err := mapper.CreatePost(newPost); err != nil {
 		utils.BizLogger(c).Errorf("创建文章失败: %v", err)
@@ -148,27 +192,74 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 
 // UpdatePost 更新文章
 func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
-	ContentHTML, ok := c.Get("_temp_content_html").(string)
-	if !ok {
-		return nil, fmt.Errorf("获取渲染后的 HTML 内容失败")
+	var ContentMarkdown string
+	var CategoryIDs []int64
+
+	// 获取 ContentMarkdown
+	contentType := c.Request().Header.Get("Content-Type")
+	switch {
+	case contentType == "application/json":
+		ContentMarkdown = req.ContentMarkdown
+	case strings.HasPrefix(contentType, "multipart/form-data"):
+		file, err := c.FormFile("content_markdown")
+		if err != nil {
+			return nil, fmt.Errorf("获取上传文件失败: %v", err)
+		}
+		src, err := file.Open()
+		if err != nil {
+			return nil, fmt.Errorf("打开上传文件失败: %v", err)
+		}
+		defer func(src multipart.File) {
+			err := src.Close()
+			if err != nil {
+				utils.BizLogger(c).Errorf("关闭上传文件失败: %v", err)
+			}
+		}(src)
+		content, err := io.ReadAll(src)
+		if err != nil {
+			return nil, fmt.Errorf("读取上传文件内容失败: %v", err)
+		}
+		ContentMarkdown = string(content)
+	default:
+		return nil, fmt.Errorf("不支持的 Content-Type: %s", contentType)
+	}
+
+	// 解析 category_ids
+	categoryIDsStr := req.CategoryIDs
+	if categoryIDsStr == "" {
+		categoryIDsStr = c.FormValue("category_ids")
+	}
+	if categoryIDsStr != "" {
+		if err := json.Unmarshal([]byte(categoryIDsStr), &CategoryIDs); err != nil {
+			categoryIDsStr = strings.Trim(categoryIDsStr, "[]")
+			categoryIDStrs := strings.Split(categoryIDsStr, ",")
+			for _, idStr := range categoryIDStrs {
+				id, err := strconv.ParseInt(idStr, 10, 64)
+				if err != nil {
+					return nil, fmt.Errorf("category_ids 格式错误: %w", err)
+				}
+				CategoryIDs = append(CategoryIDs, id)
+			}
+		}
+	}
+
+	ContentHTML, err := utils.RenderMarkdown([]byte(ContentMarkdown))
+	if err != nil {
+		return nil, fmt.Errorf("渲染 Markdown 失败: %v", err)
 	}
 
 	pos, err := mapper.GetPostByID(req.ID)
-	if err != nil {
+	if err != nil || pos == nil {
 		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
 		return nil, fmt.Errorf("获取文章失败: %v", err)
-	}
-	if pos == nil {
-		utils.BizLogger(c).Errorf("文章不存在")
-		return nil, fmt.Errorf("文章不存在")
 	}
 
 	pos.Title = req.Title
 	pos.Image = req.Image
 	pos.Visibility = req.Visibility
-	pos.ContentMarkdown = req.ContentMarkdown
+	pos.ContentMarkdown = ContentMarkdown
 	pos.ContentHTML = ContentHTML
-	pos.CategoryIDs = req.CategoryIDs
+	pos.CategoryIDs = CategoryIDs
 
 	if err := mapper.UpdateOnePostByID(req.ID, pos); err != nil {
 		utils.BizLogger(c).Errorf("更新文章失败: %v", err)

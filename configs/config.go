@@ -27,6 +27,7 @@ type DatabaseConfig struct {
 // RedisConfig 存储Redis相关配置
 type RedisConfig struct {
 	RedisHost     string `mapstructure:"REDIS_HOST"`
+	RedisPort     string `mapstructure:"REDIS_PORT"`
 	RedisDB       string `mapstructure:"REDIS_DB"`
 	RedisPassword string `mapstructure:"REDIS_PSW"`
 }

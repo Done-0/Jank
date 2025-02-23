@@ -27,7 +27,7 @@ func New(config *configs.Config) {
 func newRedisClient(config *configs.Config) *redis.Client {
 	db, _ := strconv.Atoi(config.RedisConfig.RedisDB)
 	return redis.NewClient(&redis.Options{
-		Addr:         fmt.Sprintf("%s:6379", config.RedisConfig.RedisHost),
+		Addr:         fmt.Sprintf("%s:%s", config.RedisConfig.RedisHost, config.RedisConfig.RedisPort),
 		Password:     config.RedisConfig.RedisPassword, // 数据库密码，默认为空字符串
 		DB:           db,                               // 数据库索引
 		DialTimeout:  10 * time.Second,                 // 连接超时时间

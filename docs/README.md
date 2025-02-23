@@ -507,12 +507,13 @@
 3. **createOnePost** 创建文章：
    - 请求方式：POST
    - 请求路径：/api/v1/post/createOnePost
-   - 请求参数 json：
+   - 请求参数 form-data：
       - title：string 类型，文章标题
       - image：string 类型，文章图片 URL
       - visibility：string 类型，文章可见性，取值："public" 或 "private"
-      - content_markdown: string 类型，文章内容的 Markdown 格式，支持文件路径和直接输入 markdown 文件内容
-      - category_ids：[]int64 类型，文章所属类目 ID 列表
+      - content_markdown: string 类型，文章内容的 Markdown 格式
+      - category_ids：string 类型，文章所属类目 ID 列表，示例：[12]
+     > 注：category_ids 字段为string 类型，必须加上方括号，否则会导致解析失败，此外就是暂时只支持传递一个类目。
    - 响应示例：
         ```json
         {
@@ -540,7 +541,8 @@
        - image：string 类型，文章图片 URL
        - visibility：string 类型，文章可见性，取值："public" 或 "private"
        - content_markdown: string 类型，文章内容的 Markdown 格式，支持文件路径和直接输入 markdown 文件内容
-       - category_ids：[]int64 类型，文章所属类目 ID 列表
+       - category_ids：string 类型，文章所属类目 ID
+       > 注：category_ids 字段为string 类型，必须加上方括号，否则会导致解析失败，此外就是暂时只支持传递一个类目。
    - 响应示例：
         ```json
         {

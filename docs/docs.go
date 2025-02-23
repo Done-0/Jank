@@ -2929,10 +2929,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                    "type": "string"
                 },
                 "content_markdown": {
                     "type": "string"
@@ -3184,10 +3181,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                    "type": "string"
                 },
                 "content_markdown": {
                     "type": "string"

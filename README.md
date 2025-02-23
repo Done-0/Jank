@@ -121,6 +121,9 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 1. 修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
 
    ```yaml
+   # 应用配置
+   APP_HOST: "0.0.0.0"
+
    # mysql 数据库配置
     DB_USER: "<DATABASE_USER>"
     DB_PSW: "<DATABASE_PASSWORD>"
@@ -169,7 +172,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 感谢各位对本项目的支持！
 
 <div style="display: flex; flex-wrap: wrap;">
-  <img src="https://s2.loli.net/2025/02/21/B6Aq9HVOGvJzEyI.jpg" alt="c" style="border-radius: 50%; width: 150px; height: 150px; margin: 10px;" />
+  <img src="https://s2.loli.net/2025/02/21/B6Aq9HVOGvJzEyI.jpg" alt="c" style="border-radius: 50%; width: 120px; height: 120px; margin: 10px;" />
 </div>
 
 ## 联系合作

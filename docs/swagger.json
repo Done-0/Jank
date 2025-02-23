@@ -2918,10 +2918,7 @@
             ],
             "properties": {
                 "category_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                    "type": "string"
                 },
                 "content_markdown": {
                     "type": "string"
@@ -3173,10 +3170,7 @@
             ],
             "properties": {
                 "category_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                    "type": "string"
                 },
                 "content_markdown": {
                     "type": "string"

@@ -128,9 +128,7 @@ definitions:
   dto.CreateOnePostRequest:
     properties:
       category_ids:
-        items:
-          type: integer
-        type: array
+        type: string
       content_markdown:
         type: string
       image:
@@ -306,9 +304,7 @@ definitions:
   dto.UpdateOnePostRequest:
     properties:
       category_ids:
-        items:
-          type: integer
-        type: array
+        type: string
       content_markdown:
         type: string
       id:
