@@ -16,7 +16,16 @@ func GetAccountByEmail(email string) (*account.Account, error) {
 	return &user, nil
 }
 
-// GetAccountByAccountID 根据用户ID获取账户信息
+// GetRoleByAccountID 根据用户 ID 获取角色
+func GetRoleByAccountID(accountID int64) (*account.AccountRole, error) {
+	var role account.AccountRole
+	if err := global.DB.Where("account_id = ? AND deleted = ?", accountID, 0).First(&role).Error; err != nil {
+		return nil, fmt.Errorf("获取角色失败: %v", err)
+	}
+	return &role, nil
+}
+
+// GetAccountByAccountID 根据用户 ID 获取账户信息
 func GetAccountByAccountID(accountID int64) (*account.Account, error) {
 	var user account.Account
 	if err := global.DB.Where("id = ? AND deleted = ?", accountID, 0).First(&user).Error; err != nil {
@@ -73,7 +82,7 @@ func DeleteRoleSoftly(roleID int64) error {
 		Update("deleted", 1).Error
 }
 
-// GetRoleByID 根据角色ID获取角色
+// GetRoleByID 根据角色 ID 获取角色
 func GetRoleByID(roleID int64) (*account.Role, error) {
 	var role account.Role
 	if err := global.DB.Where("id = ? AND deleted = ?", roleID, 0).First(&role).Error; err != nil {
@@ -114,7 +123,7 @@ func DeletePermissionSoftly(permissionID int64) error {
 		Update("deleted", 1).Error
 }
 
-// GetPermissionByID 根据权限ID获取权限
+// GetPermissionByID 根据权限 ID 获取权限
 func GetPermissionByID(permissionID int64) (*account.Permission, error) {
 	var permission account.Permission
 	if err := global.DB.Where("id = ? AND deleted = ?", permissionID, 0).First(&permission).Error; err != nil {
@@ -191,7 +200,7 @@ func UpdatePermissionForRole(roleID, permissionID int64) error {
 	return nil
 }
 
-// GetRolesByAcc 根据用户ID获取所有角色
+// GetRolesByAcc 根据用户 ID 获取所有角色
 func GetRolesByAcc(accountID string) ([]*account.AccountRole, error) {
 	var roles []*account.AccountRole
 	if err := global.DB.Where("account_id = ? AND deleted = ?", accountID, 0).Find(&roles).Error; err != nil {
@@ -200,7 +209,7 @@ func GetRolesByAcc(accountID string) ([]*account.AccountRole, error) {
 	return roles, nil
 }
 
-// GetPermissionsByRole 根据角色ID获取所有权限
+// GetPermissionsByRole 根据角色 ID 获取所有权限
 func GetPermissionsByRole(roleID string) ([]*account.RolePermission, error) {
 	var permissions []*account.RolePermission
 	if err := global.DB.Where("role_id = ? AND deleted = ?", roleID, 0).Find(&permissions).Error; err != nil {

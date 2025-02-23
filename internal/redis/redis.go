@@ -8,15 +8,14 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/internal/global"
 )
 
-var ctx = context.Background()
-
 func New(config *configs.Config) {
 	client := newRedisClient(config)
-	if err := client.Ping(ctx).Err(); err != nil {
+	if err := client.Ping(context.Background()).Err(); err != nil {
 		global.SysLog.Errorf("Redis 连接失败: %v", err)
 		return
 	}

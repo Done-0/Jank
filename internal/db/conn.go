@@ -12,25 +12,25 @@ import (
 )
 
 func New(config *configs.Config) {
-	tempDB, err := connectDB(config, config.DBConfig.DBName)
+	tempDB, err := connectDB(config, "")
 	if err != nil {
-		global.SysLog.Fatalf("「%s」数据库连接失败: %v", config.DBConfig.DBName, err)
+		global.SysLog.Fatalf("数据库连接失败: %v", err)
 	}
 
 	if err := createDBIfNotExists(tempDB, config.DBConfig.DBName); err != nil {
-		global.SysLog.Fatalf("「%s」数据库不存在: %v", config.DBConfig.DBName, err)
+		global.SysLog.Fatalf("数据库不存在且创建失败: %v", err)
 	}
 
 	global.DB, err = connectDB(config, config.DBConfig.DBName)
 	if err != nil {
-		global.SysLog.Fatalf("「%s」数据库连接失败: %v", config.DBConfig.DBName, err)
+		global.SysLog.Fatalf("连接数据库失败: %v", err)
 	}
 
-	log.Printf("「%s」数据库连接成功 \n", config.DBConfig.DBName)
+	log.Printf("「%s」数据库连接成功", config.DBConfig.DBName)
 	global.SysLog.Infof("「%s」数据库连接成功", config.DBConfig.DBName)
 }
 
-// connectDB 连接数据库
+// connectDB 连接到指定数据库
 func connectDB(config *configs.Config, dbName string) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -55,7 +55,9 @@ func createDBIfNotExists(db *gorm.DB, dbName string) error {
 	if !exists {
 		log.Printf("「%s」数据库不存在，正在创建...", dbName)
 		global.SysLog.Infof("「%s」数据库不存在，正在创建...", dbName)
-		return db.Exec(fmt.Sprintf("CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", dbName)).Error
+		if err := db.Exec(fmt.Sprintf("CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", dbName)).Error; err != nil {
+			return fmt.Errorf("创建「%s」数据库失败: %v", dbName, err)
+		}
 	}
 	return nil
 }

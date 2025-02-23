@@ -37,7 +37,7 @@ func GetAccount(c echo.Context) error {
 
 	response, err := service.GetAccount(req, c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -77,7 +77,7 @@ func RegisterAcc(c echo.Context) error {
 
 	user, err := service.RegisterUser(req, c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(user, c))

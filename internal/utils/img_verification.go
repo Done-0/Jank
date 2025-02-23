@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/mojocn/base64Captcha"
 )
 
@@ -19,13 +21,11 @@ var store = base64Captcha.DefaultMemStore
 func GenImgVerificationCode() (string, string, error) {
 	driver := createDriver()
 	captcha := base64Captcha.NewCaptcha(driver, store)
-
 	_, content, answer := captcha.Driver.GenerateIdQuestionAnswer()
-	if len(answer) > CaptchaLength {
-		answer = answer[:CaptchaLength]
+	item, err := captcha.Driver.DrawCaptcha(content)
+	if err != nil {
+		return "", "", fmt.Errorf("生成图形验证码失败: %v", err)
 	}
-
-	item, _ := captcha.Driver.DrawCaptcha(content)
 	return item.EncodeB64string(), answer, nil
 }
 

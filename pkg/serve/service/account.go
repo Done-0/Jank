@@ -3,11 +3,12 @@ package service
 import (
 	"context"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 
 	"jank.com/jank_blog/internal/global"
 	model "jank.com/jank_blog/internal/model/account"
@@ -24,9 +25,8 @@ var (
 )
 
 const (
-	AccAuthTokenCachePrefix     = "ACC_AUTH_TOKEN_CACHE_PREFIX"
-	RefreshAuthTokenCachePrefix = "REFRESH_AUTH_TOKEN_CACHE_PREFIX"
-	AccountIdCachePrefix        = "ACCOUNT_ID_CACHE_PREFIX"
+	UserCache           = "User_Cache"
+	UserCacheExpireTime = time.Hour * 2 // Access Token 有效期
 )
 
 // GetAccount 获取用户信息逻辑
@@ -111,16 +111,30 @@ func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) 
 		return nil, fmt.Errorf("「%s」用户不存在: %v", req.Email, err)
 	}
 
+	role, err := mapper.GetRoleByAccountID(acc.ID)
+	if err != nil {
+		utils.BizLogger(c).Errorf("获取「%s」用户角色失败: %v", acc.Nickname, err)
+		return nil, fmt.Errorf("获取「%s」用户角色失败: %v", acc.Nickname, err)
+	}
+
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.Password))
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码输入错误: %v", err)
 		return nil, fmt.Errorf("密码输入错误: %v", err)
 	}
 
-	accessTokenString, refreshTokenString, err := utils.GenerateJWT(uint(acc.ID))
+	accessTokenString, refreshTokenString, err := utils.GenerateJWT(acc.ID, role.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("token 生成失败: %v", err)
 		return nil, fmt.Errorf("token 生成失败: %v", err)
+	}
+
+	cacheKey := fmt.Sprintf("%s:%d:%d", UserCache, acc.ID, role.ID)
+
+	err = global.RedisClient.Set(context.Background(), cacheKey, accessTokenString, UserCacheExpireTime).Err()
+	if err != nil {
+		utils.BizLogger(c).Errorf("登录时设置缓存失败: %v", err)
+		return nil, fmt.Errorf("登录时设置缓存失败: %v", err)
 	}
 
 	token := &account.LoginVo{
@@ -142,38 +156,18 @@ func LogoutUser(c echo.Context) error {
 	logoutLock.Lock()
 	defer logoutLock.Unlock()
 
-	accountID, err := utils.ParseAccountIDFromJWT(c.Request().Header.Get("Authorization"))
+	accountID, roleID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 access token 失败: %v", err)
 		return fmt.Errorf("解析 access token 失败: %v", err)
 	}
 
-	accessTokenKey := AccAuthTokenCachePrefix + strconv.FormatUint(uint64(accountID), 10)
-	refreshTokenKey := RefreshAuthTokenCachePrefix + strconv.FormatUint(uint64(accountID), 10)
-	accountIdKey := AccountIdCachePrefix + strconv.FormatUint(uint64(accountID), 10)
-
-	ctx := context.Background()
-
-	go func() {
-		cmd := global.RedisClient.Do(ctx, global.DelCmd, accessTokenKey)
-		if cmd.Err() != nil {
-			utils.BizLogger(c).Errorf("删除 acess token 缓存失败: %v", cmd.Err())
-		}
-	}()
-
-	go func() {
-		cmd := global.RedisClient.Do(ctx, global.DelCmd, refreshTokenKey)
-		if cmd.Err() != nil {
-			utils.BizLogger(c).Errorf("删除 refresh token 缓存失败: %v", cmd.Err())
-		}
-	}()
-
-	go func() {
-		cmd := global.RedisClient.Do(ctx, global.DelCmd, accountIdKey)
-		if cmd.Err() != nil {
-			utils.BizLogger(c).Errorf("删除 accountID 缓存失败: %v", cmd.Err())
-		}
-	}()
+	cacheKey := fmt.Sprintf("%s:%d:%d", UserCache, accountID, roleID)
+	err = global.RedisClient.Del(c.Request().Context(), cacheKey).Err()
+	if err != nil {
+		utils.BizLogger(c).Errorf("删除 Redis 缓存失败: %v", err)
+		return fmt.Errorf("删除 Redis 缓存失败: %v", err)
+	}
 
 	return nil
 }
@@ -188,13 +182,13 @@ func ResetPassword(req *dto.ResetPwdRequest, c echo.Context) error {
 		return fmt.Errorf("两次密码输入不一致")
 	}
 
-	accountID, err := utils.ParseAccountIDFromJWT(c.Request().Header.Get("Authorization"))
+	accountID, _, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 token 失败: %v", err)
 		return fmt.Errorf("解析 token 失败: %v", err)
 	}
 
-	acc, err := mapper.GetAccountByAccountID(int64(accountID))
+	acc, err := mapper.GetAccountByAccountID(accountID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
 		return fmt.Errorf("「%s」用户不存在: %v", req.Email, err)

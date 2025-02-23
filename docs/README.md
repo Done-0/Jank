@@ -37,7 +37,7 @@
       - password：string 类型，密码
       - phone：string 类型，手机号
       - email_verification_code：string 类型，邮箱验证码
-      - img_verification_code：string 类型，图片验证码
+      - img_verification_code：string 类型，图片验证码，大小写不敏感
    - 响应示例：
         ```json
         {
@@ -74,7 +74,7 @@
    - 请求参数 json：
       - email：string 类型，邮箱
       - password：string 类型，密码
-      - img_verification_code：string 类型，图片验证码
+      - img_verification_code：string 类型，图片验证码，大小写不敏感
    - 响应示例：
     ```json
     {
