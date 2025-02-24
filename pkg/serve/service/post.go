@@ -195,80 +195,71 @@ func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, e
 	var ContentMarkdown string
 	var CategoryIDs []int64
 
-	// 获取 ContentMarkdown
 	contentType := c.Request().Header.Get("Content-Type")
 	switch {
 	case contentType == "application/json":
 		ContentMarkdown = req.ContentMarkdown
 	case strings.HasPrefix(contentType, "multipart/form-data"):
-		file, err := c.FormFile("content_markdown")
-		if err != nil {
-			return nil, fmt.Errorf("获取上传文件失败: %v", err)
-		}
-		src, err := file.Open()
-		if err != nil {
-			return nil, fmt.Errorf("打开上传文件失败: %v", err)
-		}
-		defer func(src multipart.File) {
-			err := src.Close()
+		if file, err := c.FormFile("content_markdown"); err == nil {
+			src, err := file.Open()
 			if err != nil {
-				utils.BizLogger(c).Errorf("关闭上传文件失败: %v", err)
+				return nil, fmt.Errorf("打开上传文件失败: %v", err)
 			}
-		}(src)
-		content, err := io.ReadAll(src)
-		if err != nil {
-			return nil, fmt.Errorf("读取上传文件内容失败: %v", err)
-		}
-		ContentMarkdown = string(content)
-	default:
-		return nil, fmt.Errorf("不支持的 Content-Type: %s", contentType)
-	}
-
-	// 解析 category_ids
-	categoryIDsStr := req.CategoryIDs
-	if categoryIDsStr == "" {
-		categoryIDsStr = c.FormValue("category_ids")
-	}
-	if categoryIDsStr != "" {
-		if err := json.Unmarshal([]byte(categoryIDsStr), &CategoryIDs); err != nil {
-			categoryIDsStr = strings.Trim(categoryIDsStr, "[]")
-			categoryIDStrs := strings.Split(categoryIDsStr, ",")
-			for _, idStr := range categoryIDStrs {
-				id, err := strconv.ParseInt(idStr, 10, 64)
+			defer func(src multipart.File) {
+				err := src.Close()
 				if err != nil {
-					return nil, fmt.Errorf("category_ids 格式错误: %w", err)
+					utils.BizLogger(c).Errorf("关闭上传文件失败: %v", err)
 				}
-				CategoryIDs = append(CategoryIDs, id)
+			}(src)
+			content, err := io.ReadAll(src)
+			if err != nil {
+				return nil, fmt.Errorf("读取上传文件内容失败: %v", err)
 			}
+			ContentMarkdown = string(content)
 		}
 	}
 
-	ContentHTML, err := utils.RenderMarkdown([]byte(ContentMarkdown))
-	if err != nil {
-		return nil, fmt.Errorf("渲染 Markdown 失败: %v", err)
+	if req.CategoryIDs != "" {
+		if err := json.Unmarshal([]byte(req.CategoryIDs), &CategoryIDs); err != nil {
+			for _, idStr := range strings.Split(strings.Trim(req.CategoryIDs, "[]"), ",") {
+				if id, err := strconv.ParseInt(idStr, 10, 64); err == nil {
+					CategoryIDs = append(CategoryIDs, id)
+				}
+			}
+		}
 	}
 
 	pos, err := mapper.GetPostByID(req.ID)
 	if err != nil || pos == nil {
-		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
 		return nil, fmt.Errorf("获取文章失败: %v", err)
 	}
 
-	pos.Title = req.Title
-	pos.Image = req.Image
-	pos.Visibility = req.Visibility
-	pos.ContentMarkdown = ContentMarkdown
-	pos.ContentHTML = ContentHTML
-	pos.CategoryIDs = CategoryIDs
+	if req.Title != "" {
+		pos.Title = req.Title
+	}
+	if req.Image != "" {
+		pos.Image = req.Image
+	}
+	if req.Visibility != "" {
+		pos.Visibility = req.Visibility
+	}
+	if ContentMarkdown != "" {
+		pos.ContentMarkdown = ContentMarkdown
+		pos.ContentHTML, err = utils.RenderMarkdown([]byte(ContentMarkdown))
+		if err != nil {
+			return nil, fmt.Errorf("渲染 Markdown 失败: %v", err)
+		}
+	}
+	if len(CategoryIDs) > 0 {
+		pos.CategoryIDs = CategoryIDs
+	}
 
 	if err := mapper.UpdateOnePostByID(req.ID, pos); err != nil {
-		utils.BizLogger(c).Errorf("更新文章失败: %v", err)
 		return nil, fmt.Errorf("更新文章失败: %v", err)
 	}
 
 	vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
 	if err != nil {
-		utils.BizLogger(c).Errorf("更新文章时映射 vo 失败: %v", err)
 		return nil, fmt.Errorf("更新文章时映射 vo 失败: %v", err)
 	}
 

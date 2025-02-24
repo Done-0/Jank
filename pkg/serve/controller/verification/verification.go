@@ -56,8 +56,6 @@ func SendImgVerificationCode(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成图形验证码失败", bizErr.New(bizErr.ServerError), c))
 	}
 
-	utils.BizLogger(c).Infof("图形验证码已成功存入缓存，key: %v", key)
-
 	return c.JSON(http.StatusOK, vo.Success(map[string]string{"imgBase64": imgBase64}, c))
 }
 

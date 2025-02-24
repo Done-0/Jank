@@ -12,6 +12,6 @@ type UpdateOnePostRequest struct {
 	Title           string `json:"title" xml:"title" form:"title" query:"title" validate:"min=0,max=255" default:""`
 	Image           string `json:"image" xml:"image" form:"image" query:"image" default:""`
 	Visibility      string `json:"visibility" xml:"visibility" form:"visibility" query:"visibility" default:"private"`
-	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown"`
+	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown" default:""`
 	CategoryIDs     string `json:"category_ids" xml:"category_ids" form:"category_ids" query:"category_ids" default:""`
 }

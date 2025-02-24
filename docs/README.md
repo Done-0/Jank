@@ -537,11 +537,13 @@
    - 请求方式：POST
    - 请求路径：/api/v1/post/updateOnePost
    - 请求参数 json：
+       - id：number 类型，文章 ID
        - title：string 类型，文章标题
        - image：string 类型，文章图片 URL
        - visibility：string 类型，文章可见性，取值："public" 或 "private"
        - content_markdown: string 类型，文章内容的 Markdown 格式，支持文件路径和直接输入 markdown 文件内容
        - category_ids：string 类型，文章所属类目 ID
+       > 除了 id 为必填项外，其他字段都为可选，如果不传则不修改相应字段。
        > 注：category_ids 字段为string 类型，必须加上方括号，否则会导致解析失败，此外就是暂时只支持传递一个类目。
    - 响应示例：
         ```json

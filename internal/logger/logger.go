@@ -11,6 +11,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+
 	"jank.com/jank_blog/configs"
 	"jank.com/jank_blog/internal/global"
 )
