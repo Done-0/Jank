@@ -1,6 +1,7 @@
 package comment
 
 import (
+	"jank.com/jank_blog/pkg/serve/service/comment"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -8,7 +9,6 @@ import (
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/comment/dto"
-	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -34,7 +34,7 @@ func GetOneComment(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	comment, err := service.GetCommentWithReplies(req, c)
+	comment, err := comment.GetCommentWithReplies(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -63,7 +63,7 @@ func GetCommentGraph(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	comments, err := service.GetCommentGraphByPostID(req, c)
+	comments, err := comment.GetCommentGraphByPostID(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -92,7 +92,7 @@ func CreateOneComment(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	comment, err := service.CreateComment(req, c)
+	comment, err := comment.CreateComment(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -122,7 +122,7 @@ func DeleteOneComment(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	comment, err := service.DeleteComment(req, c)
+	comment, err := comment.DeleteComment(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}

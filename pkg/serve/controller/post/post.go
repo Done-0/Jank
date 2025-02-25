@@ -1,6 +1,7 @@
 package post
 
 import (
+	"jank.com/jank_blog/pkg/serve/service/post"
 	"net/http"
 	"strconv"
 
@@ -9,7 +10,6 @@ import (
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/post/dto"
-	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -36,7 +36,7 @@ func GetOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	post, err := service.GetPostByIDOrTitle(req, c)
+	post, err := post.GetPostByIDOrTitle(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -59,7 +59,7 @@ func GetAllPosts(c echo.Context) error {
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	pageSize, _ := strconv.Atoi(c.QueryParam("pageSize"))
 
-	response, err := service.GetAllPostsWithPagingAndFormat(page, pageSize, c)
+	response, err := post.GetAllPostsWithPagingAndFormat(page, pageSize, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -90,7 +90,7 @@ func CreateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	createdPost, err := service.CreatePost(req, c)
+	createdPost, err := post.CreatePost(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -122,7 +122,7 @@ func UpdateOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	updatedPost, err := service.UpdatePost(req, c)
+	updatedPost, err := post.UpdatePost(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -154,7 +154,7 @@ func DeleteOnePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	err := service.DeletePost(req, c)
+	err := post.DeletePost(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}

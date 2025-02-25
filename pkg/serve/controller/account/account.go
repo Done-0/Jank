@@ -1,6 +1,7 @@
 package account
 
 import (
+	"jank.com/jank_blog/pkg/serve/service/account"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -9,7 +10,6 @@ import (
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
 	"jank.com/jank_blog/pkg/serve/controller/verification"
-	"jank.com/jank_blog/pkg/serve/service"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -35,7 +35,7 @@ func GetAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	response, err := service.GetAccount(req, c)
+	response, err := account.GetAccount(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -75,7 +75,7 @@ func RegisterAcc(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
-	user, err := service.RegisterUser(req, c)
+	user, err := account.RegisterUser(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -110,7 +110,7 @@ func LoginAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
 	}
 
-	response, err := service.LoginUser(req, c)
+	response, err := account.LoginUser(req, c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -129,7 +129,7 @@ func LoginAccount(c echo.Context) error {
 // @Security     BearerAuth
 // @Router       /account/logoutAccount [post]
 func LogoutAccount(c echo.Context) error {
-	if err := service.LogoutUser(c); err != nil {
+	if err := account.LogoutUser(c); err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
@@ -164,7 +164,7 @@ func ResetPassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
-	err := service.ResetPassword(req, c)
+	err := account.ResetPassword(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -194,7 +194,7 @@ func CreateRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	role, err := service.CreateRole(req, c)
+	role, err := account.CreateRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -224,7 +224,7 @@ func UpdateRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	role, err := service.UpdateRole(req, c)
+	role, err := account.UpdateRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -254,7 +254,7 @@ func DeleteRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.DeleteRole(req, c)
+	err := account.DeleteRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -272,7 +272,7 @@ func DeleteRole(c echo.Context) error {
 // @Failure      500     {object}  vo.Result{message=string}     "服务器错误"
 // @Router       /role/listAllRoles [post]
 func ListRoles(c echo.Context) error {
-	roles, err := service.ListRoles(c)
+	roles, err := account.ListRoles(c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -301,7 +301,7 @@ func CreatePermission(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	permission, err := service.CreatePermission(req, c)
+	permission, err := account.CreatePermission(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -331,7 +331,7 @@ func UpdatePermission(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	permission, err := service.UpdatePermission(req, c)
+	permission, err := account.UpdatePermission(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -361,7 +361,7 @@ func DeletePermission(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.DeletePermission(req, c)
+	err := account.DeletePermission(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -379,7 +379,7 @@ func DeletePermission(c echo.Context) error {
 // @Failure      500     {object}  vo.Result{message=string}     "服务器错误"
 // @Router       /permission/listAllPermissions [post]
 func ListPermissions(c echo.Context) error {
-	permissions, err := service.ListPermissions(c)
+	permissions, err := account.ListPermissions(c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -408,7 +408,7 @@ func AssignRoleToAcc(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.AssignRoleToAcc(req, c)
+	err := account.AssignRoleToAcc(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -438,7 +438,7 @@ func AssignPermissionToRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.AssignPermissionToRole(req, c)
+	err := account.AssignPermissionToRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -468,7 +468,7 @@ func DeleteRoleFromAcc(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.RemoveRoleFromAcc(req, c)
+	err := account.RemoveRoleFromAcc(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -498,7 +498,7 @@ func DeletePermissionFromRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.RemovePermissionFromRole(req, c)
+	err := account.RemovePermissionFromRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -528,7 +528,7 @@ func UpdateRoleForAcc(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.UpdateRoleForAcc(req, c)
+	err := account.UpdateRoleForAcc(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -558,7 +558,7 @@ func UpdatePermissionForRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	err := service.UpdatePermissionForRole(req, c)
+	err := account.UpdatePermissionForRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -588,7 +588,7 @@ func GetRolesByAcc(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	roles, err := service.GetRolesByAcc(req, c)
+	roles, err := account.GetRolesByAcc(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -618,7 +618,7 @@ func GetPermissionsByRole(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	permissions, err := service.GetPermissionsByRole(req, c)
+	permissions, err := account.GetPermissionsByRole(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}

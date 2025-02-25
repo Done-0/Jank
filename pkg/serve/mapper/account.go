@@ -191,7 +191,6 @@ func UpdateRoleForAcc(AccountID, roleID int64) error {
 
 // UpdatePermissionForRole 更新角色权限
 func UpdatePermissionForRole(roleID, permissionID int64) error {
-	// 假设更新角色权限的逻辑
 	if err := global.DB.Model(&account.RolePermission{}).
 		Where("role_id = ? AND permission_id = ? AND deleted = ?", roleID, permissionID, 0).
 		Update("permission_id", permissionID).Error; err != nil {
@@ -200,8 +199,8 @@ func UpdatePermissionForRole(roleID, permissionID int64) error {
 	return nil
 }
 
-// GetRolesByAcc 根据用户 ID 获取所有角色
-func GetRolesByAcc(accountID string) ([]*account.AccountRole, error) {
+// GetRolesByAccountID 根据用户 ID 获取所有角色
+func GetRolesByAccountID(accountID string) ([]*account.AccountRole, error) {
 	var roles []*account.AccountRole
 	if err := global.DB.Where("account_id = ? AND deleted = ?", accountID, 0).Find(&roles).Error; err != nil {
 		return nil, fmt.Errorf("查询角色失败: %v", err)
@@ -209,8 +208,8 @@ func GetRolesByAcc(accountID string) ([]*account.AccountRole, error) {
 	return roles, nil
 }
 
-// GetPermissionsByRole 根据角色 ID 获取所有权限
-func GetPermissionsByRole(roleID string) ([]*account.RolePermission, error) {
+// GetPermissionsByRoleID 根据角色 ID 获取所有权限
+func GetPermissionsByRoleID(roleID string) ([]*account.RolePermission, error) {
 	var permissions []*account.RolePermission
 	if err := global.DB.Where("role_id = ? AND deleted = ?", roleID, 0).Find(&permissions).Error; err != nil {
 		return nil, fmt.Errorf("查询权限失败: %v", err)

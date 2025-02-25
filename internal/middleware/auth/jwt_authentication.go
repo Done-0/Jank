@@ -95,7 +95,7 @@ func AuthMiddleware(requiredPermissionIDs ...int64) echo.MiddlewareFunc {
 			}
 
 			// 校验当前角色是否拥有【至少一个】对应权限
-			rolePermissions, err := mapper.GetPermissionsByRole(fmt.Sprint(roleID))
+			rolePermissions, err := mapper.GetPermissionsByRoleID(fmt.Sprint(roleID))
 			if err != nil {
 				return echo.NewHTTPError(http.StatusInternalServerError, "获取权限信息失败")
 			}
