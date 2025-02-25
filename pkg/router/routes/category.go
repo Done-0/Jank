@@ -14,7 +14,7 @@ func RegisterCategoryRoutes(r ...*echo.Group) {
 	categoryGroupV1.GET("/getOneCategory", category.GetOneCategory)
 	categoryGroupV1.GET("/getCategoryTree", category.GetCategoryTree)
 	categoryGroupV1.GET("/getCategoryChildrenTree", category.GetCategoryChildrenTree)
-	categoryGroupV1.POST("/createOneCategory", category.CreateOneCategory, authMiddleware.JWTMiddleware())
-	categoryGroupV1.POST("/updateOneCategory", category.UpdateOneCategory, authMiddleware.JWTMiddleware())
-	categoryGroupV1.POST("/deleteOneCategory", category.DeleteOneCategory, authMiddleware.JWTMiddleware())
+	categoryGroupV1.POST("/createOneCategory", category.CreateOneCategory, authMiddleware.AuthMiddleware())
+	categoryGroupV1.POST("/updateOneCategory", category.UpdateOneCategory, authMiddleware.AuthMiddleware())
+	categoryGroupV1.POST("/deleteOneCategory", category.DeleteOneCategory, authMiddleware.AuthMiddleware())
 }

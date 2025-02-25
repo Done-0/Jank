@@ -25,9 +25,10 @@ func New(config *configs.Config) {
 	if err != nil {
 		global.SysLog.Fatalf("连接数据库失败: %v", err)
 	}
+	log.Printf("「%s」数据库连接成功...", config.DBConfig.DBName)
+	global.SysLog.Infof("「%s」数据库连接成功！", config.DBConfig.DBName)
 
-	log.Printf("「%s」数据库连接成功", config.DBConfig.DBName)
-	global.SysLog.Infof("「%s」数据库连接成功", config.DBConfig.DBName)
+	autoMigrate()
 }
 
 // connectDB 连接到指定数据库

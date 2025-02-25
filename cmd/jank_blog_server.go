@@ -18,11 +18,11 @@ import (
 func Start() {
 	config, err := configs.LoadConfig()
 	if err != nil {
-		log.Fatalf("应用启动中, 加载配置失败: %v", err)
+		log.Fatalf("程序启动时加载配置失败: %v", err)
 		return
 	}
 
-	// 创建 echo 实例
+	// 初始化 echo 实例
 	app := echo.New()
 	app.HideBanner = true
 	banner.InitBanner()
@@ -32,7 +32,6 @@ func Start() {
 
 	// 初始化数据库连接并自动迁移模型
 	db.New(config)
-	db.AutoMigrate()
 
 	// 初始化 Redis 连接
 	redis.New(config)

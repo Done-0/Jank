@@ -7,7 +7,7 @@ import (
 	"jank.com/jank_blog/internal/model"
 )
 
-func AutoMigrate() {
+func autoMigrate() {
 	if global.DB == nil {
 		log.Fatal("数据库初始化失败，无法执行自动迁移...")
 	}
@@ -20,5 +20,5 @@ func AutoMigrate() {
 	}
 
 	log.Println("数据库自动迁移成功...")
-	global.SysLog.Infof("数据库自动迁移成功！")
+	global.SysLog.Infof("数据库自动迁移成功...")
 }
