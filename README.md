@@ -45,12 +45,12 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 - **Go 语言**：热门后端开发语言，适合构建高并发应用。
 - **Echo 框架**：高性能的 Web 框架，支持快速开发和灵活的路由管理。
-- **MySQL**：成熟的关系型数据库管理系统，支持复杂查询和事务处理。
+- **PostgreSQL**：开源的关系型数据库，提供高性能、高可靠性的数据存储。
 - **Redis**：热门缓存解决方案，提供快速数据存取和持久化选项。
 - **JWT**：安全的用户身份验证机制，确保数据传输的完整性和安全性。
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
 - **前端**：Vue 3 + Nuxt + Shadcn-vue（原项目已不再维护）。
-  > 注：正在使用 react + umi + shadcn/ui 重构，欢迎提供宝贵意见！
+  > 注：目前缺少前端部分，欢迎有志于前端开发的开发者加入！
 
 ## 功能模块
 
@@ -137,8 +137,8 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
    ```yaml
    environment:
-      - MYSQL_USER=<DATABASE_USER>
-      - MYSQL_PASSWORD=<DATABASE_PASSWORD>
+      - POSTGRES_USER=<DATABASE_USER>
+      - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
    ```
 
 3. 启动容器：

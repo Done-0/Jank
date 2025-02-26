@@ -15,10 +15,10 @@ import (
 func RegisterRoutes(app *echo.Echo) {
 	// 创建多版本 API 路由组
 	api1 := app.Group("/api/v1")
-	api2 := app.Group("/api/v2")
+	//api2 := app.Group("/api/v2")
 
 	// 注册测试相关的路由
-	routes.RegisterTestRoutes(api1, api2)
+	//routes.RegisterTestRoutes(api1, api2)
 	// 注册账户相关的路由
 	routes.RegisterAccountRoutes(api1)
 	// 注册角色权限相关的路由

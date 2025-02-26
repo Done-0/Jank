@@ -13,7 +13,7 @@ func CreateComment(comment *model.Comment) error {
 // GetCommentByID 根据 ID 查询评论
 func GetCommentByID(id int64) (*model.Comment, error) {
 	var comment model.Comment
-	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&comment).Error
+	err := global.DB.Where("id = ? AND deleted = ?", id, false).First(&comment).Error
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func GetReplyByCommentID(id int64) ([]*model.Comment, error) {
 // GetCommentsByPostID 根据文章 ID 查询所有评论
 func GetCommentsByPostID(postID int64) ([]*model.Comment, error) {
 	var comments []*model.Comment
-	err := global.DB.Where("post_id = ? AND deleted = ?", postID, 0).Find(&comments).Error
+	err := global.DB.Where("post_id = ? AND deleted = ?", postID, false).Find(&comments).Error
 	if err != nil {
 		return nil, err
 	}

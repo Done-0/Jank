@@ -14,6 +14,7 @@ import (
 	"jank.com/jank_blog/internal/global"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/vo"
+	"jank.com/jank_blog/pkg/vo/verification"
 )
 
 const (
@@ -56,7 +57,7 @@ func SendImgVerificationCode(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成图形验证码失败", bizErr.New(bizErr.ServerError), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(map[string]string{"imgBase64": imgBase64}, c))
+	return c.JSON(http.StatusOK, vo.Success(verification.ImgVerificationVo{ImgBase64: imgBase64}, c))
 }
 
 // SendEmailVerificationCode godoc

@@ -1,16 +1,15 @@
 # 应用相关
 app:
   APP_NAME: "JANK_BLOG"
-  APP_HOST: "localhost"  # 如果使用docker，则改为"0.0.0.0"
+  APP_HOST: "localhost" # 如果使用docker，则改为"0.0.0.0"
   APP_PORT: "9010"
   QQ_SMTP: "<QQ_SMTP>"
   FROM_EMAIL: "<FROM_QQ_EMAIL>"
 
-# 数据库相关
 database:
   DB_NAME: "jank"
-  DB_HOST: "127.0.0.1" # 如果使用docker，则改为"mysql_db"
-  DB_PORT: "3306"
+  DB_HOST: "127.0.0.1" # 如果使用docker，则改为"postgres_db"
+  DB_PORT: "5432"
   DB_USER: "<DATABASE_USER>"
   DB_PSW: "<DATABASE_PASSWORD>"
 

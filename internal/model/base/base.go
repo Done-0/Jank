@@ -11,11 +11,11 @@ import (
 
 // Base 包含通用字段
 type Base struct {
-	ID          int64   `gorm:"primaryKey;autoIncrement" json:"id"`       // 主键
-	GmtCreate   int64   `gorm:"type:bigint" json:"gmt_create"`            // 创建时间
-	GmtModified int64   `gorm:"type:bigint" json:"gmt_modified"`          // 更新时间
-	Ext         JSONMap `gorm:"type:json" json:"ext"`                     // 扩展字段
-	Deleted     bool    `gorm:"type:tinyint(1);default:0" json:"deleted"` // 逻辑删除
+	ID          int64   `gorm:"primaryKey;autoIncrement" json:"id"`        // 主键
+	GmtCreate   int64   `gorm:"type:bigint" json:"gmt_create"`             // 创建时间
+	GmtModified int64   `gorm:"type:bigint" json:"gmt_modified"`           // 更新时间
+	Ext         JSONMap `gorm:"type:json" json:"ext"`                      // 扩展字段
+	Deleted     bool    `gorm:"type:boolean;default:false" json:"deleted"` // 逻辑删除
 }
 
 // JSONMap 处理 json 类型字段
