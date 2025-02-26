@@ -240,7 +240,7 @@ func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, e
 	if req.Image != "" {
 		pos.Image = req.Image
 	}
-	if req.Visibility != "" {
+	if req.Visibility != false {
 		pos.Visibility = req.Visibility
 	}
 	if ContentMarkdown != "" {

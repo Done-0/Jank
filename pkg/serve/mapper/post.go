@@ -17,10 +17,9 @@ func getValidCategoryIDs(postID int64, categoryIDs []int64) ([]int64, bool, erro
 	var validIDs []int64
 	updated := false
 
-	// 执行数据库查询时，使用 int64 类型的 ID
 	for _, id := range categoryIDs {
 		var cat category.Category
-		err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&cat).Error
+		err := global.DB.Where("id = ? AND deleted = ?", id, false).First(&cat).Error
 		if err == nil {
 			validIDs = append(validIDs, id)
 		} else {
@@ -28,7 +27,6 @@ func getValidCategoryIDs(postID int64, categoryIDs []int64) ([]int64, bool, erro
 		}
 	}
 
-	// 如果分类 ID 被更新，更新数据库中的记录
 	if updated && postID > 0 {
 		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", validIDs).Error
 		if err != nil {
@@ -53,7 +51,7 @@ func CreatePost(newPost *post.Post) error {
 // GetPostByID 根据 ID 获取文章
 func GetPostByID(id int64) (*post.Post, error) {
 	var pos post.Post
-	err := global.DB.Where("id = ? AND deleted = ?", id, 0).First(&pos).Error
+	err := global.DB.Where("id = ? AND deleted = ?", id, false).First(&pos).Error
 	if err != nil {
 		return nil, err
 	}
@@ -68,14 +66,13 @@ func GetPostsByTitle(title string) ([]post.Post, error) {
 	}
 
 	var posts []post.Post
-	err := global.DB.Where("title LIKE ? AND deleted = ?", "%"+title+"%", 0).
+	err := global.DB.Where("title LIKE ? AND deleted = ?", "%"+title+"%", false).
 		Find(&posts).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	// 更新类别和文章信息
 	for i := range posts {
 		validCategoryIDs, updated, err := getValidCategoryIDs(posts[i].ID, posts[i].CategoryIDs)
 		if err != nil {
@@ -101,13 +98,13 @@ func GetAllPostsWithPaging(page, pageSize int) ([]*post.Post, int64, error) {
 	offset := (page - 1) * pageSize
 
 	// 查询文章总数
-	err := global.DB.Model(&post.Post{}).Where("deleted = ?", 0).Count(&total).Error
+	err := global.DB.Model(&post.Post{}).Where("deleted = ?", false).Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
 	// 查询分页数据
-	err = global.DB.Where("deleted = ?", 0).
+	err = global.DB.Where("deleted = ?", false).
 		Order("gmt_create DESC").
 		Offset(offset).Limit(pageSize).
 		Find(&posts).Error
@@ -145,7 +142,7 @@ func UpdateOnePostByID(postID int64, newPost *post.Post) error {
 	}
 	newPost.CategoryIDs = validCategoryIDs
 
-	result := global.DB.Model(&post.Post{}).Where("id = ? AND deleted = ?", postID, 0).Updates(newPost)
+	result := global.DB.Model(&post.Post{}).Where("id = ? AND deleted = ?", postID, false).Updates(newPost)
 
 	if result.Error != nil {
 		return result.Error
@@ -165,7 +162,7 @@ func DeleteOnePostByID(postID int64) error {
 	}
 
 	result := global.DB.Model(&post.Post{}).
-		Where("id = ? AND deleted = ?", postID, 0).
+		Where("id = ? AND deleted = ?", postID, false).
 		Update("deleted", true)
 
 	if result.Error != nil {

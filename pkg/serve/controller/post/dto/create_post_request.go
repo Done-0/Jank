@@ -9,7 +9,7 @@ package dto
 type CreateOnePostRequest struct {
 	Title           string `json:"title" xml:"title" form:"title" query:"title" validate:"required,min=1,max=225"`
 	Image           string `json:"image" xml:"image" form:"image" query:"image" default:""`
-	Visibility      string `json:"visibility" xml:"visibility" form:"visibility" query:"visibility" default:"private"`
+	Visibility      bool   `json:"visibility" xml:"visibility" form:"visibility" query:"visibility" default:"false"`
 	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown" default:""`
 	CategoryIDs     string `json:"category_ids" xml:"category_ids" form:"category_ids" query:"category_ids"`
 }
