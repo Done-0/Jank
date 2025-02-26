@@ -1,5 +1,5 @@
 <p style="text-align: center;">
-  <a><img src="https://s2.loli.net/2025/01/02/6F8fzMvrBDCATZk.png" alt="Jank"></a>
+  <a><img src="https://p.ipic.vip/ymgq9g.PNG" alt="Jank"></a>
 </p>
 <p style="text-align: center;">
   <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
