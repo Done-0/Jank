@@ -35,7 +35,7 @@ func GetAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
 	}
 
-	response, err := account.GetAccount(req, c)
+	response, err := service.GetAccount(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -75,7 +75,7 @@ func RegisterAcc(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
-	user, err := account.RegisterUser(req, c)
+	user, err := service.RegisterUser(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -110,7 +110,7 @@ func LoginAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
 	}
 
-	response, err := account.LoginUser(req, c)
+	response, err := service.LoginUser(req, c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
@@ -129,7 +129,7 @@ func LoginAccount(c echo.Context) error {
 // @Security     BearerAuth
 // @Router       /account/logoutAccount [post]
 func LogoutAccount(c echo.Context) error {
-	if err := account.LogoutUser(c); err != nil {
+	if err := service.LogoutUser(c); err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
@@ -164,7 +164,7 @@ func ResetPassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
 	}
 
-	err := account.ResetPassword(req, c)
+	err := service.ResetPassword(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}

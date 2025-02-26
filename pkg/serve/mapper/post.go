@@ -8,35 +8,6 @@ import (
 	post "jank.com/jank_blog/internal/model/post"
 )
 
-// getValidCategoryIDs 获取未删除的分类 ID 列表并更新数据库
-func getValidCategoryIDs(postID int64, categoryIDs []int64) ([]int64, bool, error) {
-	if len(categoryIDs) == 0 {
-		return nil, false, nil
-	}
-
-	var validIDs []int64
-	updated := false
-
-	for _, id := range categoryIDs {
-		var cat category.Category
-		err := global.DB.Where("id = ? AND deleted = ?", id, false).First(&cat).Error
-		if err == nil {
-			validIDs = append(validIDs, id)
-		} else {
-			updated = true
-		}
-	}
-
-	if updated && postID > 0 {
-		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", validIDs).Error
-		if err != nil {
-			return nil, false, err
-		}
-	}
-
-	return validIDs, updated, nil
-}
-
 // CreatePost 将文章保存到数据库
 func CreatePost(newPost *post.Post) error {
 	validCategoryIDs, _, err := getValidCategoryIDs(0, newPost.CategoryIDs)
@@ -54,6 +25,18 @@ func GetPostByID(id int64) (*post.Post, error) {
 	err := global.DB.Where("id = ? AND deleted = ?", id, false).First(&pos).Error
 	if err != nil {
 		return nil, err
+	}
+
+	validCategoryIDs, updated, err := getValidCategoryIDs(pos.ID, pos.CategoryIDs)
+	if err != nil {
+		return nil, err
+	}
+	pos.CategoryIDs = validCategoryIDs
+	if updated {
+		err = global.DB.Save(&pos).Error
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &pos, nil
@@ -161,6 +144,23 @@ func DeleteOnePostByID(postID int64) error {
 		return fmt.Errorf("无效文章ID: %d", postID)
 	}
 
+	existingPost, err := GetPostByID(postID)
+	if err != nil {
+		return err
+	}
+
+	validCategoryIDs, updated, err := getValidCategoryIDs(postID, existingPost.CategoryIDs)
+	if err != nil {
+		return err
+	}
+	if updated {
+		existingPost.CategoryIDs = validCategoryIDs
+		err = global.DB.Save(existingPost).Error
+		if err != nil {
+			return err
+		}
+	}
+
 	result := global.DB.Model(&post.Post{}).
 		Where("id = ? AND deleted = ?", postID, false).
 		Update("deleted", true)
@@ -174,4 +174,33 @@ func DeleteOnePostByID(postID int64) error {
 	}
 
 	return nil
+}
+
+// getValidCategoryIDs 获取未删除的分类 ID 列表并更新数据库
+func getValidCategoryIDs(postID int64, categoryIDs []int64) ([]int64, bool, error) {
+	if len(categoryIDs) == 0 {
+		return nil, false, nil
+	}
+
+	var validIDs []int64
+	updated := false
+
+	for _, id := range categoryIDs {
+		var cat category.Category
+		err := global.DB.Where("id = ? AND deleted = ?", id, false).First(&cat).Error
+		if err == nil {
+			validIDs = append(validIDs, id)
+		} else {
+			updated = true
+		}
+	}
+
+	if updated && postID > 0 {
+		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", validIDs).Error
+		if err != nil {
+			return nil, false, err
+		}
+	}
+
+	return validIDs, updated, nil
 }

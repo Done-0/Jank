@@ -34,7 +34,7 @@ func GetOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	category, err := category.GetCategoryByID(req, c)
+	category, err := service.GetCategoryByID(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -52,7 +52,7 @@ func GetOneCategory(c echo.Context) error {
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /category/getCategoryTree [get]
 func GetCategoryTree(c echo.Context) error {
-	categories, err := category.GetCategoryTree(c)
+	categories, err := service.GetCategoryTree(c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -83,7 +83,7 @@ func GetCategoryChildrenTree(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	childrenCategories, err := category.GetCategoryChildrenByID(req, c)
+	childrenCategories, err := service.GetCategoryChildrenByID(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -113,7 +113,7 @@ func CreateOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	createdCategory, err := category.CreateCategory(req, c)
+	createdCategory, err := service.CreateCategory(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -146,7 +146,7 @@ func UpdateOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	updatedCategory, err := category.UpdateCategory(req, c)
+	updatedCategory, err := service.UpdateCategory(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
@@ -178,7 +178,7 @@ func DeleteOneCategory(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest), c))
 	}
 
-	category, err := category.DeleteCategory(req, c)
+	category, err := service.DeleteCategory(req, c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
 	}
