@@ -1,5 +1,5 @@
 <p style="text-align: center;">
-  <a><img src="https://s2.loli.net/2025/01/02/6F8fzMvrBDCATZk.png" alt="Jank"></a>
+  <a><img src="https://p.ipic.vip/6idwb0.PNG" alt="Jank"></a>
 </p>
 <p style="text-align: center;">
   <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
@@ -27,6 +27,7 @@
 <p style="text-align: center; margin: 0; padding: 0; position: relative; top: -5px;">
   <span style="text-decoration: underline; color: grey;">简体中文</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
 </p>
+
 
 ---
 
@@ -88,7 +89,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    # mysql 数据库配置
     DB_USER: "<DATABASE_USER>"
     DB_PSW: "<DATABASE_PASSWORD>"
-
+   
    # QQ 邮箱和 SMTP 授权码（可选）
    QQ_SMTP: "<QQ_SMTP>"
    FROM_EMAIL: "<FROM_QQ_EMAIL>"
@@ -108,7 +109,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    ```bash
    # 安装 air，需要 go 1.22 或更高版本
    go install github.com/air-verse/air@latest
-
+   
    # 热重载启动
    air -c ./configs/.air.toml
    ```
