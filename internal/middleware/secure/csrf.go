@@ -41,7 +41,7 @@ var defaultCSRFConfig = csrfConfig{
 	CookieName:     "_csrf",                           // 默认 CSRF Cookie 名称
 	CookiePath:     "/",                               // Cookie 默认路径
 	CookieDomain:   "",                                // 默认不设置 Cookie 域
-	CookieSecure:   false,                             // 默认不开启 Secure
+	CookieSecure:   true,                              // 默认启用 Secure
 	CookieHTTPOnly: true,                              // 默认启用 HttpOnly
 	CookieSameSite: http.SameSiteLaxMode,              // 默认 SameSite 设置为 Lax
 	CookieMaxAge:   86400,                             // Cookie 默认 24 小时有效期

@@ -24,13 +24,11 @@
     <img src="https://img.shields.io/github/license/Done-0/Jank" alt="License">
   </a>
 </p>
-<p style="text-align: center; margin: 0; padding: 0; position: relative; top: -5px;">
-  <span style="text-decoration: underline; color: grey;">简体中文</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
-</p>
 
 ---
+## Jank-standalone
 
-Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，设计理念强调极简、低耦合和高扩展，旨在为用户提供功能丰富、界面简洁、操作简单且安全可靠的博客体验。
+**本版本为单用户独立部署版，系统只能存在一个账号，请部署后立即注册账号，避免出现安全问题。**
 
 > 注：本项目当前缺少前端部分，在此诚邀有志于前端开发的开发者加入，共同参与开发工作，期待您的宝贵意见和贡献！
 
@@ -55,13 +53,11 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 ## 功能模块
 
 - **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
-- **权限模块**：实现 RBAC（Role-Based Access Control）角色权限管理，支持用户-角色-权限的增删改查。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
 - **分类模块**：支持类目树及子类目树递归查询，单一类目查询，以及类目的创建、更新和删除。
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
 - **插件系统**：正在开发中...
 - **其他功能**：
-    - 提供 OpenAPI 接口文档
     - 集成 Air 实现热重载
     - 提供 Logrus 实现日志记录
     - 支持 CORS 跨域请求
@@ -74,9 +70,6 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 1. **安装依赖**：
 
    ```bash
-   # 安装 swagger 工具
-   go install github.com/swaggo/swag/cmd/swag@latest
-
    # 安装依赖包
    go mod tidy
    ```
@@ -139,6 +132,9 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    environment:
       - POSTGRES_USER=<DATABASE_USER>
       - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
+   
+   healthcheck:
+      test: ["CMD", "pg_isready", "-U", "<DATABASE_USER>", "-d", "jank_db"]
    ```
 
 3. 启动容器：
@@ -146,20 +142,6 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
     ```bash
     docker-compose up -d
     ```
-
-## 接口文档
-
-1. **本地启动查看 swagger 文档**：本地启动应用后，通过浏览器访问 [http://localhost:9010/swagger/index.html](http://localhost:9010/swagger/index.html)
-
-2. **README.md 文档**：在 `docs` 目录下，打开 `README.md` 文件查看。
-
-3. **postman 文档**：在 `docs` 目录下，导入 `docs/Jank_blog.postman_collection.json` 至 Postman 查看。
-
-## 架构图（待更新）
-
-**架构图及可视化接口文档**：在项目根目录中打开 `docs/jank_blog_architecture.drawio` 文件。
-
-> 注：该文档由 `draw.io` 绘制，需要使用 [draw.io](https://app.diagrams.net/) 工具打开。
 
 ## 官方社区
 

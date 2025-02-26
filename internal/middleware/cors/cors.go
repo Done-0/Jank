@@ -23,10 +23,10 @@ type corsConfig struct {
 // DefaultCORSConfig 提供了默认的 CORS 配置
 func defaultCORSConfig() corsConfig {
 	return corsConfig{
-		AllowedOrigins:   []string{"*"},                                                                                                   // 默认允许所有域名
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},                                                             // 默认允许的请求方法
-		AllowedHeaders:   []string{"Content-Type", "Authorization", "X-Client-Info", "X-Client-Version", "X-Client-Data", "X-Request-Id"}, // 默认允许的请求头
-		AllowCredentials: false,                                                                                                           // 默认不允许携带证书
+		AllowedOrigins:   []string{"*"},                                                                                                                   // 默认允许所有域名
+		AllowedMethods:   []string{"GET", "POST"},                                                                                                         // 默认允许的请求方法
+		AllowedHeaders:   []string{"Content-Type", "Authorization", "X-Client-Info", "X-Client-Version", "X-Client-Data", "X-Request-Id", "X-CSRF-Token"}, // 默认允许的请求头
+		AllowCredentials: true,                                                                                                                            // 默认允许携带证书
 	}
 }
 

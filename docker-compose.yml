@@ -16,7 +16,7 @@ services:
     networks:
       - jank_blog_network
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "fender", "-d", "jank_db"]
+      test: ["CMD", "pg_isready", "-U", "<DATABASE_USER>", "-d", "jank_db"]
       interval: 30s
       timeout: 10s
       retries: 5

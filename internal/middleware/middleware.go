@@ -26,6 +26,4 @@ func InitMiddleware(app *echo.Echo) {
 	app.Use(secureMiddleware.InitCSRF())
 	// 全局异常恢复中间件
 	app.Use(recoverMiddleware.InitRecover())
-	// 初始化 Swagger 中间件
-	//app.Use(swaggerMiddleware.InitSwagger())
 }

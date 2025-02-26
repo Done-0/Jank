@@ -17,7 +17,3 @@ func InitBanner() {
 `
 	fmt.Print(banner)
 }
-
-func PrintInputSeparator() {
-	fmt.Println("────────────────────────────────────────────")
-}
