@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"jank.com/jank_blog/internal/global"
@@ -195,11 +196,14 @@ func getValidCategoryIDs(postID int64, categoryIDs []int64) ([]int64, bool, erro
 		}
 	}
 
-	if updated && postID > 0 {
-		err := global.DB.Model(&post.Post{}).Where("id = ?", postID).Update("category_ids", validIDs).Error
-		if err != nil {
-			return nil, false, err
-		}
+	validIDsJSON, err := json.Marshal(validIDs)
+	if err != nil {
+		return nil, false, err
+	}
+
+	err = global.DB.Model(&post.Post{}).Where("id = ? and deleted = ?", postID, false).Update("category_ids", validIDsJSON).Error
+	if err != nil {
+		return nil, false, err
 	}
 
 	return validIDs, updated, nil

@@ -45,8 +45,8 @@ func GetAccount(req *dto.GetAccountRequest, c echo.Context) (*account.GetAccount
 	return vo.(*account.GetAccountVo), nil
 }
 
-// RegisterUser 用户注册逻辑
-func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVo, error) {
+// RegisterAcc 用户注册逻辑
+func RegisterAcc(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVo, error) {
 	registerLock.Lock()
 	defer registerLock.Unlock()
 
@@ -94,8 +94,8 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 	return vo.(*account.RegisterAccountVo), nil
 }
 
-// LoginUser 登录用户逻辑
-func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
+// LoginAcc 登录用户逻辑
+func LoginAcc(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
 	acc, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
@@ -114,7 +114,7 @@ func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) 
 		return nil, fmt.Errorf("token 生成失败: %v", err)
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d:%d", UserCache, acc.ID)
+	cacheKey := fmt.Sprintf("%s:%d", UserCache, acc.ID)
 
 	err = global.RedisClient.Set(context.Background(), cacheKey, accessTokenString, UserCacheExpireTime).Err()
 	if err != nil {
@@ -136,8 +136,8 @@ func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) 
 	return vo.(*account.LoginVo), nil
 }
 
-// LogoutUser 处理用户登出逻辑
-func LogoutUser(c echo.Context) error {
+// LogoutAcc 处理用户登出逻辑
+func LogoutAcc(c echo.Context) error {
 	logoutLock.Lock()
 	defer logoutLock.Unlock()
 
