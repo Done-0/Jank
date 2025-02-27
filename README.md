@@ -1,5 +1,5 @@
 <p style="text-align: center;">
-  <a><img src="https://p.ipic.vip/ymgq9g.PNG" alt="Jank"></a>
+  <a><img src="https://p.ipic.vip/7bey89.png" alt="Jank"></a>
 </p>
 <p style="text-align: center;">
   <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
@@ -27,7 +27,6 @@
 <p style="text-align: center; margin: 0; padding: 0; position: relative; top: -5px;">
   <span style="text-decoration: underline; color: grey;">简体中文</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
 </p>
-
 
 ---
 
