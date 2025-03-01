@@ -141,13 +141,13 @@ func LogoutAcc(c echo.Context) error {
 	logoutLock.Lock()
 	defer logoutLock.Unlock()
 
-	accountID, roleID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
+	accountID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 access token 失败: %v", err)
 		return fmt.Errorf("解析 access token 失败: %v", err)
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d:%d", UserCache, accountID, roleID)
+	cacheKey := fmt.Sprintf("%s:%d", UserCache, accountID)
 	err = global.RedisClient.Del(c.Request().Context(), cacheKey).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("删除 Redis 缓存失败: %v", err)
@@ -167,7 +167,7 @@ func ResetPassword(req *dto.ResetPwdRequest, c echo.Context) error {
 		return fmt.Errorf("两次密码输入不一致")
 	}
 
-	accountID, _, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
+	accountID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 token 失败: %v", err)
 		return fmt.Errorf("解析 token 失败: %v", err)

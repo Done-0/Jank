@@ -89,30 +89,25 @@ func RefreshTokenLogic(refreshTokenString string) (map[string]string, error) {
 }
 
 // ParseAccountAndRoleIDFromJWT 从 JWT 中提取 accountID 和 roleID
-func ParseAccountAndRoleIDFromJWT(tokenString string) (int64, int64, error) {
+func ParseAccountAndRoleIDFromJWT(tokenString string) (int64, error) {
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
 	token, err := ValidateJWTToken(tokenString, false)
 	if err != nil {
-		return 0, 0, err
+		return 0, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, 0, fmt.Errorf("无法解析 access token 中的 claims")
+		return 0, fmt.Errorf("无法解析 access token 中的 claims")
 	}
 
 	accountID, ok := claims["account_id"].(float64)
 	if !ok {
-		return 0, 0, fmt.Errorf("access token 中缺少 account_id")
+		return 0, fmt.Errorf("access token 中缺少 account_id")
 	}
 
-	roleID, ok := claims["role_id"].(float64)
-	if !ok {
-		return 0, 0, fmt.Errorf("access token 中缺少 role_id")
-	}
-
-	return int64(accountID), int64(roleID), nil
+	return int64(accountID), nil
 }
 
 // generateToken 通用的 token 生成函数

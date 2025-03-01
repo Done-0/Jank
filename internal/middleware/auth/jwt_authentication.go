@@ -54,13 +54,13 @@ func AuthMiddleware() echo.MiddlewareFunc {
 				tokenString = newTokens["accessToken"]
 			}
 
-			// 从 Token 中解析 accountID 和 roleID
-			accountID, roleID, err := utils.ParseAccountAndRoleIDFromJWT(tokenString)
+			// 从 Token 中解析 accountID
+			accountID, err := utils.ParseAccountAndRoleIDFromJWT(tokenString)
 			if err != nil {
 				return echo.NewHTTPError(http.StatusUnauthorized, "无效的 Access Token，请重新登录")
 			}
 
-			sessionCacheKey := fmt.Sprintf("%s:%d:%d", DefaultJWTConfig.UserCache, accountID, roleID)
+			sessionCacheKey := fmt.Sprintf("%s:%d", DefaultJWTConfig.UserCache, accountID)
 			if sessionVal, err := global.RedisClient.Get(c.Request().Context(), sessionCacheKey).Result(); err != nil || sessionVal == "" {
 				return echo.NewHTTPError(http.StatusUnauthorized, "无效会话，请重新登录")
 			}
