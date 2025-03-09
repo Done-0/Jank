@@ -234,6 +234,7 @@ Many thanks to everyone for your support!
 
 *Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-09*
 *Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
+*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
 
 ## License
 
