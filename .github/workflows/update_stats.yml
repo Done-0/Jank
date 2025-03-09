@@ -2,7 +2,7 @@ name: 更新代码统计
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, rbac ]
   schedule:
     - cron: '0 0 * * *'  # 每天凌晨运行一次
 
