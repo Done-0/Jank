@@ -24,10 +24,9 @@
     <img src="https://img.shields.io/github/license/Done-0/Jank" alt="License">
   </a>
 </p>
-<p style="text-align: center; margin: 0; padding: 0; position: relative; top: -5px;">
+<p align="center">
   <span style="text-decoration: underline; color: grey;">简体中文</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
 </p>
-
 
 ---
 
@@ -35,12 +34,22 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 > 注：本项目当前缺少前端部分，在此诚邀有志于前端开发的开发者加入，共同参与开发工作，期待您的宝贵意见和贡献！
 
-## 预览
+## 速览
+
+👉演示站｜Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
 
 👉[【b站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
+👉独立使用版：[https://github.com/Done-0/Jank/tree/standalone](https://github.com/Done-0/Jank/tree/standalone)
+
+👉部署文档：[Docker 部署文档](https://fenderisfine.icu/posts/2)
+
+👉前端仓库：[https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
+
 ![home-white.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-white.png)
 ![home-black.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-black.png)
+
+> 注：因为还在推出阶段，部分配置文件可能需要根据实际情况更改，具体请使用下面的联系方式联系作者，或者进入开发者社区交流。
 
 ## 技术栈
 
@@ -50,17 +59,17 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **Redis**：热门缓存解决方案，提供快速数据存取和持久化选项。
 - **JWT**：安全的用户身份验证机制，确保数据传输的完整性和安全性。
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
-- **前端**：Vue 3 + Nuxt + Shadcn-vue（原项目已不再维护）。
-  > 注：目前缺少前端部分，欢迎有志于前端开发的开发者加入！
+- **前端**：react + umi + shadcn/ui + tailwindcss。
 
 ## 功能模块
 
 - **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
 - **权限模块**：实现 RBAC（Role-Based Access Control）角色权限管理，支持用户-角色-权限的增删改查。
+    - 基本功能已实现，考虑到用户使用的不友好性和复杂性，第一个 release 暂不推出此功能。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
 - **分类模块**：支持类目树及子类目树递归查询，单一类目查询，以及类目的创建、更新和删除。
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
-- **插件系统**：正在开发中...
+- **插件系统**：正在火热开发中，即将推出...
 - **其他功能**：
     - 提供 OpenAPI 接口文档
     - 集成 Air 实现热重载
@@ -156,6 +165,12 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 3. **postman 文档**：在 `docs` 目录下，导入 `docs/Jank_blog.postman_collection.json` 至 Postman 查看。
 
+## roadmap（船新推出）
+
+![image.png](https://s2.loli.net/2025/03/09/qJrtOeFvD95PV4Y.png)
+
+> 注：黑色为已完成部分，白色色为待完成部分。
+
 ## 架构图（待更新）
 
 **架构图及可视化接口文档**：在项目根目录中打开 `docs/jank_blog_architecture.drawio` 文件。
@@ -180,14 +195,35 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 - **QQ**: 927171598
 - **邮箱**：<EMAIL>fenderisfine@outlook.com
+- **开发者社区(QQ)**：828270460
+
+## 贡献者名单
+
+<p>
+  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="Contributors">
+</p>
+
+## 代码统计
+
+![代码行数](https://img.shields.io/tokei/lines/github/Done-0/Jank)
+![主要语言](https://img.shields.io/github/languages/top/Done-0/Jank)
+
+### 详细统计
+
+| 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |
+|:----:|:------:|:--------:|:--------:|:--------:|:----:|
+| Go   | -      | -        | -        | -        | -    |
+| Docker | -    | -        | -        | -        | -    |
+| YAML | -      | -        | -        | -        | -    |
+| Markdown | -  | -        | -        | -        | -    |
+| 其他 | -      | -        | -        | -        | -    |
+| **总计** | **-** | **-**  | **-**    | **-**    | **100%** |
+
+*注：统计数据由 GitHub Actions 自动更新，最后更新于 YYYY-MM-DD*
 
 ## 许可证
 
 本项目遵循 [MIT 协议](https://opensource.org/licenses/MIT)。
-
-## GitHub 统计
-
-<img src="https://github-readme-stats.vercel.app/api?username=Done-0&show_icons=true&hide_title=true&theme=radical" width="100%" height="65%" alt="GitHub Stats">
 
 ## 增长趋势
 
