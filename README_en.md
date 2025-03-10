@@ -232,7 +232,8 @@ Many thanks to everyone for your support!
 | Others | 1 | 36 | 0 | 6 | 1.1% |
 | **Total** | **80** | **3183** | **584** | **646** | **100%** |
 
-*Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-09*
+*Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-10*
+*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
 *Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
 *Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
 
