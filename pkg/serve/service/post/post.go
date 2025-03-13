@@ -19,7 +19,7 @@ import (
 )
 
 // CreatePost 创建文章
-func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
+func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVO, error) {
 	var ContentMarkdown string
 	var CategoryIDs []int64
 
@@ -88,13 +88,13 @@ func CreatePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, e
 		return nil, fmt.Errorf("创建文章失败: %v", err)
 	}
 
-	vo, err := utils.MapModelToVO(newPost, &post.PostsVo{})
+	vo, err := utils.MapModelToVO(newPost, &post.PostsVO{})
 	if err != nil {
 		utils.BizLogger(c).Errorf("创建文章时映射 vo 失败: %v", err)
 		return nil, fmt.Errorf("创建文章时映射 vo 失败: %v", err)
 	}
 
-	return vo.(*post.PostsVo), nil
+	return vo.(*post.PostsVO), nil
 }
 
 // GetPostByIDOrTitle 根据 ID 或 Title 获取文章
@@ -116,13 +116,13 @@ func GetPostByIDOrTitle(req *dto.GetOnePostRequest, c echo.Context) (interface{}
 			return nil, fmt.Errorf("文章不存在: %v", err)
 		}
 
-		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 		if err != nil {
 			utils.BizLogger(c).Errorf("获取文章时映射 vo 失败: %v", err)
 			return nil, fmt.Errorf("获取文章时映射 vo 失败: %v", err)
 		}
 
-		return vo.(*post.PostsVo), nil
+		return vo.(*post.PostsVO), nil
 	}
 
 	// 如果没有传 ID，使用 Title 查询
@@ -136,15 +136,15 @@ func GetPostByIDOrTitle(req *dto.GetOnePostRequest, c echo.Context) (interface{}
 		return nil, fmt.Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
 	}
 
-	postResponse := make([]*post.PostsVo, len(posts))
+	postResponse := make([]*post.PostsVO, len(posts))
 	for i, pos := range posts {
-		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 		if err != nil {
 			utils.BizLogger(c).Errorf("获取文章时映射 vo 失败: %v", err)
 			return nil, fmt.Errorf("获取文章时映射 vo 失败: %v", err)
 		}
 
-		postResponse[i] = vo.(*post.PostsVo)
+		postResponse[i] = vo.(*post.PostsVO)
 	}
 	return postResponse, nil
 }
@@ -165,15 +165,15 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 		return nil, fmt.Errorf("获取文章列表失败: %v", err)
 	}
 
-	postResponse := make([]*post.PostsVo, len(posts))
+	postResponse := make([]*post.PostsVO, len(posts))
 	for i, pos := range posts {
-		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 		if err != nil {
 			utils.BizLogger(c).Errorf("获取文章列表时映射 vo 失败: %v", err)
 			return nil, fmt.Errorf("获取文章列表时映射 vo 失败: %v", err)
 		}
 
-		postVo := vo.(*post.PostsVo)
+		postVo := vo.(*post.PostsVO)
 
 		// 只保留 ContentHTML 的前 150 个字符
 		if len(postVo.ContentHTML) > 150 {
@@ -191,7 +191,7 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 }
 
 // UpdatePost 更新文章
-func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
+func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVO, error) {
 	var ContentMarkdown string
 	var CategoryIDs []int64
 
@@ -258,12 +258,12 @@ func UpdatePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, e
 		return nil, fmt.Errorf("更新文章失败: %v", err)
 	}
 
-	vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+	vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 	if err != nil {
 		return nil, fmt.Errorf("更新文章时映射 vo 失败: %v", err)
 	}
 
-	return vo.(*post.PostsVo), nil
+	return vo.(*post.PostsVO), nil
 }
 
 // DeletePost 删除文章

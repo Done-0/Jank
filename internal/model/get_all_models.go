@@ -4,6 +4,7 @@ import (
 	account "jank.com/jank_blog/internal/model/account"
 	category "jank.com/jank_blog/internal/model/category"
 	comment "jank.com/jank_blog/internal/model/comment"
+	plugin "jank.com/jank_blog/internal/model/plugin"
 	post "jank.com/jank_blog/internal/model/post"
 )
 
@@ -21,5 +22,8 @@ func GetAllModels() []interface{} {
 
 		// comment 模块
 		&comment.Comment{},
+
+		// plugin 插件模块
+		&plugin.PluginInfo{},
 	}
 }

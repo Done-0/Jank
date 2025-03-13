@@ -42,6 +42,15 @@ type LogConfig struct {
 	LogLevel        string `mapstructure:"LOG_LEVEL"`
 }
 
+// PluginConfig 存储插件系统相关配置
+type PluginConfig struct {
+	ENABLE      bool   `mapstructure:"ENABLE"`       // 是否启用插件系统
+	PluginDir   string `mapstructure:"PLUGIN_DIR"`   // 插件目录路径
+	AutoLoad    bool   `mapstructure:"AUTO_LOAD"`    // 是否自动加载插件
+	LoadTimeout int    `mapstructure:"LOAD_TIMEOUT"` // 插件加载超时时间(秒)
+	InitTimeout int    `mapstructure:"INIT_TIMEOUT"` // 插件初始化超时时间(秒)
+}
+
 // SwaggerConfig 存储Swagger相关配置
 type SwaggerConfig struct {
 	SwaggerHost string `mapstructure:"SWAGGER_HOST"`
@@ -53,6 +62,7 @@ type Config struct {
 	DBConfig      DatabaseConfig `mapstructure:"database"`
 	RedisConfig   RedisConfig    `mapstructure:"redis"`
 	LogConfig     LogConfig      `mapstructure:"log"`
+	PluginConfig  PluginConfig   `mapstructure:"plugin"`
 	SwaggerConfig SwaggerConfig  `mapstructure:"swagger"`
 }
 

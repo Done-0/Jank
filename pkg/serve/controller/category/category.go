@@ -1,7 +1,6 @@
 package category
 
 import (
-	"jank.com/jank_blog/pkg/serve/service/category"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -9,6 +8,7 @@ import (
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/category/dto"
+	"jank.com/jank_blog/pkg/serve/service/category"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -19,7 +19,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "类目ID"
-// @Success      200   {object} vo.Result{data=category.CategoriesVo}  "获取成功"
+// @Success      200   {object} vo.Result{data=category.CategoriesVO}  "获取成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Router       /category/getOneCategory [get]
@@ -48,7 +48,7 @@ func GetOneCategory(c echo.Context) error {
 // @Tags         类目
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  vo.Result{data=[]category.CategoriesVo}  "获取成功"
+// @Success      200  {object}  vo.Result{data=[]category.CategoriesVO}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /category/getCategoryTree [get]
 func GetCategoryTree(c echo.Context) error {
@@ -67,7 +67,7 @@ func GetCategoryTree(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "类目ID"
-// @Success      200   {object} vo.Result{data=[]category.CategoriesVo}  "获取成功"
+// @Success      200   {object} vo.Result{data=[]category.CategoriesVO}  "获取成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"
@@ -98,7 +98,7 @@ func GetCategoryChildrenTree(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateOneCategoryRequest  true  "创建类目请求参数"
-// @Success      200     {object}   vo.Result{data=category.CategoriesVo}  "创建成功"
+// @Success      200     {object}   vo.Result{data=category.CategoriesVO}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Security     BearerAuth
 // @Router       /category/createOneCategory [post]
@@ -129,7 +129,7 @@ func CreateOneCategory(c echo.Context) error {
 // @Produce      json
 // @Param        id       path      int                       true  "类目ID"
 // @Param        request  body      dto.UpdateOneCategoryRequest true  "更新类目请求参数"
-// @Success      200     {object}   vo.Result{data=category.CategoriesVo}  "更新成功"
+// @Success      200     {object}   vo.Result{data=category.CategoriesVO}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "类目不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
@@ -161,7 +161,7 @@ func UpdateOneCategory(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "类目ID"
-// @Success      200   {object} vo.Result{data=category.CategoriesVo}  "删除成功"
+// @Success      200   {object} vo.Result{data=category.CategoriesVO}  "删除成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"

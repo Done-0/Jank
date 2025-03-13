@@ -1,7 +1,6 @@
 package comment
 
 import (
-	"jank.com/jank_blog/pkg/serve/service/comment"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -9,6 +8,7 @@ import (
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/comment/dto"
+	"jank.com/jank_blog/pkg/serve/service/comment"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -19,7 +19,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        id    query     int  true  "评论ID"
-// @Success      200   {object}  vo.Result{data=comment.CommentsVo}  "获取成功"
+// @Success      200   {object}  vo.Result{data=comment.CommentsVO}  "获取成功"
 // @Failure      400   {object}  vo.Result  "请求参数错误"
 // @Failure      404   {object}  vo.Result  "评论不存在"
 // @Router       /comment/getOneComment [get]
@@ -49,7 +49,7 @@ func GetOneComment(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        post_id    query     int  true  "文章ID"
-// @Success      200        {object} vo.Result{data=[]comment.CommentsVo}  "获取成功"
+// @Success      200        {object} vo.Result{data=[]comment.CommentsVO}  "获取成功"
 // @Failure      500        {object} vo.Result  "服务器错误"
 // @Router       /comment/getOneComment [get]
 func GetCommentGraph(c echo.Context) error {
@@ -78,7 +78,7 @@ func GetCommentGraph(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateCommentRequest  true  "创建评论请求参数"
-// @Success      200     {object}   vo.Result{data=comment.CommentsVo}  "创建成功"
+// @Success      200     {object}   vo.Result{data=comment.CommentsVO}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Router       /comment/createOneComment [post]
 func CreateOneComment(c echo.Context) error {
@@ -107,7 +107,7 @@ func CreateOneComment(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "评论ID"
-// @Success      200   {object} vo.Result{data=comment.CommentsVo}  "软删除成功"
+// @Success      200   {object} vo.Result{data=comment.CommentsVO}  "软删除成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "评论不存在"
 // @Router       /comment/deleteOneComment [post]

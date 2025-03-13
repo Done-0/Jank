@@ -8,6 +8,19 @@ const (
 
 	SendImgVerificationCodeFail   = 10001
 	SendEmailVerificationCodeFail = 10002
+
+	PluginLoadFailed        = 11000 // 插件加载失败
+	PluginInitFailed        = 11001 // 插件初始化失败
+	PluginUnloadFailed      = 11002 // 插件卸载失败
+	PluginNotFound          = 11003 // 插件未找到
+	PluginAlreadyExists     = 11004 // 插件已存在
+	PluginDependencyError   = 11005 // 插件依赖错误
+	PluginMarketError       = 11006 // 插件市场错误
+	PluginDownloadError     = 11007 // 插件下载错误
+	PluginVerificationError = 11008 // 插件校验错误
+	PluginRepoNotFound      = 11009 // 仓库未找到
+	PluginRepoExists        = 11010 // 仓库已存在
+	PluginChecksumError     = 11011 // 校验和不匹配
 )
 
 var CodeMsg = map[int]string{

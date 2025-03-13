@@ -20,7 +20,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.GetOnePostRequest  true  "获取文章请求参数"
-// @Success      200      {object}  vo.Result{data=post.PostsVo}  "获取成功"
+// @Success      200      {object}  vo.Result{data=post.PostsVO}  "获取成功"
 // @Failure      400      {object}  vo.Result          "请求参数错误"
 // @Failure      404      {object}  vo.Result          "文章不存在"
 // @Failure      500      {object}  vo.Result          "服务器错误"
@@ -52,7 +52,7 @@ func GetOnePost(c echo.Context) error {
 // @Produce      json
 // @Param        page     query    int     false  "页码"
 // @Param        pageSize query    int     false  "每页显示数量"
-// @Success      200  {object}  vo.Result{data=[]post.PostsVo}  "获取成功"
+// @Success      200  {object}  vo.Result{data=[]post.PostsVO}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /post/getAllPosts [get]
 func GetAllPosts(c echo.Context) error {
@@ -74,7 +74,7 @@ func GetAllPosts(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateOnePostRequest  true  "创建文章请求参数"
-// @Success      200     {object}   vo.Result{data=post.PostsVo}  "创建成功"
+// @Success      200     {object}   vo.Result{data=post.PostsVO}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
@@ -105,7 +105,7 @@ func CreateOnePost(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.UpdateOnePostRequest  true  "更新文章请求参数"
-// @Success      200     {object}   vo.Result{data=post.PostsVo}  "更新成功"
+// @Success      200     {object}   vo.Result{data=post.PostsVO}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "文章不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"

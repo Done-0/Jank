@@ -15,7 +15,7 @@ import (
 const (
 	SUBJECT         = "【Jank Blog】注册验证码"
 	QqEmailSmtp     = "smtp.qq.com"
-	QqEmailSmtpPort = ":25"
+	QqEmailSmtpPort = ":587"
 )
 
 func SendEmail(content string, toEmail []string) bool {

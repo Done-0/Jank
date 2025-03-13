@@ -26,6 +26,7 @@
 </p>
 
 ---
+
 ## Jank-standalone
 
 **本版本为单用户独立部署版，系统只能存在一个账号，请部署后立即注册账号，避免出现安全问题。**
@@ -34,7 +35,7 @@
 
 ## 预览
 
-👉[【b站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
+👉[【b 站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
 ![home-white.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-white.png)
 ![home-black.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-black.png)
@@ -58,12 +59,12 @@
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
 - **插件系统**：正在开发中...
 - **其他功能**：
-    - 集成 Air 实现热重载
-    - 提供 Logrus 实现日志记录
-    - 支持 CORS 跨域请求
-    - 提供 CSRF 和 XSS 防护
-    - 支持 Markdown 的服务端渲染
-    - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
+  - 集成 Air 实现热重载
+  - 提供 Logrus 实现日志记录
+  - 支持 CORS 跨域请求
+  - 提供 CSRF 和 XSS 防护
+  - 支持 Markdown 的服务端渲染
+  - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
 ## 本地开发
 
@@ -130,18 +131,18 @@
 
    ```yaml
    environment:
-      - POSTGRES_USER=<DATABASE_USER>
-      - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
-   
+     - POSTGRES_USER=<DATABASE_USER>
+     - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
+
    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "<DATABASE_USER>", "-d", "jank_db"]
+     test: ["CMD", "pg_isready", "-U", "<DATABASE_USER>", "-d", "jank_db"]
    ```
 
 3. 启动容器：
 
-    ```bash
-    docker-compose up -d
-    ```
+   ```bash
+   docker-compose up -d
+   ```
 
 ## 官方社区
 

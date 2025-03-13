@@ -20,7 +20,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.GetAccountRequest  true  "获取账户请求参数"
-// @Success      200     {object}   vo.Result{data=account.GetAccountVo}  "获取成功"
+// @Success      200     {object}   vo.Result{data=account.GetAccountVO}  "获取成功"
 // @Failure      400     {object}   vo.Result              "请求参数错误"
 // @Failure      404     {object}   vo.Result              "用户不存在"
 // @Router       /account/getAccount [post]
@@ -91,7 +91,7 @@ func RegisterAcc(c echo.Context) error {
 // @Produce      json
 // @Param        request  body      dto.LoginRequest  true  "登录信息"
 // @Param        ImgVerificationCode  query   string  true  "图形验证码"
-// @Success      200     {object}   vo.Result{data=account.LoginVo}  "登录成功，返回访问令牌"
+// @Success      200     {object}   vo.Result{data=account.LoginVO}  "登录成功，返回访问令牌"
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "登录失败，凭证无效"
 // @Router       /account/loginAccount [post]

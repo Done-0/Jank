@@ -29,6 +29,14 @@ log:
   LOG_ROTATION_TIME: 24
   LOG_LEVEL: "INFO"
 
+# 插件相关
+plugin:
+  ENABLE: true
+  PLUGIN_DIR: "./plugins"
+  AUTO_LOAD: true
+  LOAD_TIMEOUT: 32
+  INIT_TIMEOUT: 32
+
 # Swagger 相关
 swagger:
   SWAGGER_HOST: "localhost:9010"

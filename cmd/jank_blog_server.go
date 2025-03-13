@@ -10,6 +10,7 @@ import (
 	"jank.com/jank_blog/internal/banner"
 	"jank.com/jank_blog/internal/db"
 	"jank.com/jank_blog/internal/middleware"
+	"jank.com/jank_blog/internal/plugin"
 	"jank.com/jank_blog/internal/redis"
 	"jank.com/jank_blog/pkg/router"
 )
@@ -35,6 +36,9 @@ func Start() {
 
 	// 初始化 Redis 连接
 	redis.New(config)
+
+	// 初始化插件系统
+	plugin.New(config, app)
 
 	// 注册路由
 	router.RegisterRoutes(app)
