@@ -11,8 +11,9 @@ type AppConfig struct {
 	AppName   string `mapstructure:"APP_NAME"`
 	AppHost   string `mapstructure:"APP_HOST"`
 	AppPort   string `mapstructure:"APP_PORT"`
-	QqSmtp    string `mapstructure:"QQ_SMTP"`
+	EmailType string `mapstructure:"EMAIL_TYPE"`
 	FromEmail string `mapstructure:"FROM_EMAIL"`
+	EmailSmtp string `mapstructure:"EMAIL_SMTP"`
 }
 
 // DatabaseConfig 存储数据库相关配置

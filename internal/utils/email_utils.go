@@ -12,12 +12,18 @@ import (
 	"jank.com/jank_blog/internal/global"
 )
 
-const (
-	SUBJECT         = "【Jank Blog】注册验证码"
-	QqEmailSmtp     = "smtp.qq.com"
-	QqEmailSmtpPort = ":587"
-)
+const SUBJECT = "【Jank Blog】注册验证码"
 
+// 邮箱服务器配置
+var emailServers = map[string]struct {
+	Server, Port string
+}{
+	"qq":      {"smtp.qq.com", ":587"},
+	"gmail":   {"smtp.gmail.com", ":587"},
+	"outlook": {"smtp.office365.com", ":587"},
+}
+
+// SendEmail 发送邮件到指定邮箱
 func SendEmail(content string, toEmail []string) bool {
 	if content == "" || len(toEmail) == 0 {
 		return false
@@ -29,13 +35,25 @@ func SendEmail(content string, toEmail []string) bool {
 		return false
 	}
 
-	ema := email.NewEmail()
-	ema.From = config.AppConfig.FromEmail
-	ema.To = toEmail
-	ema.Subject = SUBJECT
-	ema.Text = []byte(content)
-	err = ema.Send(QqEmailSmtp+QqEmailSmtpPort, smtp.PlainAuth("", config.AppConfig.FromEmail, config.AppConfig.QqSmtp, QqEmailSmtp))
-	if err != nil {
+	// 获取邮箱类型和对应的服务器配置
+	emailType := config.AppConfig.EmailType
+	serverConfig, ok := emailServers[emailType]
+	if !ok || emailType == "" {
+		emailType = "qq"
+		serverConfig = emailServers[emailType]
+		global.SysLog.Warnf("邮箱类型无效或为空, 原类型: %s, 默认使用QQ邮箱替代", emailType)
+	}
+
+	e := email.NewEmail()
+	e.From = config.AppConfig.FromEmail
+	e.To = toEmail
+	e.Subject = SUBJECT
+	e.Text = []byte(content)
+
+	smtpAddr := serverConfig.Server + serverConfig.Port
+	auth := smtp.PlainAuth("", config.AppConfig.FromEmail, config.AppConfig.EmailSmtp, serverConfig.Server)
+
+	if err := e.Send(smtpAddr, auth); err != nil {
 		global.SysLog.Errorf("发送邮件失败, toEmail: %v, 错误信息: %v", toEmail, err)
 		return false
 	}
@@ -43,7 +61,7 @@ func SendEmail(content string, toEmail []string) bool {
 	return true
 }
 
-// NewRand 生成一个六位数的随机验证码
+// NewRand 生成六位数随机验证码
 func NewRand() int {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return r.Intn(900000) + 100000
@@ -51,7 +69,6 @@ func NewRand() int {
 
 // ValidEmail 检查邮箱格式是否有效
 func ValidEmail(email string) bool {
-	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-	re := regexp.MustCompile(emailRegex)
-	return re.MatchString(email)
+	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	return regexp.MustCompile(pattern).MatchString(email)
 }
