@@ -232,18 +232,17 @@ Many thanks to everyone for your support!
 </p>
 
 ### Detailed Statistics
+| Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
+|:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
+| Go | 100 | 3989 | 917 | 820 | 93.9% |
+| Docker | 1 | 16 | 14 | 13 | 0.4% |
+| YAML | 3 | 206 | 21 | 31 | 4.8% |
+| Markdown | 1 | 1 | 0 | 0 | 0.0% |
+| Others | 1 | 36 | 0 | 6 | 0.8% |
+| **Total** | **106** | **4248** | **952** | **870** | **100%** |
 
-| Language  | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
-| :-------: | :---: | :--------: | :-----------: | :---------: | :--------: |
-|    Go     |   -   |     -      |       -       |      -      |     -      |
-|  Docker   |   -   |     -      |       -       |      -      |     -      |
-|   YAML    |   -   |     -      |       -       |      -      |     -      |
-| Markdown  |   -   |     -      |       -       |      -      |     -      |
-|  Others   |   -   |     -      |       -       |      -      |     -      |
-| **Total** | **-** |   **-**    |     **-**     |    **-**    |  **100%**  |
-
-_Note: Statistics are automatically updated by GitHub Actions, last updated on YYYY-MM-DD_
-
+*Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-14*
+*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
