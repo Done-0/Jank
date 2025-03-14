@@ -1,5 +1,5 @@
 <p style="text-align: center;">
-  <a><img src="https://p.ipic.vip/ymgq9g.PNG" alt="Jank"></a>
+  <a><img src="https://s2.loli.net/2025/03/14/BnchjpPLeIaoO75.png" alt="Jank"></a>
 </p>
 <p style="text-align: center;">
   <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
@@ -36,16 +36,15 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 速览
 
-👉演示站｜Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
+👉 演示站｜ Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
 
-👉[【b站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
+👉[【b 站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
-👉独立使用版：[https://github.com/Done-0/Jank/tree/standalone](https://github.com/Done-0/Jank/tree/standalone)
+👉 部署文档：[Docker 部署文档](https://fenderisfine.icu/posts/2)
 
-👉部署文档：[Docker 部署文档](https://fenderisfine.icu/posts/2)
+👉 前端仓库：[https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
 
-👉前端仓库：[https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
-
+![home-page.png](https://s2.loli.net/2025/03/14/veaGZ4hwfjpbN9g.png)
 ![home-white.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-white.png)
 ![home-black.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-black.png)
 
@@ -65,19 +64,19 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 - **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
 - **权限模块**：实现 RBAC（Role-Based Access Control）角色权限管理，支持用户-角色-权限的增删改查。
-    - 基本功能已实现，考虑到用户使用的不友好性和复杂性，第一个 release 暂不推出此功能。
+  - 基本功能已实现，考虑到用户使用的不友好性和复杂性，第一个 release 暂不推出此功能。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
 - **分类模块**：支持类目树及子类目树递归查询，单一类目查询，以及类目的创建、更新和删除。
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
 - **插件系统**：正在火热开发中，即将推出...
 - **其他功能**：
-    - 提供 OpenAPI 接口文档
-    - 集成 Air 实现热重载
-    - 提供 Logrus 实现日志记录
-    - 支持 CORS 跨域请求
-    - 提供 CSRF 和 XSS 防护
-    - 支持 Markdown 的服务端渲染
-    - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
+  - 提供 OpenAPI 接口文档
+  - 集成 Air 实现热重载
+  - 提供 Logrus 实现日志记录
+  - 支持 CORS 跨域请求
+  - 提供 CSRF 和 XSS 防护
+  - 支持 Markdown 的服务端渲染
+  - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
 ## 本地开发
 
@@ -98,7 +97,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    # mysql 数据库配置
     DB_USER: "<DATABASE_USER>"
     DB_PSW: "<DATABASE_PASSWORD>"
-   
+
    # QQ 邮箱和 SMTP 授权码（可选）
    QQ_SMTP: "<QQ_SMTP>"
    FROM_EMAIL: "<FROM_QQ_EMAIL>"
@@ -118,7 +117,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    ```bash
    # 安装 air，需要 go 1.22 或更高版本
    go install github.com/air-verse/air@latest
-   
+
    # 热重载启动
    air -c ./configs/.air.toml
    ```
@@ -147,15 +146,15 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
    ```yaml
    environment:
-      - POSTGRES_USER=<DATABASE_USER>
-      - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
+     - POSTGRES_USER=<DATABASE_USER>
+     - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
    ```
 
 3. 启动容器：
 
-    ```bash
-    docker-compose up -d
-    ```
+   ```bash
+   docker-compose up -d
+   ```
 
 ## 接口文档
 
@@ -187,9 +186,14 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 感谢各位对本项目的支持！
 
-<div style="display: flex; flex-wrap: wrap;">
-  <img src="https://s2.loli.net/2025/02/21/B6Aq9HVOGvJzEyI.jpg" alt="c" style="border-radius: 50%; width: 120px; height: 120px; margin: 10px;" />
-</div>
+<p>
+  <a href="https://github.com/vxincode">
+    <img src="https://github.com/vxincode.png" width="80" height="80" style="border-radius: 50%;" />
+  </a>
+  <a href="https://github.com/WowDoers">
+    <img src="https://github.com/WowDoers.png" width="80" height="80" style="border-radius: 50%;" />
+  </a>
+</p>
 
 ## 联系合作
 
@@ -199,27 +203,31 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 贡献者名单
 
-<p>
-  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="Contributors">
-</p>
+<a href="https://github.com/Done-0/Jank/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="贡献者名单" />
+</a>
 
 ## 代码统计
 
-![代码行数](https://img.shields.io/tokei/lines/github/Done-0/Jank)
-![主要语言](https://img.shields.io/github/languages/top/Done-0/Jank)
+<p align="left">
+  <img src="https://img.shields.io/github/languages/top/Done-0/Jank?label=主要语言&color=00ADD8" alt="主要语言" />
+  <img src="https://img.shields.io/github/languages/code-size/Done-0/Jank?label=代码体积&color=success" alt="代码体积" />
+  <img src="https://img.shields.io/github/last-commit/Done-0/Jank?label=最后提交&color=blue" alt="最后提交" />
+  <img src="https://img.shields.io/github/commit-activity/m/Done-0/Jank?label=月提交&color=orange" alt="提交频率" />
+</p>
 
 ### 详细统计
 
-| 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |
-|:----:|:------:|:--------:|:--------:|:--------:|:----:|
-| Go   | -      | -        | -        | -        | -    |
-| Docker | -    | -        | -        | -        | -    |
-| YAML | -      | -        | -        | -        | -    |
-| Markdown | -  | -        | -        | -        | -    |
-| 其他 | -      | -        | -        | -        | -    |
-| **总计** | **-** | **-**  | **-**    | **-**    | **100%** |
+|   语言   | 文件数 | 代码行数 | 注释行数 | 空白行数 |   占比   |
+| :------: | :----: | :------: | :------: | :------: | :------: |
+|    Go    |   -    |    -     |    -     |    -     |    -     |
+|  Docker  |   -    |    -     |    -     |    -     |    -     |
+|   YAML   |   -    |    -     |    -     |    -     |    -     |
+| Markdown |   -    |    -     |    -     |    -     |    -     |
+|   其他   |   -    |    -     |    -     |    -     |    -     |
+| **总计** | **-**  |  **-**   |  **-**   |  **-**   | **100%** |
 
-*注：统计数据由 GitHub Actions 自动更新，最后更新于 YYYY-MM-DD*
+_注：统计数据由 GitHub Actions 自动更新，最后更新于 YYYY-MM-DD_
 
 ## 许可证
 

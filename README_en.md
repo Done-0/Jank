@@ -1,5 +1,5 @@
 <p style="text-align: center;">
-  <a><img src="https://p.ipic.vip/ymgq9g.PNG" alt="Jank"></a>
+  <a><img src="https://s2.loli.net/2025/03/14/BnchjpPLeIaoO75.png" alt="Jank"></a>
 </p>
 <p style="text-align: center;">
   <em>Jank, a lightweight blogging system developed with Go and the Echo framework, emphasizing minimalism, low coupling, and high extensibility</em>
@@ -38,10 +38,10 @@ Jank is a lightweight blogging system developed using Go and the Echo framework.
 
 - **Demo Site:** [https://fenderisfine.icu](https://fenderisfine.icu)
 - **Bilibili Preview Video:** [Have You Seen a Blogging System Developed in Go?](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
-- **Standalone Version:** [https://github.com/Done-0/Jank/tree/standalone](https://github.com/Done-0/Jank/tree/standalone)
 - **Deployment Documentation:** [Docker Deployment Guide](https://fenderisfine.icu/posts/2)
 - **Front-end Repository:** [https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
 
+![home-page.png](https://s2.loli.net/2025/03/14/veaGZ4hwfjpbN9g.png)
 ![home-white.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-white.png)
 ![home-black.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-black.png)
 
@@ -64,7 +64,7 @@ Jank is a lightweight blogging system developed using Go and the Echo framework.
 
 - **Permission Module:**  
   Implements RBAC (Role-Based Access Control) for managing user roles and permissions, including CRUD operations for users, roles, and permissions.  
-  *Note: Basic functionality has been implemented, but due to complexity and potential usability issues, this feature will not be included in the first release.*
+  _Note: Basic functionality has been implemented, but due to complexity and potential usability issues, this feature will not be included in the first release._
 
 - **Article Module:**  
   Provides functionalities for creating, viewing, updating, and deleting articles.
@@ -79,13 +79,13 @@ Jank is a lightweight blogging system developed using Go and the Echo framework.
   Under active development and coming soon…
 
 - **Other Features:**
-    - Provides OpenAPI documentation.
-    - Integrates Air for hot reloading.
-    - Utilizes Logrus for logging.
-    - Supports CORS for cross-origin requests.
-    - Includes CSRF and XSS protection.
-    - Supports server-side Markdown rendering.
-    - **Additional modules are under development**—your feedback and suggestions are welcome!
+  - Provides OpenAPI documentation.
+  - Integrates Air for hot reloading.
+  - Utilizes Logrus for logging.
+  - Supports CORS for cross-origin requests.
+  - Includes CSRF and XSS protection.
+  - Supports server-side Markdown rendering.
+  - **Additional modules are under development**—your feedback and suggestions are welcome!
 
 ## Local Development
 
@@ -106,7 +106,7 @@ Jank is a lightweight blogging system developed using Go and the Echo framework.
    # PostgreSQL database configuration
    DB_USER: "<DATABASE_USER>"
    DB_PSW: "<DATABASE_PASSWORD>"
-   
+
    # QQ email and SMTP authorization code (optional)
    QQ_SMTP: "<QQ_SMTP>"
    FROM_EMAIL: "<FROM_QQ_EMAIL>"
@@ -126,7 +126,7 @@ Jank is a lightweight blogging system developed using Go and the Echo framework.
    ```bash
    # Install Air (requires Go 1.22 or later)
    go install github.com/air-verse/air@latest
-   
+
    # Start with hot reloading
    air -c ./configs/.air.toml
    ```
@@ -201,9 +201,14 @@ If you have any questions or suggestions, feel free to join our official communi
 
 Many thanks to everyone for your support!
 
-<div style="display: flex; flex-wrap: wrap;">
-  <img src="https://s2.loli.net/2025/02/21/B6Aq9HVOGvJzEyI.jpg" alt="Contributor" style="border-radius: 50%; width: 120px; height: 120px; margin: 10px;" />
-</div>
+<p>
+  <a href="https://github.com/vxincode">
+    <img src="https://github.com/vxincode.png" width="80" height="80" style="border-radius: 50%;" />
+  </a>
+  <a href="https://github.com/WowDoers">
+    <img src="https://github.com/WowDoers.png" width="80" height="80" style="border-radius: 50%;" />
+  </a>
+</p>
 
 ## Contact & Collaboration
 
@@ -213,27 +218,31 @@ Many thanks to everyone for your support!
 
 ## Contributors
 
-<p>
-  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="Contributors">
-</p>
+<a href="https://github.com/Done-0/Jank/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="贡献者名单" />
+</a>
 
 ## Code Statistics
 
-![Lines of Code](https://img.shields.io/tokei/lines/github/Done-0/Jank)
-![Top Language](https://img.shields.io/github/languages/top/Done-0/Jank)
+<p align="left">
+  <img src="https://img.shields.io/github/languages/top/Done-0/Jank?label=Language&color=00ADD8" alt="Language" />
+  <img src="https://img.shields.io/github/languages/code-size/Done-0/Jank?label=Code%20Size&color=success" alt="Code Size" />
+  <img src="https://img.shields.io/github/last-commit/Done-0/Jank?label=Last%20Commit&color=blue" alt="Last Commit" />
+  <img src="https://img.shields.io/github/commit-activity/m/Done-0/Jank?label=Monthly%20Commits&color=orange" alt="Monthly Commits" />
+</p>
 
 ### Detailed Statistics
 
-| Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
-|:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
-| Go | - | - | - | - | - |
-| Docker | - | - | - | - | - |
-| YAML | - | - | - | - | - |
-| Markdown | - | - | - | - | - |
-| Others | - | - | - | - | - |
-| **Total** | **-** | **-** | **-** | **-** | **100%** |
+| Language  | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
+| :-------: | :---: | :--------: | :-----------: | :---------: | :--------: |
+|    Go     |   -   |     -      |       -       |      -      |     -      |
+|  Docker   |   -   |     -      |       -       |      -      |     -      |
+|   YAML    |   -   |     -      |       -       |      -      |     -      |
+| Markdown  |   -   |     -      |       -       |      -      |     -      |
+|  Others   |   -   |     -      |       -       |      -      |     -      |
+| **Total** | **-** |   **-**    |     **-**     |    **-**    |  **100%**  |
 
-*Note: Statistics are automatically updated by GitHub Actions, last updated on YYYY-MM-DD*
+_Note: Statistics are automatically updated by GitHub Actions, last updated on YYYY-MM-DD_
 
 ## License
 

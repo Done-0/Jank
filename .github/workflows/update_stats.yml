@@ -58,14 +58,14 @@ jobs:
           README_CONTENT=$(cat README.md)
           NEW_TABLE="| 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |\n|:----:|:------:|:--------:|:--------:|:--------:|:----:|\n| Go | $GO_FILES | $GO_CODE | $GO_COMMENT | $GO_BLANK | $GO_PERCENT |\n| Docker | $DOCKER_FILES | $DOCKER_CODE | $DOCKER_COMMENT | $DOCKER_BLANK | $DOCKER_PERCENT |\n| YAML | $YAML_FILES | $YAML_CODE | $YAML_COMMENT | $YAML_BLANK | $YAML_PERCENT |\n| 其他 | $OTHER_FILES | $OTHER_CODE | $OTHER_COMMENT | $OTHER_BLANK | $OTHER_PERCENT |\n| **总计** | **$TOTAL_FILES** | **$TOTAL_CODE** | **$TOTAL_COMMENT** | **$TOTAL_BLANK** | **100%** |"
           
-          README_CONTENT=$(echo "$README_CONTENT" | sed -e "/| 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |/,/\*注：统计数据/c\\$NEW_TABLE\n\n*注：统计数据由 GitHub Actions 自动更新，最后更新于 $(date +"%Y-%m-%d")*\n*排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*")
+          README_CONTENT=$(echo "$README_CONTENT" | sed -E ':a;N;$!ba;s/\| 语言 \| 文件数 \|.*(\n[^|]*\|.*)*\n\*注：统计数据.*$/'"$NEW_TABLE"'\n\n*注：统计数据由 GitHub Actions 自动更新，最后更新于 '"$(date +"%Y-%m-%d")"'*\n*排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*/')
           echo "$README_CONTENT" > README.md
           
           # 更新英文 README
           README_EN_CONTENT=$(cat README_en.md)
           NEW_TABLE_EN="| Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |\n|:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|\n| Go | $GO_FILES | $GO_CODE | $GO_COMMENT | $GO_BLANK | $GO_PERCENT |\n| Docker | $DOCKER_FILES | $DOCKER_CODE | $DOCKER_COMMENT | $DOCKER_BLANK | $DOCKER_PERCENT |\n| YAML | $YAML_FILES | $YAML_CODE | $YAML_COMMENT | $YAML_BLANK | $YAML_PERCENT |\n| Others | $OTHER_FILES | $OTHER_CODE | $OTHER_COMMENT | $OTHER_BLANK | $OTHER_PERCENT |\n| **Total** | **$TOTAL_FILES** | **$TOTAL_CODE** | **$TOTAL_COMMENT** | **$TOTAL_BLANK** | **100%** |"
           
-          README_EN_CONTENT=$(echo "$README_EN_CONTENT" | sed -e "/| Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |/,/\*Note: Statistics/c\\$NEW_TABLE_EN\n\n*Note: Statistics are automatically updated by GitHub Actions, last updated on $(date +"%Y-%m-%d")*\n*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*")
+          README_EN_CONTENT=$(echo "$README_EN_CONTENT" | sed -E ':a;N;$!ba;s/\| Language \| Files \|.*(\n[^|]*\|.*)*\n\*Note: Statistics.*$/'"$NEW_TABLE_EN"'\n\n*Note: Statistics are automatically updated by GitHub Actions, last updated on '"$(date +"%Y-%m-%d")"'*\n*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*/')
           echo "$README_EN_CONTENT" > README_en.md
 
       - name: 提交更改
