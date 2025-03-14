@@ -209,19 +209,17 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 ![主要语言](https://img.shields.io/github/languages/top/Done-0/Jank)
 
 ### 详细统计
-
 | 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |
 |:----:|:------:|:--------:|:--------:|:--------:|:----:|
-| Go | 100 | 3989 | 917 | 820 | 95.2% |
+| Go | 100 | 3989 | 917 | 820 | 93.9% |
 | Docker | 1 | 16 | 14 | 13 | 0.4% |
-| YAML | 3 | 151 | 10 | 25 | 3.6% |
-| 其他 | 1 | 36 | 0 | 6 | 0.9% |
-| **总计** | **105** | **4192** | **941** | **864** | **100%** |
+| YAML | 3 | 206 | 21 | 31 | 4.8% |
+| Markdown | 1 | 1 | 0 | 0 | 0.0% |
+| 其他 | 1 | 36 | 0 | 6 | 0.8% |
+| **总计** | **106** | **4248** | **952** | **870** | **100%** |
 
-*注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-03-09*
+*注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-03-14*
 *排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*
-*排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*
-
 ## 许可证
 
 本项目遵循 [MIT 协议](https://opensource.org/licenses/MIT)。
