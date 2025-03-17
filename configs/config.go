@@ -17,11 +17,13 @@ type AppConfig struct {
 
 // DatabaseConfig 存储数据库相关配置
 type DatabaseConfig struct {
+	Dialect    string `mapstructure:"DIALECT"`
 	DBName     string `mapstructure:"DB_NAME"`
 	DBHost     string `mapstructure:"DB_HOST"`
 	DBPort     string `mapstructure:"DB_PORT"`
 	DBUser     string `mapstructure:"DB_USER"`
 	DBPassword string `mapstructure:"DB_PSW"`
+	DBPath     string `mapstructure:"DB_PATH"`
 }
 
 // RedisConfig 存储Redis相关配置

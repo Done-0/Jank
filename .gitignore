@@ -19,3 +19,6 @@ ci.yml
 
 # 忽略 docs 目录
 .docs/
+
+# 忽略数据库文件
+/database/
