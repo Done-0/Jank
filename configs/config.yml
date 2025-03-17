@@ -7,11 +7,13 @@ app:
   FROM_EMAIL: "<FROM_QQ_EMAIL>"
 
 database:
+  DIALECT: "postgres" # 数据库类型, 可选值: postgres, sqlite
   DB_NAME: "jank_db"
   DB_HOST: "127.0.0.1" # 如果使用docker，则改为"postgres_db"
   DB_PORT: "5432"
   DB_USER: "<DATABASE_USER>"
   DB_PSW: "<DATABASE_PASSWORD>"
+  DB_PATH: "./database" # 仅 SQLite 需要
 
 # Redis 相关
 redis:
