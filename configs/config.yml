@@ -8,7 +8,7 @@ app:
   EMAIL_SMTP: "<EMAIL_SMTP>"
 
 database:
-  DE_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
+  DB_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
   DB_NAME: "jank_db"
   DB_HOST: "127.0.0.1" # 如果使用docker，则改为"postgres_db"
   DB_PORT: "5432"
