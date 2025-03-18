@@ -36,17 +36,16 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 速览
 
-👉 演示站｜ Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
+👉 演示站｜Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
 
-👉[【b 站视频预览: 你见过 Go 语言开发的博客系统吗？】](https://www.bilibili.com/video/BV1W5wdeZEoY/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
-
-👉 部署文档：[Docker 部署文档](https://fenderisfine.icu/posts/2)
+👉[【Jank 博客系统】全新技术栈与 UI】](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
 👉 前端仓库：[https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
 
-![home-page.png](https://s2.loli.net/2025/03/14/veaGZ4hwfjpbN9g.png)
-![home-white.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-white.png)
-![home-black.png](https://raw.githubusercontent.com/Done-0/Jank-website/main/public/images/home-black.png)
+![home-page.png](https://s2.loli.net/2025/03/18/CVYwRJOaXtH4nb8.png)
+![posts-page.png](https://s2.loli.net/2025/03/18/s6WH3BVmlbyarRS.png)
+![post1-page.png](https://s2.loli.net/2025/03/18/IEpPOhcfRdKbk4J.png)
+![post2-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
 
 > 注：因为还在推出阶段，部分配置文件可能需要根据实际情况更改，具体请使用下面的联系方式联系作者，或者进入开发者社区交流。
 
@@ -64,7 +63,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 - **账户模块**：实现 JWT 身份验证，支持用户登录、注册、注销、密码修改和个人信息更新。
 - **权限模块**：实现 RBAC（Role-Based Access Control）角色权限管理，支持用户-角色-权限的增删改查。
-  - 基本功能已实现，考虑到用户使用的不友好性和复杂性，第一个 release 暂不推出此功能。
+  - 基本功能已实现，考虑到用户使用的不友好性和复杂性，因此暂不推出此功能。
 - **文章模块**：提供文章的创建、查看、更新和删除功能。
 - **分类模块**：支持类目树及子类目树递归查询，单一类目查询，以及类目的创建、更新和删除。
 - **评论模块**：提供评论的创建、查看、删除和回复功能，支持评论树结构的展示。
@@ -91,16 +90,22 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    ```
 
 2. **配置数据库和邮箱**：  
-   修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
+    修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
 
    ```yaml
-   # mysql 数据库配置
-    DB_USER: "<DATABASE_USER>"
-    DB_PSW: "<DATABASE_PASSWORD>"
+   database:
+     DB_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
+     DB_NAME: "jank_db"
+     DB_HOST: "127.0.0.1" # 如果使用docker，则改为"postgres_db"
+     DB_PORT: "5432"
+     DB_USER: "<DATABASE_USER>"
+     DB_PSW: "<DATABASE_PASSWORD>"
+     DB_PATH: "./database" # SQLite 数据库文件路径
 
-   # QQ 邮箱和 SMTP 授权码（可选）
-   QQ_SMTP: "<QQ_SMTP>"
-   FROM_EMAIL: "<FROM_QQ_EMAIL>"
+   # 邮箱类型和 SMTP 授权码（可选）
+   EMAIL_TYPE: "qq" # 邮箱类型，可选值: qq, gmail, outlook
+   FROM_EMAIL: "<FROM_EMAIL>" # 发件人邮箱
+   EMAIL_SMTP: "<EMAIL_SMTP>" # SMTP 授权码
    ```
 
 3. **启动服务**：  
@@ -125,21 +130,26 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 4. **访问接口**：  
    本地启动应用后，浏览器访问 [http://localhost:9010/ping](http://localhost:9010/ping)
 
-## Docker 容器部署
+## Docker 容器部署（postgres）
 
 1. 修改 `configs/config.yaml` 文件中的数据库配置和邮箱配置，示例如下：
 
    ```yaml
-   # 应用配置
-   APP_HOST: "0.0.0.0"
+   APP_HOST: "0.0.0.0" # 如果使用docker，则改为"0.0.0.0"
 
-   # mysql 数据库配置
-    DB_USER: "<DATABASE_USER>"
-    DB_PSW: "<DATABASE_PASSWORD>"
+   database:
+     DB_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
+     DB_NAME: "jank_db"
+     DB_HOST: "postgres_db" # 如果使用docker，则改为"postgres_db"
+     DB_PORT: "5432"
+     DB_USER: "<DATABASE_USER>"
+     DB_PSW: "<DATABASE_PASSWORD>"
+     DB_PATH: "./database" # SQLite 数据库文件路径
 
-   # QQ 邮箱和 SMTP 授权码（可选）
-   QQ_SMTP: "<QQ_SMTP>"
-   FROM_EMAIL: "<FROM_QQ_EMAIL>"
+   # 邮箱类型和 SMTP 授权码（可选）
+   EMAIL_TYPE: "qq" # 邮箱类型，可选值: qq, gmail, outlook
+   FROM_EMAIL: "<FROM_EMAIL>" # 发件人邮箱
+   EMAIL_SMTP: "<EMAIL_SMTP>" # SMTP 授权码
    ```
 
 2. 修改 `docker-compose.yaml` 文件中的环境变量，示例如下：
@@ -184,7 +194,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 特别鸣谢
 
-感谢各位对本项目的支持！
+感谢各位对开源社区的支持，在此诚挚地对每一位赞助者表示感谢！
 
 <p>
   <a href="https://github.com/vxincode">
@@ -217,17 +227,19 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 </p>
 
 ### 详细统计
-| 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |
-|:----:|:------:|:--------:|:--------:|:--------:|:----:|
-| Go | 100 | 4104 | 929 | 839 | 94.0% |
-| Docker | 1 | 16 | 14 | 13 | 0.4% |
-| YAML | 3 | 209 | 21 | 31 | 4.8% |
-| Markdown | 1 | 1 | 0 | 0 | 0.0% |
-| 其他 | 1 | 36 | 0 | 6 | 0.8% |
-| **总计** | **106** | **4366** | **964** | **889** | **100%** |
 
-*注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-03-18*
-*排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*
+|   语言   | 文件数  | 代码行数 | 注释行数 | 空白行数 |   占比   |
+| :------: | :-----: | :------: | :------: | :------: | :------: |
+|    Go    |   100   |   4104   |   929    |   839    |  94.0%   |
+|  Docker  |    1    |    16    |    14    |    13    |   0.4%   |
+|   YAML   |    3    |   209    |    21    |    31    |   4.8%   |
+| Markdown |    1    |    1     |    0     |    0     |   0.0%   |
+|   其他   |    1    |    36    |    0     |    6     |   0.8%   |
+| **总计** | **106** | **4366** | **964**  | **889**  | **100%** |
+
+_注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-03-18_
+_排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件_
+
 ## 许可证
 
 本项目遵循 [MIT 协议](https://opensource.org/licenses/MIT)。
