@@ -3,17 +3,18 @@ app:
   APP_NAME: "JANK_BLOG"
   APP_HOST: "localhost" # 如果使用docker，则改为"0.0.0.0"
   APP_PORT: "9010"
-  QQ_SMTP: "<QQ_SMTP>"
-  FROM_EMAIL: "<FROM_QQ_EMAIL>"
+  EMAIL_TYPE: "qq" # 邮箱类型，可选值: qq, gmail, outlook
+  FROM_EMAIL: "<FROM_EMAIL>"
+  EMAIL_SMTP: "<EMAIL_SMTP>"
 
 database:
-  DIALECT: "postgres" # 数据库类型, 可选值: postgres, sqlite
+  DE_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
   DB_NAME: "jank_db"
   DB_HOST: "127.0.0.1" # 如果使用docker，则改为"postgres_db"
   DB_PORT: "5432"
   DB_USER: "<DATABASE_USER>"
   DB_PSW: "<DATABASE_PASSWORD>"
-  DB_PATH: "./database" # 仅 SQLite 需要
+  DB_PATH: "./database" # SQLite 数据库文件路径
 
 # Redis 相关
 redis:
