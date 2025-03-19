@@ -229,12 +229,12 @@ We sincerely thank every sponsor for their support of the open-source community!
 ### Detailed Statistics
 | Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
 |:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
-| Go | 100 | 4104 | 929 | 839 | 94.0% |
+| Go | 82 | 3342 | 664 | 669 | 92.7% |
 | Docker | 1 | 16 | 14 | 13 | 0.4% |
-| YAML | 3 | 209 | 21 | 31 | 4.8% |
+| YAML | 3 | 209 | 21 | 31 | 5.8% |
 | Markdown | 1 | 1 | 0 | 0 | 0.0% |
-| Others | 1 | 36 | 0 | 6 | 0.8% |
-| **Total** | **106** | **4366** | **964** | **889** | **100%** |
+| Others | 1 | 36 | 0 | 6 | 1.0% |
+| **Total** | **88** | **3604** | **699** | **719** | **100%** |
 
 *Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-19*
 *Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
