@@ -18,13 +18,13 @@ var (
 )
 
 // GenerateJWT 生成 Access Token 和 Refresh Token
-func GenerateJWT(accountID, roleID int64) (string, string, error) {
-	accessTokenString, err := generateToken(accountID, roleID, accessSecret, accessExpireTime)
+func GenerateJWT(accountID int64) (string, string, error) {
+	accessTokenString, err := generateToken(accountID, accessSecret, accessExpireTime)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshTokenString, err := generateToken(accountID, roleID, refreshSecret, refreshExpireTime)
+	refreshTokenString, err := generateToken(accountID, refreshSecret, refreshExpireTime)
 	if err != nil {
 		return "", "", err
 	}
@@ -73,9 +73,8 @@ func RefreshTokenLogic(refreshTokenString string) (map[string]string, error) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		accountID := int64(claims["account_id"].(float64))
-		roleID := int64(claims["role_id"].(float64))
 
-		newAccessToken, newRefreshToken, err := GenerateJWT(accountID, roleID)
+		newAccessToken, newRefreshToken, err := GenerateJWT(accountID)
 		if err != nil {
 			return nil, err
 		}
@@ -90,37 +89,31 @@ func RefreshTokenLogic(refreshTokenString string) (map[string]string, error) {
 }
 
 // ParseAccountAndRoleIDFromJWT 从 JWT 中提取 accountID 和 roleID
-func ParseAccountAndRoleIDFromJWT(tokenString string) (int64, int64, error) {
+func ParseAccountAndRoleIDFromJWT(tokenString string) (int64, error) {
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
 	token, err := ValidateJWTToken(tokenString, false)
 	if err != nil {
-		return 0, 0, err
+		return 0, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, 0, fmt.Errorf("无法解析 access token 中的 claims")
+		return 0, fmt.Errorf("无法解析 access token 中的 claims")
 	}
 
 	accountID, ok := claims["account_id"].(float64)
 	if !ok {
-		return 0, 0, fmt.Errorf("access token 中缺少 account_id")
+		return 0, fmt.Errorf("access token 中缺少 account_id")
 	}
 
-	roleID, ok := claims["role_id"].(float64)
-	if !ok {
-		return 0, 0, fmt.Errorf("access token 中缺少 role_id")
-	}
-
-	return int64(accountID), int64(roleID), nil
+	return int64(accountID), nil
 }
 
 // generateToken 通用的 token 生成函数
-func generateToken(accountID, roleID int64, secret []byte, expireTime time.Duration) (string, error) {
+func generateToken(accountID int64, secret []byte, expireTime time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"account_id": accountID,
-		"role_id":    roleID,
 		"exp":        time.Now().UTC().Add(expireTime).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

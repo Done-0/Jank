@@ -21,8 +21,6 @@ func RegisterRoutes(app *echo.Echo) {
 	//routes.RegisterTestRoutes(api1, api2)
 	// 注册账户相关的路由
 	routes.RegisterAccountRoutes(api1)
-	// 注册角色权限相关的路由
-	routes.RegisterRolePermissionRoutes(api1)
 	// 注册验证相关的路由
 	routes.RegisterVerificationRoutes(api1)
 	// 注册文章相关的路由
