@@ -45,10 +45,21 @@ func GetAccount(req *dto.GetAccountRequest, c echo.Context) (*account.GetAccount
 	return vo.(*account.GetAccountVo), nil
 }
 
-// RegisterUser 用户注册逻辑
-func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVo, error) {
+// RegisterAcc 用户注册逻辑
+func RegisterAcc(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVo, error) {
 	registerLock.Lock()
 	defer registerLock.Unlock()
+
+	totalAccounts, err := mapper.GetTotalAccounts()
+	if err != nil {
+		utils.BizLogger(c).Errorf("获取用户总数失败: %v", err)
+		return nil, fmt.Errorf("获取用户总数失败: %v", err)
+	}
+
+	if totalAccounts > 0 {
+		utils.BizLogger(c).Error("系统限制: 当前为单用户独立部署版本，已达到账户数量上限 (1/1)")
+		return nil, fmt.Errorf("系统限制: 当前为单用户独立部署版本，已达到账户数量上限 (1/1)")
+	}
 
 	existingUser, _ := mapper.GetAccountByEmail(req.Email)
 	if existingUser != nil {
@@ -74,25 +85,6 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 		return nil, fmt.Errorf("「%s」用户注册失败: %v", req.Email, err)
 	}
 
-	// 获取并分配默认角色，如果没有则自动创建
-	role, err := mapper.GetRoleByCode("user")
-	if err != nil {
-		defaultRole := &model.Role{
-			Code:        "user",
-			Description: "普通用户",
-		}
-		if err := mapper.CreateRole(defaultRole); err != nil {
-			utils.BizLogger(c).Errorf("创建默认角色失败: %v", err)
-			return nil, fmt.Errorf("创建默认角色失败: %v", err)
-		}
-		role = defaultRole
-	}
-
-	if err := mapper.AssignRoleToAcc(acc.ID, role.ID); err != nil {
-		utils.BizLogger(c).Errorf("给用户分配角色失败: %v", err)
-		return nil, fmt.Errorf("给用户分配角色失败: %v", err)
-	}
-
 	vo, err := utils.MapModelToVO(acc, &account.RegisterAccountVo{})
 	if err != nil {
 		utils.BizLogger(c).Errorf("用户注册时映射 vo 失败: %v", err)
@@ -102,18 +94,12 @@ func RegisterUser(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAc
 	return vo.(*account.RegisterAccountVo), nil
 }
 
-// LoginUser 登录用户逻辑
-func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
+// LoginAcc 登录用户逻辑
+func LoginAcc(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
 	acc, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
 		return nil, fmt.Errorf("「%s」用户不存在: %v", req.Email, err)
-	}
-
-	role, err := mapper.GetRoleByAccountID(acc.ID)
-	if err != nil {
-		utils.BizLogger(c).Errorf("获取「%s」用户角色失败: %v", acc.Nickname, err)
-		return nil, fmt.Errorf("获取「%s」用户角色失败: %v", acc.Nickname, err)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.Password))
@@ -122,13 +108,13 @@ func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) 
 		return nil, fmt.Errorf("密码输入错误: %v", err)
 	}
 
-	accessTokenString, refreshTokenString, err := utils.GenerateJWT(acc.ID, role.ID)
+	accessTokenString, refreshTokenString, err := utils.GenerateJWT(acc.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("token 生成失败: %v", err)
 		return nil, fmt.Errorf("token 生成失败: %v", err)
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d:%d", UserCache, acc.ID, role.ID)
+	cacheKey := fmt.Sprintf("%s:%d", UserCache, acc.ID)
 
 	err = global.RedisClient.Set(context.Background(), cacheKey, accessTokenString, UserCacheExpireTime).Err()
 	if err != nil {
@@ -150,18 +136,18 @@ func LoginUser(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) 
 	return vo.(*account.LoginVo), nil
 }
 
-// LogoutUser 处理用户登出逻辑
-func LogoutUser(c echo.Context) error {
+// LogoutAcc 处理用户登出逻辑
+func LogoutAcc(c echo.Context) error {
 	logoutLock.Lock()
 	defer logoutLock.Unlock()
 
-	accountID, roleID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
+	accountID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 access token 失败: %v", err)
 		return fmt.Errorf("解析 access token 失败: %v", err)
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d:%d", UserCache, accountID, roleID)
+	cacheKey := fmt.Sprintf("%s:%d", UserCache, accountID)
 	err = global.RedisClient.Del(c.Request().Context(), cacheKey).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("删除 Redis 缓存失败: %v", err)
@@ -181,7 +167,7 @@ func ResetPassword(req *dto.ResetPwdRequest, c echo.Context) error {
 		return fmt.Errorf("两次密码输入不一致")
 	}
 
-	accountID, _, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
+	accountID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 token 失败: %v", err)
 		return fmt.Errorf("解析 token 失败: %v", err)
