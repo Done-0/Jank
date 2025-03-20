@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -9,18 +9,15 @@ services:
       - POSTGRES_DB=jank_db
       - POSTGRES_USER=<DATABASE_USER>
       - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - jank_blog_network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "fender", "-d", "jank_db"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 10s
+      retries: 30
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jank_blog_network
 
   redis:
     image: redis:7.0
@@ -38,8 +35,8 @@ services:
       - jank_blog_network
 
   app:
-    build: Jank
-    container_name: jank_blog_app
+    build: ./backend
+    container_name: jank_blog_backend_app
     restart: unless-stopped
     ports:
       - "9010:9010"
@@ -49,27 +46,49 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./configs:/app/configs
+      - ./backend/configs:/app/configs
+    networks:
+      - jank_blog_network
+
+  frontend:
+    build: ./frontend
+    container_name: jank_blog_frontend_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/public:/app/public
+      - frontend_next_static:/app/.next/static
     networks:
       - jank_blog_network
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.24.0
     container_name: nginx
     restart: always
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./configs/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - app
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+      - ./frontend/public:/app/public:ro
     networks:
       - jank_blog_network
-
-volumes:
-  postgres_data:
-  redis_data:
+    command: >
+      bash -c "mkdir -p /var/cache/nginx/proxy_cache &&
+              chown -R nginx:nginx /var/cache/nginx &&
+              nginx -g 'daemon off;'"
+    depends_on:
+      - frontend
+      - app
 
 networks:
   jank_blog_network:
     driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  frontend_next_static:
