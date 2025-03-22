@@ -224,3 +224,16 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 ## Star History
 
 <img src="https://api.star-history.com/svg?repos=Done-0/Jank&type=timeline" width="100%" height="65%" alt="GitHub Stats">
+
+### Detailed Statistics
+| Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
+|:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
+| Go | 82 | 3343 | 664 | 669 | 92.3% |
+| Docker | 1 | 16 | 14 | 13 | 0.4% |
+| YAML | 3 | 227 | 21 | 32 | 6.3% |
+| Markdown | 1 | 1 | 0 | 0 | 0.0% |
+| Others | 1 | 36 | 0 | 6 | 1.0% |
+| **Total** | **88** | **3623** | **699** | **720** | **100%** |
+
+*Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-22*
+*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
