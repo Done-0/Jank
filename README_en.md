@@ -2,7 +2,7 @@
   <a><img src="https://s2.loli.net/2025/03/14/BnchjpPLeIaoO75.png" alt="Jank"></a>
 </p>
 <p style="text-align: center;">
-  <em>Jank, a lightweight blogging system, developed using Go language and the Echo framework, emphasizes minimalism, low coupling, and high scalability.</em>
+  <em>Jank - A lightweight blog system built with Go and Echo framework, emphasizing minimalism, low coupling, and high extensibility</em>
 </p>
 <p style="text-align: center;">
   <a href="https://img.shields.io/github/stars/Done-0/Jank?style=social" target="_blank">
@@ -25,57 +25,58 @@
   </a>
 </p>
 <p align="center">
-  <span style="text-decoration: underline; color: grey;">Simplified Chinese</span> | <a href="README_en.md" style="text-decoration: none;">English</a>
+  <a href="README.md" style="text-decoration: none;">简体中文</a> | <span style="text-decoration: underline; color: grey;">English</span>
 </p>
 
 ---
 
-Jank is a lightweight blogging system, developed using Go language and the Echo framework, designed with a focus on minimalism, low coupling, and high scalability. It aims to provide users with a feature-rich, simple, and secure blogging experience.
+Jank is a lightweight blog system built with Go language and Echo framework. Designed with principles of minimalism, low coupling, and high extensibility, it aims to provide users with a feature-rich, clean-interface, easy-to-use, and secure blogging experience.
 
-> Note: This project currently lacks a front-end component. We invite developers interested in front-end development to join and contribute to the project. We look forward to your valuable feedback and contributions!
+> Note: The project currently lacks professional frontend development. We sincerely invite frontend developers to participate in the frontend project development. Your valuable suggestions and contributions are highly appreciated!
 
-## Quick Overview
+## Quick Look
 
 👉 Demo Site: [https://fenderisfine.icu](https://fenderisfine.icu)
 
-👉 [【Jank Blog System】New Technology Stack and UI](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
+👉 [【Jank Blog System】New Tech Stack & UI】](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
-👉 Front-end Repository: [https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
+👉 Frontend Repository: [https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
 
 ![home-page.png](https://s2.loli.net/2025/03/18/CVYwRJOaXtH4nb8.png)
 ![posts-page.png](https://s2.loli.net/2025/03/18/s6WH3BVmlbyarRS.png)
-![post1-page.png](https://s2.loli.net/2025/03/18/IEpPOhcfRdKbk4J.png)
-![post2-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
+![post1-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
 
-> Note: Since the project is in its early stages, some configuration files may need to be adjusted according to actual requirements. Please contact the author using the information below, or join the developer community for further discussions.
+> Note: As the project is still in its early stages, some configuration files may require adjustments based on actual usage. Please contact the author using the provided contact information or join the developer community for discussions.
 
-## Technology Stack
+## Tech Stack
 
-- **Go Language**: A popular back-end development language, suitable for building high-concurrency applications.
-- **Echo Framework**: A high-performance web framework that supports rapid development and flexible routing management.
-- **PostgreSQL**: An open-source relational database offering high performance and reliability for data storage.
-- **Redis**: A popular caching solution that offers fast data access and persistence options.
-- **JWT**: A secure user authentication mechanism to ensure the integrity and security of data transmission.
-- **Docker**: A containerization deployment tool that simplifies application packaging and distribution.
-- **Frontend**: React + Umi + Shadcn/ui + TailwindCSS.
+- **Go Language**: Popular backend development language suitable for building high-concurrency applications.
+- **Echo Framework**: High-performance web framework supporting rapid development and flexible route management.
+- **Database**: Open-source relational databases supporting Postgres, MySQL, and SQLite.
+- **Redis**: Popular caching solution providing fast data access and persistence options.
+- **JWT**: Secure user authentication mechanism ensuring data transmission integrity and security.
+- **Docker**: Containerization deployment tool simplifying application packaging and distribution.
+- **Frontend**: React + Next.js + shadcn/ui + Tailwind CSS.
 
 ## Feature Modules
 
-- **Account Module**: Implements JWT authentication, supporting user login, registration, logout, password modification, and personal information updates.
-- **Permission Module**: Implements RBAC (Role-Based Access Control) for role permission management, supporting CRUD operations for users, roles, and permissions.
-  - Basic features are implemented, but due to the complexity and user-friendliness concerns, this feature is not yet released.
-- **Article Module**: Provides functionality for creating, viewing, updating, and deleting articles.
-- **Category Module**: Supports recursive queries for category trees and subcategory trees, single category queries, and category creation, updating, and deletion.
-- **Comment Module**: Provides functionality for creating, viewing, deleting, and replying to comments, supporting tree structures for comment display.
-- **Plugin System**: Actively under development, coming soon...
+- **Account Module**: JWT authentication supporting user login, registration, logout, password modification, and profile updates.
+- **Permission Module**: RBAC (Role-Based Access Control) implementation supporting user-role-permission management.
+  - Core functionality implemented but temporarily withheld due to usability considerations.
+- **Article Module**: Provides article creation, viewing, updating, and deletion functionalities.
+- **Category Module**: Supports recursive queries for category trees and sub-category trees, single category queries, and CRUD operations.
+- **Comment Module**: Enables comment creation, viewing, deletion, and replies with tree structure display.
+- **Plugin System**: Under active development, coming soon...
 - **Other Features**:
-  - Provides OpenAPI documentation
-  - Integrates Air for hot reloading
-  - Uses Logrus for logging
-  - Supports CORS for cross-origin requests
-  - Provides CSRF and XSS protection
-  - Supports server-side rendering for Markdown
-  - **Other modules are under development**, feedback and suggestions are welcome!
+  - OpenAPI documentation
+  - Air integration for hot reload
+  - Logrus implementation for logging
+  - CORS support
+  - CSRF and XSS protection
+  - Server-side Markdown rendering
+  - Graphical CAPTCHA integration
+  - Email sending support for QQ/Gmail/Outlook
+  - **More modules in development** - Welcome your valuable suggestions!
 
 ## Local Development
 
@@ -85,74 +86,56 @@ Jank is a lightweight blogging system, developed using Go language and the Echo 
    # Install swagger tool
    go install github.com/swaggo/swag/cmd/swag@latest
 
-   # Install dependencies
+   # Install project dependencies
    go mod tidy
    ```
 
-2. **Configure Database and Email**:  
-   Modify the database and email configurations in the `configs/config.yaml` file as shown below:
+2. **Configure Database and Email**:
+   Modify `configs/config.yaml`:
 
    ```yaml
    database:
-     DB_DIALECT: "postgres" # Database type, options: postgres, mysql, sqlite
+     DB_DIALECT: "postgres" # Database type: postgres, mysql, sqlite
      DB_NAME: "jank_db"
-     DB_HOST: "127.0.0.1" # Change to "postgres_db" if using Docker
+     DB_HOST: "127.0.0.1" # Use "postgres_db" for docker
      DB_PORT: "5432"
      DB_USER: "<DATABASE_USER>"
      DB_PSW: "<DATABASE_PASSWORD>"
-     DB_PATH: "./database" # SQLite database file path
+     DB_PATH: "./database" # SQLite file path
 
-   # Email type and SMTP authorization code (optional)
-   EMAIL_TYPE: "qq" # Email type, options: qq, gmail, outlook
-   FROM_EMAIL: "<FROM_EMAIL>" # Sender email
-   EMAIL_SMTP: "<EMAIL_SMTP>" # SMTP authorization code
+   # Email configuration
+   EMAIL_TYPE: "qq" # qq, gmail, outlook
+   FROM_EMAIL: "<FROM_EMAIL>"
+   EMAIL_SMTP: "<EMAIL_SMTP>"
    ```
 
-3. **Start the Service**:  
-   Use the following command to start the application:
+3. **Start Service**:
 
    ```bash
    go run main.go
    ```
 
-   Or use Air for hot reloading:
-
-   > This method is the most convenient, but make sure to configure the GOPATH environment variable beforehand.
+   Or with Air hot reload:
 
    ```bash
-   # Install Air (requires Go 1.22 or higher)
    go install github.com/air-verse/air@latest
-
-   # Start with hot reloading
    air -c ./configs/.air.toml
    ```
 
-4. **Access the Interface**:  
-   After starting the application locally, access it via the browser at [http://localhost:9010/ping](http://localhost:9010/ping)
+4. **Access API**:
+   Visit [http://localhost:9010/ping](http://localhost:9010/ping)
 
-## Docker Container Deployment (PostgreSQL)
+## Docker Deployment (Postgres)
 
-1. Modify the database and email configurations in the `configs/config.yaml` file as shown below:
+1. Update `configs/config.yaml`:
 
    ```yaml
-   APP_HOST: "0.0.0.0" # Change to "0.0.0.0" if using Docker
-
+   APP_HOST: "0.0.0.0"
    database:
-     DB_DIALECT: "postgres" # Database type, options: postgres, mysql, sqlite
-     DB_NAME: "jank_db"
-     DB_HOST: "postgres_db" # Change to "postgres_db" if using Docker
-     DB_PORT: "5432"
-     DB_USER: "<DATABASE_USER>"
-     DB_PSW: "<DATABASE_PASSWORD>"
-     DB_PATH: "./database" # SQLite database file path
-
-   # Email type and SMTP authorization code (optional)
-   EMAIL_TYPE: "qq" # Email type, options: qq, gmail, outlook
-   FROM_EMAIL: "<FROM_EMAIL>" # Sender email
-   EMAIL_SMTP: "<EMAIL_SMTP>" # SMTP authorization code
+     DB_HOST: "postgres_db"
    ```
 
-2. Modify the environment variables in the `docker-compose.yaml` file as shown below:
+2. Modify `docker-compose.yaml` environment variables:
 
    ```yaml
    environment:
@@ -160,41 +143,32 @@ Jank is a lightweight blogging system, developed using Go language and the Echo 
      - POSTGRES_PASSWORD=<DATABASE_PASSWORD>
    ```
 
-3. Start the container:
-
+3. Start containers:
    ```bash
    docker-compose up -d
    ```
 
 ## API Documentation
 
-1. **View Swagger Documentation Locally**: After starting the application locally, access the Swagger documentation at [http://localhost:9010/swagger/index.html](http://localhost:9010/swagger/index.html)
+1. **Swagger UI**: Available at [http://localhost:9010/swagger/index.html](http://localhost:9010/swagger/index.html)
+2. **Postman Collection**: Import `docs/Jank_blog.postman_collection.json`
+3. **README Documentation**: See `docs/README.md`
 
-2. **README.md Documentation**: Open the `README.md` file in the `docs` directory.
-
-3. **Postman Documentation**: Import the `docs/Jank_blog.postman_collection.json` file into Postman to view.
-
-## Roadmap (New Release)
+## Roadmap
 
 ![image.png](https://s2.loli.net/2025/03/09/qJrtOeFvD95PV4Y.png)
 
-> Note: Black represents completed features, white represents pending features.
-
-## Architecture Diagram (To Be Updated)
-
-**Architecture Diagram and Visual API Documentation**: Open the `docs/jank_blog_architecture.drawio` file in the project root directory.
-
-> Note: This document was created using `draw.io` and requires the [draw.io](https://app.diagrams.net/) tool to view.
+> Black sections indicate completed features, white sections indicate planned features.
 
 ## Official Community
 
-If you have any questions or suggestions, feel free to join the official community for discussions.
+Join our official community for discussions:
 
 <img src="https://s2.loli.net/2025/01/25/L9BspuHnrIeim7S.jpg" alt="Official Community" width="300" />
 
-## Special Thanks
+## Acknowledgments
 
-We sincerely thank every sponsor for their support of the open-source community!
+Special thanks to our sponsors and contributors:
 
 <p>
   <a href="https://github.com/vxincode">
@@ -205,16 +179,19 @@ We sincerely thank every sponsor for their support of the open-source community!
   </a>
 </p>
 
-## Contact and Cooperation
+## Contact
 
 - **QQ**: 927171598
 - **Email**: <EMAIL>fenderisfine@outlook.com
 - **Developer Community (QQ)**: 828270460
 
-## Contributors List
+> Community guidelines:  
+> Strictly prohibit discussions involving pornography, gambling, drugs, or politically sensitive content. No advertising permitted.
+
+## Contributors
 
 <a href="https://github.com/Done-0/Jank/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="Contributors List" />
+  <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="Contributors" />
 </a>
 
 ## Code Statistics
@@ -223,25 +200,27 @@ We sincerely thank every sponsor for their support of the open-source community!
   <img src="https://img.shields.io/github/languages/top/Done-0/Jank?label=Primary%20Language&color=00ADD8" alt="Primary Language" />
   <img src="https://img.shields.io/github/languages/code-size/Done-0/Jank?label=Code%20Size&color=success" alt="Code Size" />
   <img src="https://img.shields.io/github/last-commit/Done-0/Jank?label=Last%20Commit&color=blue" alt="Last Commit" />
-  <img src="https://img.shields.io/github/commit-activity/m/Done-0/Jank?label=Monthly%20Commits&color=orange" alt="Commit Frequency" />
+  <img src="https://img.shields.io/github/commit-activity/m/Done-0/Jank?label=Monthly%20Commits&color=orange" alt="Commit Activity" />
 </p>
 
-### Detailed Statistics
-| Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
-|:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
-| Go | 82 | 3343 | 664 | 669 | 92.3% |
-| Docker | 1 | 16 | 14 | 13 | 0.4% |
-| YAML | 3 | 227 | 21 | 32 | 6.3% |
-| Markdown | 1 | 1 | 0 | 0 | 0.0% |
-| Others | 1 | 36 | 0 | 6 | 1.0% |
-| **Total** | **88** | **3623** | **699** | **720** | **100%** |
+### Detailed Stats
 
-*Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-22*
-*Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
+| Language  | Files  | Code Lines | Comments | Blanks  |  Ratio   |
+| :-------: | :----: | :--------: | :------: | :-----: | :------: |
+|    Go     |   82   |    3343    |   664    |   669   |  92.3%   |
+|  Docker   |   1    |     16     |    14    |   13    |   0.4%   |
+|   YAML    |   3    |    227     |    21    |   32    |   6.3%   |
+| Markdown  |   1    |     1      |    0     |    0    |   0.0%   |
+|  Others   |   1    |     36     |    0     |    6    |   1.0%   |
+| **Total** | **88** |  **3623**  | **699**  | **720** | **100%** |
+
+_Note: Stats updated automatically via GitHub Actions (Last update: 2025-03-22)_  
+_Excludes docs/, tmp/ directories and various config files_
+
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-## Growth Trends
+## Star History
 
 <img src="https://api.star-history.com/svg?repos=Done-0/Jank&type=timeline" width="100%" height="65%" alt="GitHub Stats">

@@ -32,11 +32,11 @@
 
 Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，设计理念强调极简、低耦合和高扩展，旨在为用户提供功能丰富、界面简洁、操作简单且安全可靠的博客体验。
 
-> 注：本项目当前缺少前端部分，在此诚邀有志于前端开发的开发者加入，共同参与开发工作，期待您的宝贵意见和贡献！
+> 注：项目缺少专业的前端，在此诚邀前端开发者一起参与前端项目开发，期待您的宝贵意见和贡献！
 
 ## 速览
 
-👉 演示站｜Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
+👉 演示站｜ Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
 
 👉[【Jank 博客系统】全新技术栈与 UI】](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
@@ -44,20 +44,19 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ![home-page.png](https://s2.loli.net/2025/03/18/CVYwRJOaXtH4nb8.png)
 ![posts-page.png](https://s2.loli.net/2025/03/18/s6WH3BVmlbyarRS.png)
-![post1-page.png](https://s2.loli.net/2025/03/18/IEpPOhcfRdKbk4J.png)
-![post2-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
+![post1-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
 
-> 注：因为还在推出阶段，部分配置文件可能需要根据实际情况更改，具体请使用下面的联系方式联系作者，或者进入开发者社区交流。
+> 注：因为还在推出阶段，部分配置文件可能需要根据实际情况更改，具体请使用下面的联系方式联系作者，或进入开发者社区交流。
 
 ## 技术栈
 
 - **Go 语言**：热门后端开发语言，适合构建高并发应用。
 - **Echo 框架**：高性能的 Web 框架，支持快速开发和灵活的路由管理。
-- **PostgreSQL**：开源的关系型数据库，提供高性能、高可靠性的数据存储。
+- **数据库**：开源的关系型数据库，支持 Postgres、MySQL 和 SQLite。
 - **Redis**：热门缓存解决方案，提供快速数据存取和持久化选项。
 - **JWT**：安全的用户身份验证机制，确保数据传输的完整性和安全性。
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
-- **前端**：react + umi + shadcn/ui + tailwindcss。
+- **前端**：react + nextjs + shadcn/ui + tailwindcss4。
 
 ## 功能模块
 
@@ -75,6 +74,8 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
   - 支持 CORS 跨域请求
   - 提供 CSRF 和 XSS 防护
   - 支持 Markdown 的服务端渲染
+  - 集成图形验证码功能
+  - 支持 QQ/Gmail/Outlook 等主流邮箱服务端发送能力
   - **其他模块正在开发中**，欢迎提供宝贵意见和建议！
 
 ## 本地开发
@@ -211,6 +212,9 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **邮箱**：<EMAIL>fenderisfine@outlook.com
 - **开发者社区(QQ)**：828270460
 
+> 注：因社群成员较多，请自觉遵守规范。  
+> 严禁讨论涉黄、赌、毒及政治敏感内容，禁止发布任何形式的不良广告。
+
 ## 贡献者名单
 
 <a href="https://github.com/Done-0/Jank/graphs/contributors">
@@ -227,17 +231,19 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 </p>
 
 ### 详细统计
-| 语言 | 文件数 | 代码行数 | 注释行数 | 空白行数 | 占比 |
-|:----:|:------:|:--------:|:--------:|:--------:|:----:|
-| Go | 82 | 3343 | 664 | 669 | 92.3% |
-| Docker | 1 | 16 | 14 | 13 | 0.4% |
-| YAML | 3 | 227 | 21 | 32 | 6.3% |
-| Markdown | 1 | 1 | 0 | 0 | 0.0% |
-| 其他 | 1 | 36 | 0 | 6 | 1.0% |
-| **总计** | **88** | **3623** | **699** | **720** | **100%** |
 
-*注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-03-22*
-*排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*
+|   语言   | 文件数 | 代码行数 | 注释行数 | 空白行数 |   占比   |
+| :------: | :----: | :------: | :------: | :------: | :------: |
+|    Go    |   82   |   3343   |   664    |   669    |  92.3%   |
+|  Docker  |   1    |    16    |    14    |    13    |   0.4%   |
+|   YAML   |   3    |   227    |    21    |    32    |   6.3%   |
+| Markdown |   1    |    1     |    0     |    0     |   0.0%   |
+|   其他   |   1    |    36    |    0     |    6     |   1.0%   |
+| **总计** | **88** | **3623** | **699**  | **720**  | **100%** |
+
+_注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-03-22_
+_排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件_
+
 ## 许可证
 
 本项目遵循 [MIT 协议](https://opensource.org/licenses/MIT)。
