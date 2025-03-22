@@ -46,6 +46,7 @@ func defaultMarkdownConfig() MarkdownConfig {
 			extension.Footnote,       // 脚注支持
 			extension.DefinitionList, // 定义列表支持
 			extension.Typographer,    // Typography support
+			extension.CJK,            // CJK 支持
 		},
 		ParserOptions: []parser.Option{
 			parser.WithAutoHeadingID(),         // 自动生成标题 ID
