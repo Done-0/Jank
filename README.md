@@ -181,36 +181,11 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 > 注：黑色为已完成部分，白色色为待完成部分。
 
-## 架构图（待更新）
-
-**架构图及可视化接口文档**：在项目根目录中打开 `docs/jank_blog_architecture.drawio` 文件。
-
-> 注：该文档由 `draw.io` 绘制，需要使用 [draw.io](https://app.diagrams.net/) 工具打开。
-
 ## 官方社区
 
-如果有任何疑问或建议，欢迎加入官方社区交流。
+如果有任何疑问或建议，欢迎加入微信官方社区讨论。
 
-<img src="https://s2.loli.net/2025/01/25/L9BspuHnrIeim7S.jpg" alt="官方社区" width="300" />
-
-## 特别鸣谢
-
-感谢各位对开源社区的支持，在此诚挚地对每一位赞助者表示感谢！
-
-<p>
-  <a href="https://github.com/vxincode">
-    <img src="https://github.com/vxincode.png" width="80" height="80" style="border-radius: 50%;" />
-  </a>
-  <a href="https://github.com/WowDoers">
-    <img src="https://github.com/WowDoers.png" width="80" height="80" style="border-radius: 50%;" />
-  </a>
-</p>
-
-## 联系合作
-
-- **QQ**: 927171598
-- **邮箱**：<EMAIL>fenderisfine@outlook.com
-- **开发者社区(QQ)**：828270460
+<img src="https://s2.loli.net/2025/03/24/hmepXacow6bBD9T.jpg" alt="官方社区" width="300" />
 
 > 注：因社群成员较多，请自觉遵守规范。  
 > 严禁讨论涉黄、赌、毒及政治敏感内容，禁止发布任何形式的不良广告。
@@ -220,6 +195,25 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 <a href="https://github.com/Done-0/Jank/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Done-0/Jank" alt="贡献者名单" />
 </a>
+
+## 特别鸣谢
+
+感谢各位对开源社区的支持，在此诚挚地对每一位赞助者表示感谢！
+
+<p>
+  <a href="https://github.com/vxincode">
+    <img src="https://github.com/vxincode.png" width="70" height="70" style="border-radius: 50%;" />
+  </a>
+  <a href="https://github.com/WowDoers">
+    <img src="https://github.com/WowDoers.png" width="70" height="70" style="border-radius: 50%;" />
+  </a>
+</p>
+
+## 联系合作
+
+- **QQ**: 927171598
+- **微信**: l927171598
+- **邮箱**：<EMAIL>fenderisfine@outlook.com
 
 ## 代码统计
 

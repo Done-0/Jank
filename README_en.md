@@ -164,7 +164,15 @@ Jank is a lightweight blog system built with Go language and Echo framework. Des
 
 Join our official community for discussions:
 
-<img src="https://s2.loli.net/2025/01/25/L9BspuHnrIeim7S.jpg" alt="Official Community" width="300" />
+<img src="https://s2.loli.net/2025/03/24/hmepXacow6bBD9T.jpg" alt="Official Community" width="300" />
+
+> Community guidelines:  
+> Strictly prohibit discussions involving pornography, gambling, drugs, or politically sensitive content. No advertising permitted.
+
+## Contact
+
+- **QQ**: 927171598
+- **Email**: <EMAIL>fenderisfine@outlook.com
 
 ## Acknowledgments
 
@@ -172,21 +180,12 @@ Special thanks to our sponsors and contributors:
 
 <p>
   <a href="https://github.com/vxincode">
-    <img src="https://github.com/vxincode.png" width="80" height="80" style="border-radius: 50%;" />
+    <img src="https://github.com/vxincode.png" width="70" height="70" style="border-radius: 50%;" />
   </a>
   <a href="https://github.com/WowDoers">
-    <img src="https://github.com/WowDoers.png" width="80" height="80" style="border-radius: 50%;" />
+    <img src="https://github.com/WowDoers.png" width="70" height="70" style="border-radius: 50%;" />
   </a>
 </p>
-
-## Contact
-
-- **QQ**: 927171598
-- **Email**: <EMAIL>fenderisfine@outlook.com
-- **Developer Community (QQ)**: 828270460
-
-> Community guidelines:  
-> Strictly prohibit discussions involving pornography, gambling, drugs, or politically sensitive content. No advertising permitted.
 
 ## Contributors
 
