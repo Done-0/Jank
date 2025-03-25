@@ -11,7 +11,7 @@ import (
 func GetAllModels() []interface{} {
 	return []interface{}{
 		// account 模块
-		&account.Account{}, // 用户账号模型
+		&account.Account{},
 
 		// post 模块
 		&post.Post{},
