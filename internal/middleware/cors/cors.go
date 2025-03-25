@@ -54,7 +54,6 @@ func corsWithConfig(config corsConfig) echo.MiddlewareFunc {
 					"method", c.Request().Method,
 					"path", c.Request().URL.Path,
 					"origin", c.Request().Header.Get("Origin"),
-					"headers", c.Request().Header,
 				)
 			}
 
