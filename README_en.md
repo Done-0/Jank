@@ -227,12 +227,12 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 ### Detailed Statistics
 | Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
 |:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
-| Go | 82 | 3342 | 664 | 669 | 92.3% |
-| Docker | 1 | 16 | 14 | 13 | 0.4% |
-| YAML | 3 | 227 | 21 | 32 | 6.3% |
+| Go | 81 | 3234 | 651 | 650 | 92.0% |
+| Docker | 1 | 16 | 14 | 13 | 0.5% |
+| YAML | 3 | 227 | 21 | 32 | 6.5% |
 | Markdown | 1 | 1 | 0 | 0 | 0.0% |
 | Others | 1 | 36 | 0 | 6 | 1.0% |
-| **Total** | **88** | **3622** | **699** | **720** | **100%** |
+| **Total** | **87** | **3514** | **686** | **701** | **100%** |
 
 *Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-25*
 *Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
