@@ -12,26 +12,26 @@ import (
 	"jank.com/jank_blog/pkg/vo"
 )
 
-// Ping          @Summary       Ping API
+// TestPing          @Summary       Ping API
 // @Description  测试接口
 // @Tags         test
 // @Accept       json
 // @Produce      json
 // @Success      200  {string}  string  "Pong successfully!\n"
 // @Router       /test/ping [get]
-func Ping(c echo.Context) error {
+func TestPing(c echo.Context) error {
 	utils.BizLogger(c).Info("Ping...")
 	return c.String(http.StatusOK, "Pong successfully!\n")
 }
 
-// Hello         @Summary       Hello API
+// TestHello         @Summary       Hello API
 // @Description  测试接口
 // @Tags         test
 // @Accept       json
 // @Produce      json
 // @Success      200  {string}  string  "Hello, Jank 🎉!\n"
 // @Router       /test/hello [get]
-func Hello(c echo.Context) error {
+func TestHello(c echo.Context) error {
 	utils.BizLogger(c).Info("Hello, Jank!")
 	return c.String(http.StatusOK, "Hello, Jank 🎉!\n")
 }
@@ -110,14 +110,14 @@ func TestErrorMiddleware(c echo.Context) error {
 	panic("测试错误处理中间件...")
 }
 
-// LongReq       @Summary       长时间请求接口
+// TestLongReq       @Summary       长时间请求接口
 // @Description  模拟一个耗时请求
 // @Tags         test
 // @Accept       json
 // @Produce      json
 // @Success      200  {string}  string  "模拟耗时请求处理完成!\n"
 // @Router       /test/long [get]
-func LongReq(c echo.Context) error {
+func TestLongReq(c echo.Context) error {
 	utils.BizLogger(c).Info("开始测试耗时请求...")
 	time.Sleep(20 * time.Second)
 	return c.String(http.StatusOK, "模拟耗时请求处理完成!\n")

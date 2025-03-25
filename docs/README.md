@@ -1,4 +1,4 @@
-# 接口文档
+接口文档
 
 ## 统一响应格式：
 
@@ -24,9 +24,7 @@
 }
 ```
 
-## account 账号模块：
-
-### 账户部分：
+## account 账号模块
 
 1. **registerAccount** 注册账号：
    - 请求方式：POST
@@ -117,313 +115,6 @@
       }
       ```
 
-### 角色部分：
-
-1. **createOneRole** 获取所有角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role/createOneRole
-   - 请求参数 json：
-      - code：string 类型，角色编码
-      - description：string 类型，角色描述
-   - 响应示例：
-      ```json
-      {
-        "data": {
-          "id": 3,
-          "code": "2",
-          "description": "超级管理员"
-        },
-        "requestId": "MhxZlfixcWhgaoSNpDzAPzAoCLmkYRJg",
-        "timeStamp": 1740039482
-      }
-      ```
-
-2. **updateOneRole** 获取所有角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role/updateOneRole
-   - 请求参数 json：
-      - id：number 类型，角色 ID
-      - code：string 类型，角色编码
-      - description：string 类型，角色描述
-   - 响应示例：
-       ```json
-       {
-         "data": {
-           "id": 1,
-           "code": "1",
-           "description": "牛马1"
-         },
-         "requestId": "GAskIabBGnwfDzKRiaLZjoypJtpAQEVd",
-         "timeStamp": 1740039450
-       }
-       ```
-     
-3. **deleteOneRole** 删除角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role/deleteOneRole
-   - 请求参数 json：
-      - id：number 类型，角色 ID
-   - 响应示例：
-      ```json
-      {
-        "data": "角色删除成功",
-        "requestId": "JwwTCsafbjAhTHljgsfDZeTTBRaNVDyr",
-        "timeStamp": 1740039455
-      }
-      ```
-     
-4. **listAllRoles** 获取所有角色：
-   - 请求方式：GET
-   - 请求路径：/api/v1/role/listAllRoles
-   - 请求参数：无
-   - 响应示例：
-       ```json
-       {
-         "data": [
-           {
-             "id": 3,
-             "code": "2",
-             "description": "超级管理员"
-           },
-           {
-             "id": 4,
-             "code": "user",
-             "description": "普通用户"
-           },
-           {
-             "id": 6,
-             "code": "3",
-             "description": "超级管理员"
-           }
-         ],
-         "requestId": "fLFOtxiWKfDIbKIzAyNCFwDxBLFJlJPm",
-         "timeStamp": 1740123628
-       }
-       ```
-
-### 权限部分：
-
-1. **createOnePermission** 创建权限：
-   - 请求方式：POST
-   - 请求路径：/api/v1/permission/createOnePermission
-   - 请求参数 json：
-      - code：string 类型，权限编码
-      - description：string 类型，权限描述
-   - 响应示例：
-       ```json
-       {
-         "data": {
-           "id": 3,
-           "code": "2",
-           "description": "读权限"
-         },
-         "requestId": "RZZTBHiLLASBIZUiXQaDEFvkwZefXFao",
-         "timeStamp": 1740039497
-       }
-       ```
-     
-2. **updateOnePermission** 更新权限：
-   - 请求方式：POST
-   - 请求路径：/api/v1/permission/updateOnePermission
-   - 请求参数 json：
-      - id：number 类型，权限 ID
-      - code：string 类型，权限编码
-      - description：string 类型，权限描述
-   - 响应示例：
-       ```json
-       {
-         "data": {
-           "id": 1,
-           "code": "1",
-           "description": "写权限"
-         },
-         "requestId": "vJGjQvKZfYvK",
-         "timeStamp": 1740039465
-       }
-       ```
-     
-3. **deleteOnePermission** 删除权限：
-   - 请求方式：POST
-   - 请求路径：/api/v1/permission/deleteOnePermission
-   - 请求参数 json：
-      - id：number 类型，权限 ID
-   - 响应示例：
-      ```json
-      {
-        "data": "权限删除成功",
-        "requestId": "ZayqFPOcRflKeROWJOdKLnyKGsEMvwdx",
-        "timeStamp": 1740039407
-      }
-      ```
-
-4. **listAllPermissions** 获取所有权限：
-   - 请求方式：GET
-   - 请求路径：/api/v1/permission/listAllPermissions
-   - 请求参数：无
-   - 响应示例：
-       ```json
-       {
-         "data": [
-           {
-             "id": 3,
-             "code": "2",
-             "description": "读权限"
-           },
-           {
-             "id": 4,
-             "code": "3",
-             "description": "写权限"
-           },
-           {
-             "id": 5,
-             "code": "4",
-             "description": "改权限"
-           }
-         ],
-         "requestId": "fLFOtxiWKfDIbKIzAyNCFwDxBLFJlJPm",
-         "timeStamp": 1740123628
-       }
-       ```
-
-### 用户角色部分：
-
-1. **assignRoleToAcc** 分配角色给用户：
-   - 请求方式：POST
-   - 请求路径：/api/v1/acc-role/assignRoleToAcc
-   - 请求参数 json：
-      - account_id：number 类型，用户 ID
-      - role_id：number 类型，角色 ID
-   - 响应示例：
-       ```json
-       {
-         "data": "用户角色分配成功",
-         "requestId": "dfjXkakhthXmijpfiLlLnhtdjJzCzDgA",
-         "timeStamp": 1740039603
-       }
-       ```
-     
-2. **deleteRoleFromAcc** 移除角色给用户：
-   - 请求方式：POST
-   - 请求路径：/api/v1/acc-role/deleteRoleFromAcc
-   - 请求参数 json：
-      - account_id：number 类型，用户 ID
-      - role_id：number 类型，角色 ID
-   - 响应示例：
-       ```json
-       {
-         "data": "用户角色删除成功",
-         "requestId": "taLHCASaHRJchnyvQabdyfZQPibiJhgW",
-         "timeStamp": 1740124160
-       }
-       ```
-     
-3. **getRolesByAcc** 获取用户的角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/acc-role/getRolesByAcc
-   - 请求参数 json：
-      - account_id：number 类型，用户 ID
-   - 响应示例：
-       ```json
-       {
-         "data": [
-           {
-             "id": 1,
-             "code": "1",
-             "description": "牛马1号"
-           },
-           {
-             "id": 2,
-             "code": "1",
-             "description": "牛马2号"
-           }
-         ],
-         "requestId": "czGjKTEcqJIkVrGaqVFJnUtTHRqobYIN",
-         "timeStamp": 1740041100
-       }
-       ```
-     
-4. **updateRoleForAcc** 更新用户的角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/acc-role/updateRoleForAcc
-   - 请求参数 json：
-      - account_id：number 类型，用户 ID
-      - role_id：number 类型，角色 ID
-   - 响应示例：
-       ```json
-       {
-         "data": "用户角色更新成功",
-         "requestId": "rpDPluLybcEmKwKjtxcybjLoWfFOBKRF",
-         "timeStamp": 1740041095
-       }
-       ```
-
-### 角色权限部分：
-
-1. **assignPermissionToRole** 分配权限给角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role-permission/assignPermissionToRole
-   - 请求参数 json：
-      - role_id：number 类型，角色 ID
-      - permission_id：number 类型，权限 ID
-   - 响应示例：
-       ```json
-       {
-         "data": "角色权限分配成功",
-         "requestId": "kPYBBXsbXHUktecYNdOoHojiUBBZCfsR",
-         "timeStamp": 1740124346
-       }
-       ```
-     
-2. **updatePermissionForRole** 更新角色的权限：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role-permission/updatePermissionForRole
-   - 请求参数 json：
-      - role_id：number 类型，角色 ID
-      - permission_id：number 类型，权限 ID
-   - 响应示例：
-       ```json
-       {
-         "data": "角色权限更新成功",
-         "requestId": "SzbvgWapUHzVnHeHLVPizGsWRQrEbUeK",
-         "timeStamp": 1740124534
-       }
-       ```
-     
-3. **deletePermissionFromRole** 移除权限给角色：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role-permission/deletePermissionFromRole
-   - 请求参数 json：
-      - role_id：number 类型，角色 ID
-      - permission_id：number 类型，权限 ID
-   - 响应示例：
-       ```json
-       {
-         "data": "角色权限移除成功",
-         "requestId": "vJgJPKrrgLpnZhAbjBwjVusqRGyHaWFU",
-         "timeStamp": 1740124752
-       }
-       ```
-     
-4. **getPermissionsByRole** 获取角色的权限：
-   - 请求方式：POST
-   - 请求路径：/api/v1/role-permission/getPermissionsByRole
-   - 请求参数 json：
-      - role_id：number 类型，角色 ID
-   - 响应示例：
-       ```json
-       {
-         "data": [
-           {
-             "id": 1,
-             "code": "1",
-             "description": "读权限"
-           }
-         ],
-         "requestId": "aZiRDHMdAogwiaFcmNEYhFTWcBcJUFJz",
-         "timeStamp": 1740124717
-       }
-       ```
-
 ## post 文章模块
 
 - 统一响应格式：
@@ -463,7 +154,7 @@
                 "image": "https://haowallpaper.com/link/common/file/previewFileImg/16019647630462336",
                 "visibility": "public",
                 "content_markdown": "",
-                "content_html": "<h1>Markdown 格式示例</h1>\n\n<h2>1. 标题</h2>\n<h1>这是一级标题</h1>\n<h2>这是二级标题</h2>\n<h3>这是三级标题</h3>\n<h4>这是四��",
+                "content_html": "这里将会是文章内容的 HTML 格式",
                 "category_ids": [
                   13
                 ]
@@ -493,7 +184,7 @@
           "image": "https://haowallpaper.com/link/common/file/previewFileImg/15942630369381760",
           "visibility": "public",
           "content_markdown": "",
-          "content_html": "<p>文章内容 1</p>",
+          "content_html": "这里将会是文章内容的 HTML 格式",
           "category_ids": [
             12
           ]
@@ -523,7 +214,7 @@
             "image": "https://haowallpaper.com/link/common/file/previewFileImg/16019647630462336",
             "visibility": "public",
             "content_markdown": "",
-            "content_html": "<h1>Markdown 格式示例</h1>\n\n<h2>1. 标题</h2>\n<h1>这是一级标题</h1>\n<h2>这是二级标题</h2>\n<h3>这是三级标题</h3>\n<h4>这是四��",
+            "content_html": "这里将会是文章内容的 HTML 格式",
             "category_ids": [
                 13
             ]
@@ -578,7 +269,7 @@
         }
         ```
 
-## category 类目模块：
+## category 类目模块
 
 - 统一响应格式：
 
@@ -775,7 +466,7 @@
     }
     ```
 
-## verification 验证码模块：
+## verification 验证码模块
 
 1. **SendImgVerificationCode** 发送图形验证码：
    - 请求方式：GET
@@ -807,7 +498,7 @@
           }
         ```
 
-## comment 评论模块：
+## comment 评论模块
 
 1. **getOneComment** 获取单条评论：
     - 请求方式：GET
@@ -933,20 +624,20 @@
     }
     ```
 
-## test 测试模块：
+## test 测试模块
 
-1. **ping** 测试接口：
+1. **testPing** 测试接口：
     - 请求方式：GET
-    - 请求路径：/api/v1/test/ping
+    - 请求路径：/api/v1/test/testPing
     - 请求参数：无
     - 响应示例：
     ```text
     Pong successfully!
     ```
    
-2. **hello** 测试接口：
+2. **testHello** 测试接口：
     - 请求方式：GET
-    - 请求路径：/api/v1/test/hello
+    - 请求路径：/api/v1/test/testHello
     - 请求参数：无
     - 响应示例：
     ```text
@@ -971,9 +662,9 @@
     测试缓存功能完成!
     ```
    
-5. **testSuccess** 测试接口：
+5. **testSuccessRes** 测试接口：
     - 请求方式：GET
-    - 请求路径：/api/v1/test/testSuccess
+    - 请求路径：/api/v1/test/testSuccessRes
     - 请求参数：无
     - 响应示例：
     ```json
@@ -984,9 +675,9 @@
     }
     ```
    
-6. **testErr** 测试接口：
+6. **testErrRes** 测试接口：
     - 请求方式：GET
-    - 请求路径：/api/v1/test/testErr
+    - 请求路径：/api/v1/test/testErrRes
     - 请求参数：无
     - 响应示例：
     ```json
@@ -1008,9 +699,9 @@
     - 请求参数：无
     - 响应示例：无
 
-8. **long** 测试接口：
+8. **testLongReq** 测试接口：
     - 请求方式：GET
-    - 请求路径：/api/v2/test/long
+    - 请求路径：/api/v2/test/testLongReq
     - 请求参数：无
     - 响应示例：
     ```text
