@@ -36,7 +36,7 @@ Jank is a lightweight blog system built with Go language and Echo framework. Des
 
 ## Quick Look
 
-👉 Demo Site: [https://jank.org.cn](https://jank.org.cn)
+👉 Demo Site: [https://www.jank.org.cn](https://www.jank.org.cn)
 
 👉 [【Jank Blog System】New Tech Stack & UI】](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
@@ -227,12 +227,12 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 ### Detailed Statistics
 | Language | Files | Code Lines | Comment Lines | Blank Lines | Percentage |
 |:--------:|:-----:|:----------:|:-------------:|:-----------:|:----------:|
-| Go | 78 | 3216 | 635 | 648 | 92.0% |
+| Go | 81 | 3234 | 651 | 650 | 92.0% |
 | Docker | 1 | 16 | 14 | 13 | 0.5% |
 | YAML | 3 | 227 | 21 | 32 | 6.5% |
 | Markdown | 1 | 1 | 0 | 0 | 0.0% |
 | Others | 1 | 36 | 0 | 6 | 1.0% |
-| **Total** | **84** | **3496** | **670** | **699** | **100%** |
+| **Total** | **87** | **3514** | **686** | **701** | **100%** |
 
 *Note: Statistics are automatically updated by GitHub Actions, last updated on 2025-03-29*
 *Excluded docs, tmp directories and go.mod, go.sum, LICENSE, .gitignore, .dockerignore, README.md, README_en.md files*
