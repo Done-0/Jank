@@ -36,7 +36,7 @@ Jank is a lightweight blog system built with Go language and Echo framework. Des
 
 ## Quick Look
 
-👉 Demo Site: [https://fenderisfine.icu](https://fenderisfine.icu)
+👉 Demo Site: [https://jank.org.cn](https://jank.org.cn)
 
 👉 [【Jank Blog System】New Tech Stack & UI】](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 

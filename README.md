@@ -36,7 +36,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 速览
 
-👉 演示站｜ Demo：[https://fenderisfine.icu](https://fenderisfine.icu)
+👉 演示站｜ Demo：[https://jank.org.cn](https://jank.org.cn)
 
 👉[【Jank 博客系统】全新技术栈与 UI】](https://www.bilibili.com/video/BV1bjQ8YNEEo/?share_source=copy_web&vd_source=6fd45877cd498bfb9c2b449d1197363c)
 
@@ -214,6 +214,8 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 - **QQ**: 927171598
 - **微信**: l927171598
 - **邮箱**：<EMAIL>fenderisfine@outlook.com
+
+> 广告、合作或者赞助可根据以上联系方式联系作者。
 
 ## 代码统计
 
