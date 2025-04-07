@@ -42,9 +42,10 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 👉 前端仓库：[https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
 
-![home-page.png](https://s2.loli.net/2025/03/18/CVYwRJOaXtH4nb8.png)
-![posts-page.png](https://s2.loli.net/2025/03/18/s6WH3BVmlbyarRS.png)
-![post1-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
+![home-page.png](https://s2.loli.net/2025/04/07/l1tGYV4WkmoiIHv.png)
+![posts-page.png](https://s2.loli.net/2025/04/07/xR62vhWKsmgw3Ht.png)
+![post1-page.png](https://s2.loli.net/2025/04/07/DbcJzryKmBNR7vQ.png)
+![post2-page.png](https://s2.loli.net/2025/04/07/iNpXyMdkjaDbn92.png)
 
 > 注：因为还在推出阶段，部分配置文件可能需要根据实际情况更改，具体请使用下面的联系方式联系作者，或进入开发者社区交流。
 
@@ -185,7 +186,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 如果有任何疑问或建议，欢迎加入微信官方社区讨论。
 
-<img src="https://s2.loli.net/2025/03/24/hmepXacow6bBD9T.jpg" alt="官方社区" width="300" />
+<img src="https://s2.loli.net/2025/04/07/p8b3UMdyrhOlt2w.png" alt="官方社区" width="300" />
 
 > 注：因社群成员较多，请自觉遵守规范。  
 > 严禁讨论涉黄、赌、毒及政治敏感内容，禁止发布任何形式的不良广告。

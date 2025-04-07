@@ -42,9 +42,10 @@ Jank is a lightweight blog system built with Go language and Echo framework. Des
 
 👉 Frontend Repository: [https://github.com/Done-0/Jank-website](https://github.com/Done-0/Jank-website)
 
-![home-page.png](https://s2.loli.net/2025/03/18/CVYwRJOaXtH4nb8.png)
-![posts-page.png](https://s2.loli.net/2025/03/18/s6WH3BVmlbyarRS.png)
-![post1-page.png](https://s2.loli.net/2025/03/18/TS1j9Zr7UpnVPOY.png)
+![home-page.png](https://s2.loli.net/2025/04/07/l1tGYV4WkmoiIHv.png)
+![posts-page.png](https://s2.loli.net/2025/04/07/xR62vhWKsmgw3Ht.png)
+![post1-page.png](https://s2.loli.net/2025/04/07/DbcJzryKmBNR7vQ.png)
+![post2-page.png](https://s2.loli.net/2025/04/07/iNpXyMdkjaDbn92.png)
 
 > Note: As the project is still in its early stages, some configuration files may require adjustments based on actual usage. Please contact the author using the provided contact information or join the developer community for discussions.
 
@@ -164,7 +165,7 @@ Jank is a lightweight blog system built with Go language and Echo framework. Des
 
 Join our official community for discussions:
 
-<img src="https://s2.loli.net/2025/03/24/hmepXacow6bBD9T.jpg" alt="Official Community" width="300" />
+<img src="https://s2.loli.net/2025/04/07/p8b3UMdyrhOlt2w.png" alt="Official Community" width="300" />
 
 > Community guidelines:  
 > Strictly prohibit discussions involving pornography, gambling, drugs, or politically sensitive content. No advertising permitted.
