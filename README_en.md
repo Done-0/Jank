@@ -165,7 +165,7 @@ Jank is a lightweight blog system built with Go language and Echo framework. Des
 
 Join our official community for discussions:
 
-<img src="https://s2.loli.net/2025/04/07/p8b3UMdyrhOlt2w.png" alt="Official Community" width="300" />
+<img src="https://s2.loli.net/2025/04/14/qpVkK3Ms9nm6dCj.jpg" alt="Official Community" width="300" />
 
 > Community guidelines:  
 > Strictly prohibit discussions involving pornography, gambling, drugs, or politically sensitive content. No advertising permitted.
