@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 
@@ -13,20 +14,27 @@ import (
 )
 
 // GetCategoryByID 根据 ID 获取类目
-func GetCategoryByID(req *dto.GetOneCategoryRequest, c echo.Context) (*model.Category, error) {
+func GetCategoryByID(req *dto.GetOneCategoryRequest, c echo.Context) (interface{}, error) {
 	cat, err := mapper.GetCategoryByID(req.ID)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
-		return nil, fmt.Errorf("获取类目失败：%w", err)
+		utils.BizLogger(c).Errorf("根据 ID 获取类目失败: %v", err)
+		return nil, fmt.Errorf("根据 ID 获取类目失败: %w", err)
 	}
-	return cat, nil
+
+	categoryVO, err := utils.MapModelToVO(cat, &category.CategoriesVO{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("获取类目时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("获取类目时映射 VO 失败: %w", err)
+	}
+
+	return categoryVO.(*category.CategoriesVO), nil
 }
 
 // GetCategoryTree 获取类目树
-func GetCategoryTree(c echo.Context) ([]*category.CategoriesVo, error) {
+func GetCategoryTree(c echo.Context) ([]*category.CategoriesVO, error) {
 	categories, err := mapper.GetAllActivatedCategories()
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取类目树失败：%v", err)
+		utils.BizLogger(c).Errorf("获取类目树失败: %v", err)
 		return nil, fmt.Errorf("获取类目树失败: %w", err)
 	}
 
@@ -42,67 +50,41 @@ func GetCategoryTree(c echo.Context) ([]*category.CategoriesVo, error) {
 		cat := categories[i]
 		if cat.ParentID == 0 {
 			rootCategories = append(rootCategories, cat)
-		} else {
-			if parent, exists := categoryMap[cat.ParentID]; exists {
-				if parent.Children == nil {
-					parent.Children = make([]*model.Category, 0)
-				}
-				parent.Children = append(parent.Children, cat)
+		} else if parent, exists := categoryMap[cat.ParentID]; exists {
+			if parent.Children == nil {
+				parent.Children = make([]*model.Category, 0)
 			}
+			parent.Children = append(parent.Children, cat)
 		}
 	}
 
-	var rootCategoriesVo []*category.CategoriesVo
+	var rootCategoriesVO []*category.CategoriesVO
 	for _, root := range rootCategories {
-		rootCategoryVo, err := utils.MapModelToVO(root, &category.CategoriesVo{})
+		rootCategoryVO, err := buildCategoryVOTree(root, c)
 		if err != nil {
-			utils.BizLogger(c).Errorf("获取类目树时映射 vo 失败：%v", err)
-			return nil, fmt.Errorf("获取类目树时映射 vo 失败：%v", err)
+			utils.BizLogger(c).Errorf("获取类目树时映射 VO 失败: %v", err)
+			return nil, fmt.Errorf("获取类目树时映射 VO 失败: %w", err)
 		}
-
-		if root.Children != nil {
-			rootCategoryVo.(*category.CategoriesVo).Children = make([]*category.CategoriesVo, 0)
-			for _, child := range root.Children {
-				childVo, err := utils.MapModelToVO(child, &category.CategoriesVo{})
-				if err != nil {
-					utils.BizLogger(c).Errorf("获取类目树时映射子类目 vo 失败：%v", err)
-					return nil, fmt.Errorf("获取类目树时映射子类目 vo 失败：%v", err)
-				}
-				if child.Children != nil {
-					childVo.(*category.CategoriesVo).Children = make([]*category.CategoriesVo, 0)
-					for _, subChild := range child.Children {
-						subChildVo, err := utils.MapModelToVO(subChild, &category.CategoriesVo{})
-						if err != nil {
-							utils.BizLogger(c).Errorf("获取类目树时映射孙类目 vo 失败：%v", err)
-							return nil, fmt.Errorf("获取类目树时映射孙类目 vo 失败：%v", err)
-						}
-						childVo.(*category.CategoriesVo).Children = append(childVo.(*category.CategoriesVo).Children, subChildVo.(*category.CategoriesVo))
-					}
-				}
-				rootCategoryVo.(*category.CategoriesVo).Children = append(rootCategoryVo.(*category.CategoriesVo).Children, childVo.(*category.CategoriesVo))
-			}
-		}
-
-		rootCategoriesVo = append(rootCategoriesVo, rootCategoryVo.(*category.CategoriesVo))
+		rootCategoriesVO = append(rootCategoriesVO, rootCategoryVO)
 	}
-	return rootCategoriesVo, nil
+
+	return rootCategoriesVO, nil
 }
 
 // GetCategoryChildrenByID 根据类目 ID 获取层级子类目
-func GetCategoryChildrenByID(req *dto.GetOneCategoryRequest, c echo.Context) ([]*category.CategoriesVo, error) {
+func GetCategoryChildrenByID(req *dto.GetOneCategoryRequest, c echo.Context) ([]*category.CategoriesVO, error) {
 	categories, err := mapper.GetAllActivatedCategories()
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取类目树失败：%v", err)
-		return nil, fmt.Errorf("获取类目树失败: %w", err)
+		utils.BizLogger(c).Errorf("根据 ID 获取层级子类目失败: %v", err)
+		return nil, fmt.Errorf("根据 ID 获取层级子类目失败: %w", err)
 	}
 
-	// 构建类目映射
+	// 构建类目映射与父子关系
 	categoryMap := make(map[int64]*model.Category)
 	for i := range categories {
 		categoryMap[categories[i].ID] = categories[i]
 	}
 
-	// 构建父子关系
 	for i := range categories {
 		cat := categories[i]
 		if cat.ParentID != 0 {
@@ -115,223 +97,241 @@ func GetCategoryChildrenByID(req *dto.GetOneCategoryRequest, c echo.Context) ([]
 		}
 	}
 
-	// 找到目标类目
+	// 查找目标类目
 	target, exists := categoryMap[req.ID]
 	if !exists {
-		return nil, fmt.Errorf("未找到类目 ID: %d", req.ID)
+		utils.BizLogger(c).Errorf("类目 ID=%d 不存在", req.ID)
+		return nil, fmt.Errorf("类目 ID=%d 不存在", req.ID)
 	}
 
-	var childrenVo []*category.CategoriesVo
-	if target.Children != nil {
+	var childrenVO []*category.CategoriesVO
+	if len(target.Children) > 0 {
 		for _, child := range target.Children {
-			childVo, err := utils.MapModelToVO(child, &category.CategoriesVo{})
+			childVO, err := buildCategoryVOTree(child, c)
 			if err != nil {
-				utils.BizLogger(c).Errorf("获取层级子类目时映射 vo 失败：%v", err)
-				return nil, fmt.Errorf("获取层级子类目时映射 vo 失败：%v", err)
+				utils.BizLogger(c).Errorf("获取层级子类目时映射 VO 失败: %v", err)
+				return nil, fmt.Errorf("获取层级子类目时映射 VO 失败: %w", err)
 			}
-
-			if child.Children != nil {
-				childVo.(*category.CategoriesVo).Children = make([]*category.CategoriesVo, 0)
-				for _, subChild := range child.Children {
-					subChildVo, err := utils.MapModelToVO(subChild, &category.CategoriesVo{})
-					if err != nil {
-						utils.BizLogger(c).Errorf("获取层级子类目时映射孙类目 vo 失败：%v", err)
-						return nil, fmt.Errorf("获取层级子类目时映射孙类目 vo 失败：%v", err)
-					}
-					childVo.(*category.CategoriesVo).Children = append(childVo.(*category.CategoriesVo).Children, subChildVo.(*category.CategoriesVo))
-				}
-			}
-			childrenVo = append(childrenVo, childVo.(*category.CategoriesVo))
+			childrenVO = append(childrenVO, childVO)
 		}
 	}
-	return childrenVo, nil
+
+	return childrenVO, nil
 }
 
 // CreateCategory 创建类目
-func CreateCategory(req *dto.CreateOneCategoryRequest, c echo.Context) (*category.CategoriesVo, error) {
-	var newCategory *model.Category
-
-	if req.ParentID == 0 {
-		newCategory = &model.Category{
-			Name:        req.Name,
-			Description: req.Description,
-			ParentID:    0,
-			Path:        "",
-		}
-
-		if err := mapper.CreateCategory(newCategory); err != nil {
-			utils.BizLogger(c).Errorf("创建根类目失败：%v", err)
-			return nil, fmt.Errorf("创建根类目失败: %v", err)
-		}
-
-		categoryVo, err := utils.MapModelToVO(newCategory, &category.CategoriesVo{})
-		if err != nil {
-			utils.BizLogger(c).Errorf("创建类目时映射 vo 失败：%v", err)
-			return nil, fmt.Errorf("创建类目时映射 vo 失败：%v", err)
-		}
-		return categoryVo.(*category.CategoriesVo), nil
-	}
-
-	cat, err := mapper.GetCategoryByID(req.ParentID)
-	if err != nil {
-		utils.BizLogger(c).Errorf("获取父类目失败：%v", err)
-		return nil, fmt.Errorf("获取父类目失败：%v", err)
-	}
-
-	newCategory = &model.Category{
+func CreateCategory(req *dto.CreateOneCategoryRequest, c echo.Context) (*category.CategoriesVO, error) {
+	newCategory := &model.Category{
 		Name:        req.Name,
 		Description: req.Description,
 		ParentID:    req.ParentID,
-		Path:        fmt.Sprintf("%s/%d", cat.Path, req.ParentID),
+		Path:        "",
 	}
 
+	// 处理父类目路径
+	if req.ParentID != 0 {
+		parentCat, err := mapper.GetCategoryByID(req.ParentID)
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取父类目失败: %v", err)
+			return nil, fmt.Errorf("获取父类目失败: %w", err)
+		}
+
+		if parentCat.Path == "" {
+			newCategory.Path = fmt.Sprintf("/%d", req.ParentID)
+		} else {
+			newCategory.Path = fmt.Sprintf("%s/%d", parentCat.Path, req.ParentID)
+		}
+	}
+
+	// 创建类目
 	if err := mapper.CreateCategory(newCategory); err != nil {
-		utils.BizLogger(c).Errorf("创建子类目失败：%v", err)
-		return nil, fmt.Errorf("创建子类目失败: %v", err)
+		utils.BizLogger(c).Errorf("创建类目失败: %v", err)
+		return nil, fmt.Errorf("创建类目失败: %w", err)
 	}
 
-	categoryVo, err := utils.MapModelToVO(newCategory, &category.CategoriesVo{})
+	categoryVO, err := utils.MapModelToVO(newCategory, &category.CategoriesVO{})
 	if err != nil {
-		utils.BizLogger(c).Errorf("创建类目时映射 vo 失败：%v", err)
-		return nil, fmt.Errorf("创建类目时映射 vo 失败：%v", err)
+		utils.BizLogger(c).Errorf("创建类目时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("创建类目时映射 VO 失败: %w", err)
 	}
-	return categoryVo.(*category.CategoriesVo), nil
+
+	return categoryVO.(*category.CategoriesVO), nil
 }
 
 // UpdateCategory 更新类目
-func UpdateCategory(req *dto.UpdateOneCategoryRequest, c echo.Context) (*category.CategoriesVo, error) {
+func UpdateCategory(req *dto.UpdateOneCategoryRequest, c echo.Context) (*category.CategoriesVO, error) {
 	existingCategory, err := mapper.GetCategoryByID(req.ID)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
-		return nil, fmt.Errorf("获取类目失败: %v", err)
+		utils.BizLogger(c).Errorf("获取类目失败: %v", err)
+		return nil, fmt.Errorf("获取类目失败: %w", err)
 	}
 
-	parentPath, err := mapper.GetParentCategoryPathByID(req.ParentID)
-	if err != nil {
-		utils.BizLogger(c).Errorf("获取「%v」父类目路径失败：%v", existingCategory.Name, err)
-		return nil, fmt.Errorf("获取「%v」父类目路径失败：%v", existingCategory.Name, err)
+	if req.ParentID == req.ID {
+		utils.BizLogger(c).Error("父类目不能设置为自身")
+		return nil, fmt.Errorf("父类目不能设置为自身")
 	}
 
+	var parentPath string
+	if req.ParentID != 0 {
+		parentCategory, err := mapper.GetCategoryByID(req.ParentID)
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取父类目「%d」失败: %v", req.ParentID, err)
+			return nil, fmt.Errorf("获取父类目「%d」失败: %w", req.ParentID, err)
+		}
+
+		if parentCategory.Path != "" && strings.Contains(parentCategory.Path, fmt.Sprintf("/%d/", req.ID)) {
+			utils.BizLogger(c).Errorf("检测到循环引用: 无法将子类目「%d」设置为父类目", req.ID)
+			return nil, fmt.Errorf("检测到循环引用: 无法将子类目「%d」设置为父类目", req.ID)
+		}
+
+		parentPath = parentCategory.Path
+	}
+
+	oldPath := existingCategory.Path
 	existingCategory.Name = req.Name
 	existingCategory.Description = req.Description
 	existingCategory.ParentID = req.ParentID
-	existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, req.ParentID)
+
+	if req.ParentID == 0 {
+		existingCategory.Path = ""
+	} else if parentPath == "" {
+		existingCategory.Path = fmt.Sprintf("/%d", req.ParentID)
+	} else {
+		existingCategory.Path = fmt.Sprintf("%s/%d", parentPath, req.ParentID)
+	}
 
 	if err := mapper.UpdateCategory(existingCategory); err != nil {
-		utils.BizLogger(c).Errorf("「%v」类目更新失败：%v", existingCategory.Name, err)
-		return nil, fmt.Errorf("「%v」类目更新失败: %v", existingCategory.Name, err)
+		utils.BizLogger(c).Errorf("更新类目失败: %v", err)
+		return nil, fmt.Errorf("更新类目失败: %w", err)
 	}
 
-	if err := recursivelyUpdateChildrenPaths(existingCategory, c); err != nil {
-		utils.BizLogger(c).Errorf("递归更新「%v」类目失败: %v", existingCategory.Name, err)
-		return nil, fmt.Errorf("递归更新「%v」类目失败: %v", existingCategory.Name, err)
-	}
-
-	var convert func(cat *model.Category) (*category.CategoriesVo, error)
-	convert = func(cat *model.Category) (*category.CategoriesVo, error) {
-		vo, err := utils.MapModelToVO(cat, &category.CategoriesVo{})
-		if err != nil {
-			utils.BizLogger(c).Errorf("映射类目 VO 失败：%v", err)
-			return nil, fmt.Errorf("映射类目 VO 失败：%v", err)
+	if oldPath != existingCategory.Path {
+		if err := recursivelyUpdateChildrenPaths(existingCategory, c); err != nil {
+			utils.BizLogger(c).Errorf("更新子类目路径失败: %v", err)
+			return nil, fmt.Errorf("更新子类目路径失败: %w", err)
 		}
-		catVo := vo.(*category.CategoriesVo)
-		if cat.Children != nil && len(cat.Children) > 0 {
-			catVo.Children = make([]*category.CategoriesVo, 0, len(cat.Children))
-			for _, child := range cat.Children {
-				childVo, err := convert(child)
-				if err != nil {
-					return nil, err
-				}
-				catVo.Children = append(catVo.Children, childVo)
-			}
-		}
-		return catVo, nil
 	}
 
-	updatedVo, err := convert(existingCategory)
+	updatedVO, err := buildCategoryVOTree(existingCategory, c)
 	if err != nil {
-		return nil, err
+		utils.BizLogger(c).Errorf("更新类目时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("更新类目时映射 VO 失败: %w", err)
 	}
-	return updatedVo, nil
+
+	return updatedVO, nil
 }
 
 // DeleteCategory 软删除类目
-func DeleteCategory(req *dto.DeleteOneCategoryRequest, c echo.Context) ([]*category.CategoriesVo, error) {
+func DeleteCategory(req *dto.DeleteOneCategoryRequest, c echo.Context) ([]*category.CategoriesVO, error) {
 	cat, err := mapper.GetCategoryByID(req.ID)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取类目失败：%v", err)
-		return nil, fmt.Errorf("获取类目失败：%w", err)
+		utils.BizLogger(c).Errorf("获取类目失败: %v", err)
+		return nil, fmt.Errorf("获取类目失败: %w", err)
 	}
 
-	deletedCategories, err := mapper.GetCategoriesByPath(cat.Path)
+	categoriesToDelete, err := mapper.GetCategoriesByPath(cat.Path)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取「%v」下所有子类目失败：%v", cat.Name, err)
-		return nil, fmt.Errorf("获取「%v」下所有子类目失败：%v", cat.Name, err)
+		utils.BizLogger(c).Errorf("获取子类目失败: %v", err)
+		return nil, fmt.Errorf("获取子类目失败: %w", err)
+	}
+
+	// 删除对应类目及其子类目并返回被删除的类目树
+	var deletedCategories []*model.Category
+	var categoryIDs []int64
+
+	categoryIDs = append(categoryIDs, req.ID)
+	deletedCategories = append(deletedCategories, cat)
+
+	for _, cat := range categoriesToDelete {
+		if cat.ID != req.ID && strings.HasPrefix(cat.Path, cat.Path) {
+			deletedCategories = append(deletedCategories, cat)
+			categoryIDs = append(categoryIDs, cat.ID)
+		}
+	}
+
+	for _, categoryID := range categoryIDs {
+		if err := mapper.DeletePostCategoryByCategoryID(categoryID); err != nil {
+			utils.BizLogger(c).Errorf("删除文章-类目关联失败: %v", err)
+			return nil, fmt.Errorf("删除文章-类目关联失败: %w", err)
+		}
 	}
 
 	if err := mapper.DeleteCategoriesByPathSoftly(cat.Path, req.ID); err != nil {
-		utils.BizLogger(c).Errorf("软删除「%v」下所有子类目失败：%v", cat.Name, err)
-		return nil, fmt.Errorf("软删除「%v」下所有子类目失败：%v", cat.Name, err)
+		utils.BizLogger(c).Errorf("软删除类目失败: %v", err)
+		return nil, fmt.Errorf("软删除类目失败: %w", err)
 	}
 
-	var convert func(cat *model.Category) (*category.CategoriesVo, error)
-	convert = func(cat *model.Category) (*category.CategoriesVo, error) {
-		vo, err := utils.MapModelToVO(cat, &category.CategoriesVo{})
-		if err != nil {
-			utils.BizLogger(c).Errorf("映射类目 Vo 失败：%v", err)
-			return nil, fmt.Errorf("映射类目 Vo 失败：%v", err)
-		}
-		catVo := vo.(*category.CategoriesVo)
+	categoryMap := make(map[int64]*model.Category)
+	for _, c := range deletedCategories {
+		c.Children = []*model.Category{}
+		categoryMap[c.ID] = c
+	}
 
-		if cat.Children != nil && len(cat.Children) > 0 {
-			catVo.Children = make([]*category.CategoriesVo, 0, len(cat.Children))
-			for _, child := range cat.Children {
-				childVo, err := convert(child)
-				if err != nil {
-					return nil, err
-				}
-				catVo.Children = append(catVo.Children, childVo)
+	for _, c := range deletedCategories {
+		if c.ID != req.ID && c.ParentID != 0 {
+			if parent, exists := categoryMap[c.ParentID]; exists {
+				parent.Children = append(parent.Children, c)
 			}
 		}
-		return catVo, nil
 	}
 
-	var deletedCategoriesVo []*category.CategoriesVo
-	for _, deletedCategory := range deletedCategories {
-		deletedCategoryVo, err := convert(deletedCategory)
-		if err != nil {
-			utils.BizLogger(c).Errorf("映射删除的类目时失败：%v", err)
-			return nil, fmt.Errorf("映射删除的类目时失败：%v", err)
-		}
-		deletedCategoriesVo = append(deletedCategoriesVo, deletedCategoryVo)
+	rootVO, err := buildCategoryVOTree(cat, c)
+	if err != nil {
+		utils.BizLogger(c).Errorf("删除类目时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("删除类目时映射 VO 失败: %w", err)
 	}
 
-	return deletedCategoriesVo, nil
+	return []*category.CategoriesVO{rootVO}, nil
 }
 
 // recursivelyUpdateChildrenPaths 递归更新子类目路径
 func recursivelyUpdateChildrenPaths(parentCategory *model.Category, c echo.Context) error {
 	children, err := mapper.GetCategoriesByParentID(parentCategory.ID)
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取「%v」子类目失败：%v", parentCategory.Name, err)
-		utils.BizLogger(c).Errorf("递归时获取「%v」父类目失败：%v", parentCategory.Name, err)
-		return nil
+		utils.BizLogger(c).Errorf("获取类目失败: %v", err)
+		return fmt.Errorf("获取类目失败: %w", err)
 	}
 
-	// 更新每个子类目的路径
 	for _, child := range children {
-		child.Path = fmt.Sprintf("%s/%d", parentCategory.Path, child.ID)
+		if parentCategory.Path == "" {
+			child.Path = fmt.Sprintf("/%d", parentCategory.ID)
+		} else {
+			child.Path = fmt.Sprintf("%s/%d", parentCategory.Path, parentCategory.ID)
+		}
 
 		if err := mapper.UpdateCategory(child); err != nil {
-			utils.BizLogger(c).Errorf("更新「%v」子类目失败：%v", child.Name, err)
-			return fmt.Errorf("更新「%v」子类目失败：%v", child.Name, err)
+			utils.BizLogger(c).Errorf("更新子类目失败: %v", err)
+			return fmt.Errorf("更新子类目失败: %w", err)
 		}
 
 		if err := recursivelyUpdateChildrenPaths(child, c); err != nil {
-			utils.BizLogger(c).Errorf("递归更新「%v」子类目失败：%v", child.Name, err)
-			return fmt.Errorf("递归更新「%v」子类目失败：%v", child.Name, err)
+			return err
 		}
 	}
 
 	return nil
+}
+
+// buildCategoryVOTree 构建类目树VO
+func buildCategoryVOTree(cat *model.Category, c echo.Context) (*category.CategoriesVO, error) {
+	vo, err := utils.MapModelToVO(cat, &category.CategoriesVO{})
+	if err != nil {
+		utils.BizLogger(c).Errorf("映射类目 VO 失败: %v", err)
+		return nil, fmt.Errorf("映射类目 VO 失败: %w", err)
+	}
+
+	catVO := vo.(*category.CategoriesVO)
+
+	if len(cat.Children) > 0 {
+		catVO.Children = make([]*category.CategoriesVO, 0, len(cat.Children))
+		for _, child := range cat.Children {
+			childVO, err := buildCategoryVOTree(child, c)
+			if err != nil {
+				return nil, err
+			}
+			catVO.Children = append(catVO.Children, childVO)
+		}
+	}
+
+	return catVO, nil
 }

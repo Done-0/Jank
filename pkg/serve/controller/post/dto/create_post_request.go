@@ -5,11 +5,11 @@ package dto
 // @Param	image				body	string	true	"文章图片(可选)"
 // @Param	visibility			body	string	true	"文章可见性(可选,默认 private)"
 // @Param	content_html	    body	string	true	"文章内容(markdown格式)"
-// @Param	category_ids		body	[]int64	true	"文章分类ID列表"
+// @Param	category_id			body	int64	true	"文章分类ID"
 type CreateOnePostRequest struct {
 	Title           string `json:"title" xml:"title" form:"title" query:"title" validate:"required,min=1,max=225"`
 	Image           string `json:"image" xml:"image" form:"image" query:"image" default:""`
-	Visibility      bool   `json:"visibility" xml:"visibility" form:"visibility" query:"visibility" default:"false"`
+	Visibility      bool   `json:"visibility" xml:"visibility" form:"visibility" query:"visibility" validate:"omitempty,boolean" default:"false"`
 	ContentMarkdown string `json:"content_markdown" xml:"content_markdown" form:"content_markdown" query:"content_markdown" default:""`
-	CategoryIDs     string `json:"category_ids" xml:"category_ids" form:"category_ids" query:"category_ids"`
+	CategoryID      int64  `json:"category_id" xml:"category_id" form:"category_id" query:"category_id" validate:"omitempty,gte=0"`
 }

@@ -127,7 +127,7 @@
         "image": "string",
         "visibility": "string",
         "content_html": "string",
-        "category_ids": []int64
+        "category_ids": number
     },
     "requestId": "string",
     "timeStamp": number
@@ -155,9 +155,7 @@
                 "visibility": "public",
                 "content_markdown": "",
                 "content_html": "这里将会是文章内容的 HTML 格式",
-                "category_ids": [
-                  13
-                ]
+                "category_ids": 13
               }
             ],
             "totalPages": 2
@@ -166,7 +164,7 @@
           "timeStamp": 1740042288
         }
         ```
-   > 注：为了减少传输体积和提供预览效果，此接口对于 content_html 字段只会返回存储在数据库的 HTML 的前 150 个字符。
+   > 注：为了减少传输体积和提供预览效果，此接口对于 content_html 字段只会返回存储在数据库的 HTML 的前 200 个字符。
 
 2. **getOnePost** 获取单篇文章详情：
    - 请求方式：POST
@@ -185,9 +183,7 @@
           "visibility": "public",
           "content_markdown": "",
           "content_html": "这里将会是文章内容的 HTML 格式",
-          "category_ids": [
-            12
-          ]
+          "category_ids": 12
         },
           "requestId": "YWOzpncbNgdQINiDMPcYpwvtaFFQrAPI",
           "timeStamp": 1740043295
@@ -203,8 +199,7 @@
       - image：string 类型，文章图片 URL
       - visibility：boolean 类型，文章可见性，取值：0 或 1，也可以 true 或 false，0 表示公开，1 表示私密
       - content_markdown: string 类型，文章内容的 Markdown 格式
-      - category_ids：string 类型，文章所属类目 ID 列表，示例：[12]
-     > 注：category_ids 字段为string 类型，必须加上方括号，否则会导致解析失败，此外就是暂时只支持传递一个类目。
+      - category_id：number 类型，文章所属类目 ID
    - 响应示例：
         ```json
         {
@@ -215,9 +210,7 @@
             "visibility": "public",
             "content_markdown": "",
             "content_html": "这里将会是文章内容的 HTML 格式",
-            "category_ids": [
-                13
-            ]
+            "category_ids": 13
           },
           "requestId": "VjDkicQKtuIJGoDUCzwGiAkLgVpxSgvW",
           "timeStamp": 1740042288
@@ -233,9 +226,8 @@
        - image：string 类型，文章图片 URL
        - visibility：boolean 类型，文章可见性，取值：0 或 1，也可以 true 或 false，0 表示公开，1 表示私密
        - content_markdown: string 类型，文章内容的 Markdown 格式，支持文件路径和直接输入 markdown 文件内容
-       - category_ids：string 类型，文章所属类目 ID
-       > 除了 id 为必填项外，其他字段都为可选，如果不传则不修改相应字段。
-       > 注：category_ids 字段为string 类型，必须加上方括号，否则会导致解析失败，此外就是暂时只支持传递一个类目。
+       - category_id：number 类型，文章所属类目 ID
+       > 除了 id 为必填项外，其他字段都为可选，只会更新传递的字段，未传递的字段保持原值。
    - 响应示例：
         ```json
         {
@@ -246,9 +238,7 @@
             "visibility": "public",
             "content_markdown": "",
             "content_html": "<p>文章内容 1</p>",
-            "category_ids": [
-                12
-            ]
+            "category_ids": 12
           },
           "requestId": "YWOzpncbNgdQINiDMPcYpwvtaFFQrAPI",
           "timeStamp": 1740043295
@@ -281,7 +271,7 @@
     "description": "string",
     "parent_id": number,
     "path": "string",
-    "children": []int64
+    "children": number
   },
   "requestId": "string",
   "timeStamp": number
@@ -684,10 +674,7 @@
     {
       "code": 10000,
       "msg": "服务端异常",
-      "data": {
-        "code": 10000,
-        "msg": "服务端异常"
-      },
+      "data": {},
       "requestId": "BRnzCMxAoprBllAuBGPWqoDNofArbuOX",
       "timeStamp": 1740118534
     }

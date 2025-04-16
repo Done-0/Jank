@@ -8,7 +8,7 @@ import (
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/category/dto"
-	"jank.com/jank_blog/pkg/serve/service/category"
+	service "jank.com/jank_blog/pkg/serve/service/category"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -19,14 +19,14 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "类目ID"
-// @Success      200   {object} vo.Result{data=category.CategoriesVo}  "获取成功"
+// @Success      200   {object} vo.Result{data=category.CategoriesVO}  "获取成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Router       /category/getOneCategory [get]
 func GetOneCategory(c echo.Context) error {
 	req := new(dto.GetOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -36,7 +36,7 @@ func GetOneCategory(c echo.Context) error {
 
 	category, err := service.GetCategoryByID(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(category, c))
@@ -48,13 +48,13 @@ func GetOneCategory(c echo.Context) error {
 // @Tags         类目
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  vo.Result{data=[]category.CategoriesVo}  "获取成功"
+// @Success      200  {object}  vo.Result{data=[]category.CategoriesVO}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /category/getCategoryTree [get]
 func GetCategoryTree(c echo.Context) error {
 	categories, err := service.GetCategoryTree(c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(categories, c))
@@ -67,7 +67,7 @@ func GetCategoryTree(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "类目ID"
-// @Success      200   {object} vo.Result{data=[]category.CategoriesVo}  "获取成功"
+// @Success      200   {object} vo.Result{data=[]category.CategoriesVO}  "获取成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"
@@ -75,7 +75,7 @@ func GetCategoryTree(c echo.Context) error {
 func GetCategoryChildrenTree(c echo.Context) error {
 	req := new(dto.GetOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -85,7 +85,7 @@ func GetCategoryChildrenTree(c echo.Context) error {
 
 	childrenCategories, err := service.GetCategoryChildrenByID(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(childrenCategories, c))
@@ -98,14 +98,14 @@ func GetCategoryChildrenTree(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateOneCategoryRequest  true  "创建类目请求参数"
-// @Success      200     {object}   vo.Result{data=category.CategoriesVo}  "创建成功"
+// @Success      200     {object}   vo.Result{data=category.CategoriesVO}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Security     BearerAuth
 // @Router       /category/createOneCategory [post]
 func CreateOneCategory(c echo.Context) error {
 	req := new(dto.CreateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -115,7 +115,7 @@ func CreateOneCategory(c echo.Context) error {
 
 	createdCategory, err := service.CreateCategory(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(createdCategory, c))
@@ -129,7 +129,7 @@ func CreateOneCategory(c echo.Context) error {
 // @Produce      json
 // @Param        id       path      int                       true  "类目ID"
 // @Param        request  body      dto.UpdateOneCategoryRequest true  "更新类目请求参数"
-// @Success      200     {object}   vo.Result{data=category.CategoriesVo}  "更新成功"
+// @Success      200     {object}   vo.Result{data=category.CategoriesVO}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "类目不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
@@ -138,7 +138,7 @@ func CreateOneCategory(c echo.Context) error {
 func UpdateOneCategory(c echo.Context) error {
 	req := new(dto.UpdateOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -148,7 +148,7 @@ func UpdateOneCategory(c echo.Context) error {
 
 	updatedCategory, err := service.UpdateCategory(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(updatedCategory, c))
@@ -161,7 +161,7 @@ func UpdateOneCategory(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        id    path     int  true  "类目ID"
-// @Success      200   {object} vo.Result{data=category.CategoriesVo}  "删除成功"
+// @Success      200   {object} vo.Result{data=category.CategoriesVO}  "删除成功"
 // @Failure      400   {object} vo.Result  "请求参数错误"
 // @Failure      404   {object} vo.Result  "类目不存在"
 // @Failure      500   {object} vo.Result  "服务器错误"
@@ -170,7 +170,7 @@ func UpdateOneCategory(c echo.Context) error {
 func DeleteOneCategory(c echo.Context) error {
 	req := new(dto.DeleteOneCategoryRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -180,7 +180,7 @@ func DeleteOneCategory(c echo.Context) error {
 
 	category, err := service.DeleteCategory(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(category, c))

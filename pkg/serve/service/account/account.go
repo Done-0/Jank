@@ -29,31 +29,31 @@ const (
 )
 
 // GetAccount 获取用户信息逻辑
-func GetAccount(req *dto.GetAccountRequest, c echo.Context) (*account.GetAccountVo, error) {
+func GetAccount(req *dto.GetAccountRequest, c echo.Context) (*account.GetAccountVO, error) {
 	userInfo, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("「%s」邮箱不存在", req.Email)
 		return nil, fmt.Errorf("「%s」邮箱不存在", req.Email)
 	}
 
-	vo, err := utils.MapModelToVO(userInfo, &account.GetAccountVo{})
+	vo, err := utils.MapModelToVO(userInfo, &account.GetAccountVO{})
 	if err != nil {
-		utils.BizLogger(c).Errorf("获取用户信息时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("获取用户信息时映射 vo 失败: %v", err)
+		utils.BizLogger(c).Errorf("获取用户信息时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("获取用户信息时映射 VO 失败: %w", err)
 	}
 
-	return vo.(*account.GetAccountVo), nil
+	return vo.(*account.GetAccountVO), nil
 }
 
 // RegisterAcc 用户注册逻辑
-func RegisterAcc(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVo, error) {
+func RegisterAcc(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAccountVO, error) {
 	registerLock.Lock()
 	defer registerLock.Unlock()
 
 	totalAccounts, err := mapper.GetTotalAccounts()
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取用户总数失败: %v", err)
-		return nil, fmt.Errorf("获取用户总数失败: %v", err)
+		return nil, fmt.Errorf("获取用户总数失败: %w", err)
 	}
 
 	if totalAccounts > 0 {
@@ -70,7 +70,7 @@ func RegisterAcc(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAcc
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		utils.BizLogger(c).Errorf("哈希加密失败: %v", err)
-		return nil, fmt.Errorf("哈希加密失败: %v", err)
+		return nil, fmt.Errorf("哈希加密失败: %w", err)
 	}
 
 	acc := &model.Account{
@@ -82,36 +82,36 @@ func RegisterAcc(req *dto.RegisterRequest, c echo.Context) (*account.RegisterAcc
 
 	if err := mapper.CreateAccount(acc); err != nil {
 		utils.BizLogger(c).Errorf("「%s」用户注册失败: %v", req.Email, err)
-		return nil, fmt.Errorf("「%s」用户注册失败: %v", req.Email, err)
+		return nil, fmt.Errorf("「%s」用户注册失败: %w", req.Email, err)
 	}
 
-	vo, err := utils.MapModelToVO(acc, &account.RegisterAccountVo{})
+	vo, err := utils.MapModelToVO(acc, &account.RegisterAccountVO{})
 	if err != nil {
-		utils.BizLogger(c).Errorf("用户注册时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("用户注册时映射 vo 失败: %v", err)
+		utils.BizLogger(c).Errorf("用户注册时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("用户注册时映射 VO 失败: %w", err)
 	}
 
-	return vo.(*account.RegisterAccountVo), nil
+	return vo.(*account.RegisterAccountVO), nil
 }
 
 // LoginAcc 登录用户逻辑
-func LoginAcc(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
+func LoginAcc(req *dto.LoginRequest, c echo.Context) (*account.LoginVO, error) {
 	acc, err := mapper.GetAccountByEmail(req.Email)
 	if err != nil {
 		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
-		return nil, fmt.Errorf("「%s」用户不存在: %v", req.Email, err)
+		return nil, fmt.Errorf("「%s」用户不存在: %w", req.Email, err)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.Password))
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码输入错误: %v", err)
-		return nil, fmt.Errorf("密码输入错误: %v", err)
+		return nil, fmt.Errorf("密码输入错误: %w", err)
 	}
 
 	accessTokenString, refreshTokenString, err := utils.GenerateJWT(acc.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("token 生成失败: %v", err)
-		return nil, fmt.Errorf("token 生成失败: %v", err)
+		return nil, fmt.Errorf("token 生成失败: %w", err)
 	}
 
 	cacheKey := fmt.Sprintf("%s:%d", UserCache, acc.ID)
@@ -119,21 +119,21 @@ func LoginAcc(req *dto.LoginRequest, c echo.Context) (*account.LoginVo, error) {
 	err = global.RedisClient.Set(context.Background(), cacheKey, accessTokenString, UserCacheExpireTime).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("登录时设置缓存失败: %v", err)
-		return nil, fmt.Errorf("登录时设置缓存失败: %v", err)
+		return nil, fmt.Errorf("登录时设置缓存失败: %w", err)
 	}
 
-	token := &account.LoginVo{
+	token := &account.LoginVO{
 		AccessToken:  accessTokenString,
 		RefreshToken: refreshTokenString,
 	}
 
-	vo, err := utils.MapModelToVO(token, &account.LoginVo{})
+	vo, err := utils.MapModelToVO(token, &account.LoginVO{})
 	if err != nil {
-		utils.BizLogger(c).Errorf("用户登录时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("用户登陆时映射 vo 失败: %v", err)
+		utils.BizLogger(c).Errorf("用户登录时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("用户登陆时映射 VO 失败: %v", err)
 	}
 
-	return vo.(*account.LoginVo), nil
+	return vo.(*account.LoginVO), nil
 }
 
 // LogoutAcc 处理用户登出逻辑
@@ -144,14 +144,14 @@ func LogoutAcc(c echo.Context) error {
 	accountID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 access token 失败: %v", err)
-		return fmt.Errorf("解析 access token 失败: %v", err)
+		return fmt.Errorf("解析 access token 失败: %w", err)
 	}
 
 	cacheKey := fmt.Sprintf("%s:%d", UserCache, accountID)
 	err = global.RedisClient.Del(c.Request().Context(), cacheKey).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("删除 Redis 缓存失败: %v", err)
-		return fmt.Errorf("删除 Redis 缓存失败: %v", err)
+		return fmt.Errorf("删除 Redis 缓存失败: %w", err)
 	}
 
 	return nil
@@ -170,25 +170,25 @@ func ResetPassword(req *dto.ResetPwdRequest, c echo.Context) error {
 	accountID, err := utils.ParseAccountAndRoleIDFromJWT(c.Request().Header.Get("Authorization"))
 	if err != nil {
 		utils.BizLogger(c).Errorf("解析 token 失败: %v", err)
-		return fmt.Errorf("解析 token 失败: %v", err)
+		return fmt.Errorf("解析 token 失败: %w", err)
 	}
 
 	acc, err := mapper.GetAccountByAccountID(accountID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("「%s」用户不存在: %v", req.Email, err)
-		return fmt.Errorf("「%s」用户不存在: %v", req.Email, err)
+		return fmt.Errorf("「%s」用户不存在: %w", req.Email, err)
 	}
 
 	newPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
 	if err != nil {
 		utils.BizLogger(c).Errorf("密码加密失败: %v", err)
-		return fmt.Errorf("密码加密失败: %v", err)
+		return fmt.Errorf("密码加密失败: %w", err)
 	}
 	acc.Password = string(newPassword)
 
 	if err := mapper.UpdateAccount(acc); err != nil {
 		utils.BizLogger(c).Errorf("密码修改失败: %v", err)
-		return fmt.Errorf("密码修改失败: %v", err)
+		return fmt.Errorf("密码修改失败: %w", err)
 	}
 
 	return nil

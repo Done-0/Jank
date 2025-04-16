@@ -20,7 +20,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"email\": \"927171598@qq.com\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"110\",\r\n  \"email_verification_code\": \"513362\",\r\n  \"img_verification_code\": \"5T3P\"\r\n}",
+									"raw": "{\r\n  \"email\": \"927171598@qq.com\",\r\n  \"nickname\": \"fender\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"110\",\r\n  \"email_verification_code\": \"822487\",\r\n  \"img_verification_code\": \"I4P2\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -106,7 +106,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"email\": \"string\",\r\n  \"nickname\": \"stirng\",\r\n  \"password\": \"string\",\r\n  \"phone\": \"string\",\r\n  \"img_verification_code\": \"PPKX\"\r\n}",
+									"raw": "{\r\n  \"email\": \"927171598@qq.com\",\r\n  \"password\": \"123456\",\r\n  \"img_verification_code\": \"8F6N\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -135,6 +135,16 @@
 						{
 							"name": "logoutAccount",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoyLCJleHAiOjE3NDAzMjQ0OTcsInJvbGVfaWQiOjF9.o1LQpOw80c0cUFBQEOQEmX1JwE7RXP3xeaL4R1WgNao",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -220,7 +230,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"code\": \"2\",\n  \"description\": \"超级管理员\"\n}",
+									"raw": "{\n  \"code\": \"3\",\n  \"description\": \"超级管理员\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -381,7 +391,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n      \"id\": 1\n  \"code\": \"1\",\n  \"description\": \"牛马1\",\n\n}",
+									"raw": "{\n  \"id\": 1,\n  \"code\": \"1\",\n  \"description\": \"牛马1\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -521,7 +531,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"account_id\": 0,\n  \"role_id\": 0\n}",
+									"raw": "{\n  \"account_id\": 1,\n  \"role_id\": 4\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -658,7 +668,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"role_id\": 0,\n  \"permission_id\": 0\n}",
+									"raw": "{\n  \"role_id\": 3,\n  \"permission_id\": 1\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -860,6 +870,16 @@
 						"disabledSystemHeaders": {}
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJleHAiOjE3NDAyNDE3MzN9.ptVu2OnP3Lc790xV3ZOiQJduCvKlKmrFw30HA5jWuEg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -867,12 +887,12 @@
 							"formdata": [
 								{
 									"key": "title",
-									"value": "第3个Markdown文件",
+									"value": "接口文档",
 									"type": "text"
 								},
 								{
 									"key": "image",
-									"value": "https://haowallpaper.com/link/common/file/previewFileImg/16288183061564800",
+									"value": "https://haowallpaper.com/link/common/file/previewFileImg/16401030894505344",
 									"type": "text"
 								},
 								{
@@ -887,7 +907,7 @@
 								},
 								{
 									"key": "category_ids",
-									"value": "[1,2]",
+									"value": "[]",
 									"type": "text"
 								}
 							]
@@ -1014,23 +1034,11 @@
 			"item": [
 				{
 					"name": "getOneCategory",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 6\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "127.0.0.1:9010/api/v1/category/getOneCategory",
+							"raw": "127.0.0.1:9010/api/v1/category/getOneCategory?id=15",
 							"host": [
 								"127",
 								"0",
@@ -1043,6 +1051,12 @@
 								"v1",
 								"category",
 								"getOneCategory"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "15"
+								}
 							]
 						}
 					},
@@ -1079,7 +1093,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"测试类目4\",\r\n    \"description\": \"测试类目4\",\r\n    \"parent_id\": 1\r\n}",
+							"raw": "{\r\n    \"name\": \"测试类目18\",\r\n    \"description\": \"测试类目18\",\r\n    \"parent_id\": 30\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1112,7 +1126,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 16,\r\n    \"name\": \"测试类目1\",\r\n    \"description\": \"测试类目1\",\r\n    \"parent_id\": 15\r\n}",
+							"raw": "{\r\n    \"id\": 21,\r\n    \"name\": \"测试类目002\",\r\n    \"description\": \"测试类目001\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1145,7 +1159,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 16\r\n}",
+							"raw": "{\r\n    \"id\": 29\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1173,8 +1187,11 @@
 				},
 				{
 					"name": "getCategoryChildrenTree",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -1186,7 +1203,7 @@
 							}
 						},
 						"url": {
-							"raw": "127.0.0.1:9010/api/v1/category/getCategoryChildrenTree",
+							"raw": "127.0.0.1:9010/api/v1/category/getCategoryChildrenTree?id=12",
 							"host": [
 								"127",
 								"0",
@@ -1199,6 +1216,12 @@
 								"v1",
 								"category",
 								"getCategoryChildrenTree"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "12"
+								}
 							]
 						}
 					},
@@ -1273,15 +1296,18 @@
 			"name": "test",
 			"item": [
 				{
-					"name": "ping",
+					"name": "testPing",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9010/api/v1/test/ping",
+							"raw": "http://127.0.0.1:9010/api/v1/test/ping",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
 							"port": "9010",
 							"path": [
@@ -1295,7 +1321,7 @@
 					"response": []
 				},
 				{
-					"name": "hello",
+					"name": "testHello",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1361,7 +1387,7 @@
 					"response": []
 				},
 				{
-					"name": "testSuccess",
+					"name": "testSuccessRes",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1383,7 +1409,7 @@
 					"response": []
 				},
 				{
-					"name": "testErr",
+					"name": "testErrRes",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1427,7 +1453,7 @@
 					"response": []
 				},
 				{
-					"name": "long",
+					"name": "testLongReq",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1460,7 +1486,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:9010/api/v1/comment/getOneComment?id=1",
+							"raw": "127.0.0.1:9010/api/v1/comment/getOneComment?comment_id=1",
 							"host": [
 								"127",
 								"0",
@@ -1476,7 +1502,7 @@
 							],
 							"query": [
 								{
-									"key": "id",
+									"key": "comment_id",
 									"value": "1"
 								}
 							]
@@ -1490,7 +1516,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:9010/api/v1/comment/getCommentGraph?post_id=1",
+							"raw": "127.0.0.1:9010/api/v1/comment/getCommentGraph?post_id=5",
 							"host": [
 								"127",
 								"0",
@@ -1507,7 +1533,7 @@
 							"query": [
 								{
 									"key": "post_id",
-									"value": "1"
+									"value": "5"
 								}
 							]
 						}
@@ -1521,7 +1547,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"content\": \"测试评论 1\",\n  \"user_id\": 1,\n  \"post_id\": 1,\n  \"reply_to_comment_id\": 0\n}\n",
+							"raw": "{\n  \"content\": \"测试评论 1\",\n  \"user_id\": 1,\n  \"post_id\": 5,\n  \"reply_to_comment_id\": 4\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"

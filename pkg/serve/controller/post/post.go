@@ -9,7 +9,7 @@ import (
 	bizErr "jank.com/jank_blog/internal/error"
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/post/dto"
-	"jank.com/jank_blog/pkg/serve/service/post"
+	service "jank.com/jank_blog/pkg/serve/service/post"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -20,7 +20,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.GetOnePostRequest  true  "获取文章请求参数"
-// @Success      200      {object}  vo.Result{data=post.PostsVo}  "获取成功"
+// @Success      200      {object}  vo.Result{data=post.PostsVO}  "获取成功"
 // @Failure      400      {object}  vo.Result          "请求参数错误"
 // @Failure      404      {object}  vo.Result          "文章不存在"
 // @Failure      500      {object}  vo.Result          "服务器错误"
@@ -28,7 +28,7 @@ import (
 func GetOnePost(c echo.Context) error {
 	req := new(dto.GetOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -38,7 +38,7 @@ func GetOnePost(c echo.Context) error {
 
 	pos, err := service.GetOnePostByIDOrTitle(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(pos, c))
@@ -52,7 +52,7 @@ func GetOnePost(c echo.Context) error {
 // @Produce      json
 // @Param        page     query    int     false  "页码"
 // @Param        pageSize query    int     false  "每页显示数量"
-// @Success      200  {object}  vo.Result{data=[]post.PostsVo}  "获取成功"
+// @Success      200  {object}  vo.Result{data=[]post.PostsVO}  "获取成功"
 // @Failure      500  {object}  vo.Result                 "服务器错误"
 // @Router       /post/getAllPosts [get]
 func GetAllPosts(c echo.Context) error {
@@ -61,7 +61,7 @@ func GetAllPosts(c echo.Context) error {
 
 	response, err := service.GetAllPostsWithPagingAndFormat(page, pageSize, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -74,7 +74,7 @@ func GetAllPosts(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateOnePostRequest  true  "创建文章请求参数"
-// @Success      200     {object}   vo.Result{data=post.PostsVo}  "创建成功"
+// @Success      200     {object}   vo.Result{data=post.PostsVO}  "创建成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      500     {object}   vo.Result          "服务器错误"
 // @Security     BearerAuth
@@ -82,7 +82,7 @@ func GetAllPosts(c echo.Context) error {
 func CreateOnePost(c echo.Context) error {
 	req := new(dto.CreateOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -92,7 +92,7 @@ func CreateOnePost(c echo.Context) error {
 
 	createdPost, err := service.CreateOnePost(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(createdPost, c))
@@ -105,7 +105,7 @@ func CreateOnePost(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.UpdateOnePostRequest  true  "更新文章请求参数"
-// @Success      200     {object}   vo.Result{data=post.PostsVo}  "更新成功"
+// @Success      200     {object}   vo.Result{data=post.PostsVO}  "更新成功"
 // @Failure      400     {object}   vo.Result          "请求参数错误"
 // @Failure      404     {object}   vo.Result          "文章不存在"
 // @Failure      500     {object}   vo.Result          "服务器错误"
@@ -114,7 +114,7 @@ func CreateOnePost(c echo.Context) error {
 func UpdateOnePost(c echo.Context) error {
 	req := new(dto.UpdateOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -124,7 +124,7 @@ func UpdateOnePost(c echo.Context) error {
 
 	updatedPost, err := service.UpdateOnePost(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(updatedPost, c))
@@ -146,7 +146,7 @@ func UpdateOnePost(c echo.Context) error {
 func DeleteOnePost(c echo.Context) error {
 	req := new(dto.DeleteOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(bizErr.New(bizErr.BadRequest, err.Error()), nil, c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -156,7 +156,7 @@ func DeleteOnePost(c echo.Context) error {
 
 	err := service.DeleteOnePost(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError, err.Error()), nil, c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("文章删除成功", c))

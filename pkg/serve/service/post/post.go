@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -19,14 +18,15 @@ import (
 )
 
 // CreateOnePost 创建文章
-func CreateOnePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
+func CreateOnePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVO, error) {
 	var ContentMarkdown string
-	var CategoryIDs []int64
+	var CategoryID int64
 
 	contentType := c.Request().Header.Get("Content-Type")
 	switch {
 	case contentType == "application/json":
 		ContentMarkdown = req.ContentMarkdown
+		CategoryID = req.CategoryID
 	case strings.HasPrefix(contentType, "multipart/form-data"):
 		file, err := c.FormFile("content_markdown")
 		if err != nil {
@@ -47,31 +47,30 @@ func CreateOnePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo
 			return nil, fmt.Errorf("读取上传文件内容失败: %v", err)
 		}
 		ContentMarkdown = string(content)
+		categoryIDStr := c.FormValue("category_id")
+		if categoryIDStr != "" {
+			id, err := strconv.ParseInt(categoryIDStr, 10, 64)
+			if err != nil {
+				return nil, fmt.Errorf("类目ID格式错误: %v", err)
+			}
+			CategoryID = id
+		}
 	default:
-		return nil, fmt.Errorf("不支持的 Content-Type: %s", contentType)
+		return nil, fmt.Errorf("不支持的 Content-Type: %v", contentType)
 	}
 
-	categoryIDsStr := req.CategoryIDs
-	if categoryIDsStr == "" {
-		categoryIDsStr = c.FormValue("category_ids")
-	}
-	if categoryIDsStr != "" {
-		if err := json.Unmarshal([]byte(categoryIDsStr), &CategoryIDs); err != nil {
-			categoryIDsStr = strings.Trim(categoryIDsStr, "[]")
-			categoryIDStrs := strings.Split(categoryIDsStr, ",")
-			for _, idStr := range categoryIDStrs {
-				id, err := strconv.ParseInt(idStr, 10, 64)
-				if err != nil {
-					return nil, fmt.Errorf("category_ids 格式错误: %w", err)
-				}
-				CategoryIDs = append(CategoryIDs, id)
-			}
+	if CategoryID > 0 {
+		_, err := mapper.GetCategoryByID(CategoryID)
+		if err != nil {
+			utils.BizLogger(c).Errorf("类目ID「%d」不存在: %v", CategoryID, err)
+			return nil, fmt.Errorf("类目ID「%d」不存在: %w", CategoryID, err)
 		}
 	}
 
 	ContentHTML, err := utils.RenderMarkdown([]byte(ContentMarkdown))
 	if err != nil {
-		return nil, fmt.Errorf("渲染 Markdown 失败: %v", err)
+		utils.BizLogger(c).Errorf("渲染 Markdown 失败: %v", err)
+		return nil, fmt.Errorf("渲染 Markdown 失败: %w", err)
 	}
 
 	newPost := &model.Post{
@@ -80,73 +79,103 @@ func CreateOnePost(req *dto.CreateOnePostRequest, c echo.Context) (*post.PostsVo
 		Visibility:      req.Visibility,
 		ContentMarkdown: ContentMarkdown,
 		ContentHTML:     ContentHTML,
-		CategoryIDs:     CategoryIDs,
 	}
 
 	if err := mapper.CreatePost(newPost); err != nil {
 		utils.BizLogger(c).Errorf("创建文章失败: %v", err)
-		return nil, fmt.Errorf("创建文章失败: %v", err)
+		return nil, fmt.Errorf("创建文章失败: %w", err)
 	}
 
-	vo, err := utils.MapModelToVO(newPost, &post.PostsVo{})
+	if CategoryID > 0 {
+		if err := mapper.CreatePostCategory(newPost.ID, CategoryID); err != nil {
+			utils.BizLogger(c).Errorf("创建文章-类目关联失败: %v", err)
+			return nil, fmt.Errorf("创建文章-类目关联失败: %w", err)
+		}
+	}
+
+	vo, err := utils.MapModelToVO(newPost, &post.PostsVO{})
 	if err != nil {
-		utils.BizLogger(c).Errorf("创建文章时映射 vo 失败: %v", err)
-		return nil, fmt.Errorf("创建文章时映射 vo 失败: %v", err)
+		utils.BizLogger(c).Errorf("创建文章时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("创建文章时映射 VO 失败: %w", err)
 	}
 
-	return vo.(*post.PostsVo), nil
+	postsVO := vo.(*post.PostsVO)
+	postsVO.CategoryID = CategoryID
+
+	return postsVO, nil
 }
 
 // GetOnePostByIDOrTitle 根据 ID 或 Title 获取文章
 func GetOnePostByIDOrTitle(req *dto.GetOnePostRequest, c echo.Context) (interface{}, error) {
-	if req.ID == 0 && req.Title == "" {
-		utils.BizLogger(c).Error("参数 id 和 title 不能同时为空")
-		return nil, fmt.Errorf("参数 id 和 title 不能同时为空")
-	}
-
-	// 如果传递了 ID，优先使用 ID 查询
-	if req.ID > 0 {
+	switch {
+	case req.ID > 0:
 		pos, err := mapper.GetPostByID(req.ID)
 		if err != nil {
 			utils.BizLogger(c).Errorf("根据 ID 获取文章失败: %v", err)
-			return nil, fmt.Errorf("根据 ID 获取文章失败: %v", err)
+			return nil, fmt.Errorf("根据 ID 获取文章失败: %w", err)
 		}
 		if pos == nil {
 			utils.BizLogger(c).Errorf("文章不存在: %v", err)
-			return nil, fmt.Errorf("文章不存在: %v", err)
+			return nil, fmt.Errorf("文章不存在: %w", err)
 		}
 
-		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 		if err != nil {
-			utils.BizLogger(c).Errorf("获取文章时映射 vo 失败: %v", err)
-			return nil, fmt.Errorf("获取文章时映射 vo 失败: %v", err)
+			utils.BizLogger(c).Errorf("获取文章时映射 VO 失败: %v", err)
+			return nil, fmt.Errorf("获取文章时映射 VO 失败: %w", err)
 		}
 
-		return vo.(*post.PostsVo), nil
-	}
+		postsVO := vo.(*post.PostsVO)
 
-	// 如果没有传 ID，使用 Title 查询
-	posts, err := mapper.GetPostsByTitle(req.Title)
-	if err != nil {
-		utils.BizLogger(c).Errorf("根据标题获取文章失败: %v", err)
-		return nil, fmt.Errorf("根据标题获取文章失败: %v", err)
-	}
-	if len(posts) == 0 {
-		utils.BizLogger(c).Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
-		return nil, fmt.Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
-	}
-
-	postResponse := make([]*post.PostsVo, len(posts))
-	for i, pos := range posts {
-		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		postCategory, err := mapper.GetPostCategory(pos.ID)
 		if err != nil {
-			utils.BizLogger(c).Errorf("获取文章时映射 vo 失败: %v", err)
-			return nil, fmt.Errorf("获取文章时映射 vo 失败: %v", err)
+			utils.BizLogger(c).Errorf("获取文章类目关联失败: %v", err)
 		}
 
-		postResponse[i] = vo.(*post.PostsVo)
+		if postCategory != nil {
+			postsVO.CategoryID = postCategory.CategoryID
+		}
+
+		return postsVO, nil
+
+	case req.Title != "":
+		posts, err := mapper.GetPostsByTitle(req.Title)
+		if err != nil {
+			utils.BizLogger(c).Errorf("根据标题获取文章失败: %v", err)
+			return nil, fmt.Errorf("根据标题获取文章失败: %w", err)
+		}
+		if len(posts) == 0 {
+			utils.BizLogger(c).Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
+			return nil, fmt.Errorf("没有找到与标题 \"%s\" 匹配的文章", req.Title)
+		}
+
+		postsVO := make([]*post.PostsVO, len(posts))
+		for i, pos := range posts {
+			vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
+			if err != nil {
+				utils.BizLogger(c).Errorf("获取文章时映射 VO 失败: %v", err)
+				return nil, fmt.Errorf("获取文章时映射 VO 失败: %w", err)
+			}
+
+			postVO := vo.(*post.PostsVO)
+
+			postCategory, err := mapper.GetPostCategory(pos.ID)
+			if err != nil {
+				utils.BizLogger(c).Errorf("获取文章ID「%d」的类目关联失败: %v", pos.ID, err)
+			}
+
+			if postCategory != nil {
+				postVO.CategoryID = postCategory.CategoryID
+			}
+
+			postsVO[i] = postVO
+		}
+		return postsVO, nil
+
+	default:
+		utils.BizLogger(c).Error("参数 id 和 title 至少需要传递一个")
+		return nil, fmt.Errorf("参数 id 和 title 至少需要传递一个")
 	}
-	return postResponse, nil
 }
 
 // GetAllPostsWithPagingAndFormat 获取格式化后的分页文章列表、总页数和当前页数
@@ -162,25 +191,34 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 	posts, total, err := mapper.GetAllPostsWithPaging(page, pageSize)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取文章列表失败: %v", err)
-		return nil, fmt.Errorf("获取文章列表失败: %v", err)
+		return nil, fmt.Errorf("获取文章列表失败: %w", err)
 	}
 
-	postResponse := make([]*post.PostsVo, len(posts))
+	postResponse := make([]*post.PostsVO, len(posts))
 	for i, pos := range posts {
-		vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+		vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 		if err != nil {
-			utils.BizLogger(c).Errorf("获取文章列表时映射 vo 失败: %v", err)
-			return nil, fmt.Errorf("获取文章列表时映射 vo 失败: %v", err)
+			utils.BizLogger(c).Errorf("获取文章列表时映射 VO 失败: %v", err)
+			return nil, fmt.Errorf("获取文章列表时映射 VO 失败: %w", err)
 		}
 
-		postVo := vo.(*post.PostsVo)
+		postVO := vo.(*post.PostsVO)
 
-		// 只保留 ContentHTML 的前 150 个字符
-		if len(postVo.ContentHTML) > 150 {
-			postVo.ContentHTML = postVo.ContentHTML[:150]
+		postCategory, err := mapper.GetPostCategory(pos.ID)
+		if err != nil {
+			utils.BizLogger(c).Errorf("获取文章ID「%d」的类目关联失败: %v", pos.ID, err)
 		}
 
-		postResponse[i] = postVo
+		if postCategory != nil {
+			postVO.CategoryID = postCategory.CategoryID
+		}
+
+		// 只保留 ContentHTML 的前 200 个字符
+		if len(postVO.ContentHTML) > 200 {
+			postVO.ContentHTML = postVO.ContentHTML[:200]
+		}
+
+		postResponse[i] = postVO
 	}
 
 	return map[string]interface{}{
@@ -191,14 +229,37 @@ func GetAllPostsWithPagingAndFormat(page, pageSize int, c echo.Context) (map[str
 }
 
 // UpdateOnePost 更新文章
-func UpdateOnePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo, error) {
+func UpdateOnePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVO, error) {
 	var ContentMarkdown string
-	var CategoryIDs []int64
+	var CategoryID int64
+
+	pos, err := mapper.GetPostByID(req.ID)
+	if err != nil || pos == nil {
+		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
+		return nil, fmt.Errorf("获取文章失败: %w", err)
+	}
 
 	contentType := c.Request().Header.Get("Content-Type")
 	switch {
 	case contentType == "application/json":
-		ContentMarkdown = req.ContentMarkdown
+		if req.Title != "" {
+			pos.Title = req.Title
+		}
+		if req.Image != "" {
+			pos.Image = req.Image
+		}
+		pos.Visibility = req.Visibility
+		if req.ContentMarkdown != "" {
+			ContentMarkdown = req.ContentMarkdown
+			pos.ContentMarkdown = ContentMarkdown
+			pos.ContentHTML, err = utils.RenderMarkdown([]byte(ContentMarkdown))
+			if err != nil {
+				utils.BizLogger(c).Errorf("渲染 Markdown 失败: %v", err)
+				return nil, fmt.Errorf("渲染 Markdown 失败: %w", err)
+			}
+		}
+		CategoryID = req.CategoryID
+
 	case strings.HasPrefix(contentType, "multipart/form-data"):
 		if file, err := c.FormFile("content_markdown"); err == nil {
 			src, err := file.Open()
@@ -216,54 +277,61 @@ func UpdateOnePost(req *dto.UpdateOnePostRequest, c echo.Context) (*post.PostsVo
 				return nil, fmt.Errorf("读取上传文件内容失败: %v", err)
 			}
 			ContentMarkdown = string(content)
-		}
-	}
-
-	if req.CategoryIDs != "" {
-		if err := json.Unmarshal([]byte(req.CategoryIDs), &CategoryIDs); err != nil {
-			for _, idStr := range strings.Split(strings.Trim(req.CategoryIDs, "[]"), ",") {
-				if id, err := strconv.ParseInt(idStr, 10, 64); err == nil {
-					CategoryIDs = append(CategoryIDs, id)
-				}
+			pos.ContentMarkdown = ContentMarkdown
+			pos.ContentHTML, err = utils.RenderMarkdown([]byte(ContentMarkdown))
+			if err != nil {
+				utils.BizLogger(c).Errorf("渲染 Markdown 失败: %v", err)
+				return nil, fmt.Errorf("渲染 Markdown 失败: %w", err)
 			}
 		}
-	}
 
-	pos, err := mapper.GetPostByID(req.ID)
-	if err != nil || pos == nil {
-		return nil, fmt.Errorf("获取文章失败: %v", err)
-	}
-
-	if req.Title != "" {
-		pos.Title = req.Title
-	}
-	if req.Image != "" {
-		pos.Image = req.Image
-	}
-	if req.Visibility != false {
-		pos.Visibility = req.Visibility
-	}
-	if ContentMarkdown != "" {
-		pos.ContentMarkdown = ContentMarkdown
-		pos.ContentHTML, err = utils.RenderMarkdown([]byte(ContentMarkdown))
-		if err != nil {
-			return nil, fmt.Errorf("渲染 Markdown 失败: %v", err)
+		if title := c.FormValue("title"); title != "" {
+			pos.Title = title
+		}
+		if image := c.FormValue("image"); image != "" {
+			pos.Image = image
+		}
+		if visibility := c.FormValue("visibility"); visibility != "" {
+			pos.Visibility = visibility == "true"
+		}
+		if categoryIDStr := c.FormValue("category_id"); categoryIDStr != "" {
+			id, err := strconv.ParseInt(categoryIDStr, 10, 64)
+			if err != nil {
+				return nil, fmt.Errorf("category_id 格式错误: %w", err)
+			}
+			CategoryID = id
 		}
 	}
-	if len(CategoryIDs) > 0 {
-		pos.CategoryIDs = CategoryIDs
+
+	if CategoryID > 0 {
+		if _, err := mapper.GetCategoryByID(CategoryID); err != nil {
+			utils.BizLogger(c).Errorf("类目ID「%d」不存在: %v", CategoryID, err)
+			return nil, fmt.Errorf("类目ID「%d」不存在: %w", CategoryID, err)
+		}
 	}
 
 	if err := mapper.UpdateOnePostByID(req.ID, pos); err != nil {
-		return nil, fmt.Errorf("更新文章失败: %v", err)
+		utils.BizLogger(c).Errorf("更新文章失败: %v", err)
+		return nil, fmt.Errorf("更新文章失败: %w", err)
 	}
 
-	vo, err := utils.MapModelToVO(pos, &post.PostsVo{})
+	if CategoryID > 0 {
+		if err := mapper.UpdatePostCategory(req.ID, CategoryID); err != nil {
+			utils.BizLogger(c).Errorf("更新文章-类目关联失败: %v", err)
+			return nil, fmt.Errorf("更新文章-类目关联失败: %w", err)
+		}
+	}
+
+	vo, err := utils.MapModelToVO(pos, &post.PostsVO{})
 	if err != nil {
-		return nil, fmt.Errorf("更新文章时映射 vo 失败: %v", err)
+		utils.BizLogger(c).Errorf("更新文章时映射 VO 失败: %v", err)
+		return nil, fmt.Errorf("更新文章时映射 VO 失败: %w", err)
 	}
 
-	return vo.(*post.PostsVo), nil
+	postsVO := vo.(*post.PostsVO)
+	postsVO.CategoryID = CategoryID
+
+	return postsVO, nil
 }
 
 // DeleteOnePost 删除文章
@@ -271,7 +339,7 @@ func DeleteOnePost(req *dto.DeleteOnePostRequest, c echo.Context) error {
 	pos, err := mapper.GetPostByID(req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("获取文章失败: %v", err)
-		return fmt.Errorf("获取文章失败: %v", err)
+		return fmt.Errorf("获取文章失败: %w", err)
 	}
 	if pos == nil {
 		utils.BizLogger(c).Errorf("文章不存在")
@@ -280,7 +348,12 @@ func DeleteOnePost(req *dto.DeleteOnePostRequest, c echo.Context) error {
 
 	if err := mapper.DeleteOnePostByID(req.ID); err != nil {
 		utils.BizLogger(c).Errorf("删除文章失败: %v", err)
-		return fmt.Errorf("删除文章失败: %v", err)
+		return fmt.Errorf("删除文章失败: %w", err)
+	}
+
+	if err := mapper.DeletePostCategory(req.ID); err != nil {
+		utils.BizLogger(c).Errorf("删除文章-类目关联失败: %v", err)
+		return fmt.Errorf("删除文章-类目关联失败: %w", err)
 	}
 
 	return nil

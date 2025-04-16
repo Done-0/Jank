@@ -5,6 +5,7 @@ import (
 	category "jank.com/jank_blog/internal/model/category"
 	comment "jank.com/jank_blog/internal/model/comment"
 	post "jank.com/jank_blog/internal/model/post"
+	association "jank.com/jank_blog/internal/model/association"
 )
 
 // GetAllModels 获取并注册所有模型
@@ -21,5 +22,8 @@ func GetAllModels() []interface{} {
 
 		// comment 模块
 		&comment.Comment{},
+
+		// association 跨模块中间表
+		&association.PostCategory{},
 	}
 }

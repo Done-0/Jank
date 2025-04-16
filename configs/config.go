@@ -40,8 +40,8 @@ type LogConfig struct {
 	LogFilePath     string `mapstructure:"LOG_FILE_PATH"`
 	LogFileName     string `mapstructure:"LOG_FILE_NAME"`
 	LogTimestampFmt string `mapstructure:"LOG_TIMESTAMP_FMT"`
-	LogMaxAge       int    `mapstructure:"LOG_MAX_AGE"`
-	LogRotationTime int    `mapstructure:"LOG_ROTATION_TIME"`
+	LogMaxAge       int64  `mapstructure:"LOG_MAX_AGE"`
+	LogRotationTime int64  `mapstructure:"LOG_ROTATION_TIME"`
 	LogLevel        string `mapstructure:"LOG_LEVEL"`
 }
 

@@ -48,16 +48,16 @@ func SendImgVerificationCode(c echo.Context) error {
 	imgBase64, answer, err := utils.GenImgVerificationCode()
 	if err != nil {
 		utils.BizLogger(c).Errorf("生成图片验证码失败: %v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成图形验证码失败", bizErr.New(bizErr.ServerError), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError), c))
 	}
 
 	err = global.RedisClient.Set(context.Background(), key, answer, ImgVerificationCodeCacheExpiration).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("图形验证码写入缓存失败，key: %v, 错误: %v", key, err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail("服务器错误，生成图形验证码失败", bizErr.New(bizErr.ServerError), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError), c))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(verification.ImgVerificationVo{ImgBase64: imgBase64}, c))
+	return c.JSON(http.StatusOK, vo.Success(verification.ImgVerificationVO{ImgBase64: imgBase64}, c))
 }
 
 // SendEmailVerificationCode godoc
@@ -89,11 +89,11 @@ func SendEmailVerificationCode(c echo.Context) error {
 	exists, err := global.RedisClient.Exists(context.Background(), key).Result()
 	if err != nil {
 		utils.BizLogger(c).Errorf("检查邮箱验证码是否有效失败: %v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizErr.New(bizErr.ServerError), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError), c))
 	}
 
 	if exists > 0 {
-		return c.JSON(http.StatusBadRequest, vo.Fail(nil, bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
 	}
 
 	// 生成并缓存验证码
@@ -101,7 +101,7 @@ func SendEmailVerificationCode(c echo.Context) error {
 	err = global.RedisClient.Set(context.Background(), key, strconv.Itoa(code), EmailVerificationCodeCacheExpiration).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("邮箱验证码写入缓存失败: %v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizErr.New(bizErr.ServerError), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError), c))
 	}
 
 	// 发送验证码邮件
@@ -111,7 +111,7 @@ func SendEmailVerificationCode(c echo.Context) error {
 	if !success {
 		utils.BizLogger(c).Errorf("邮箱验证码发送失败，邮箱地址: %s, 错误: %v", email, err)
 		global.RedisClient.Del(context.Background(), key)
-		return c.JSON(http.StatusInternalServerError, vo.Fail("邮箱验证码发送失败", bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("邮箱验证码发送成功, 请注意查收！", c))

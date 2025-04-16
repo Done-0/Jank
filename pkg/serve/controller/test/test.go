@@ -95,7 +95,7 @@ func TestSuccRes(c echo.Context) error {
 // @Router       /test/testErr [get]
 func TestErrRes(c echo.Context) error {
 	utils.BizLogger(c).Info("测试失败响应...")
-	return c.JSON(http.StatusInternalServerError, vo.Fail(bizErr.New(bizErr.ServerError), nil, c))
+	return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizErr.New(bizErr.ServerError), c))
 }
 
 // TestErrorMiddleware         @Summary    测试错误处理中间件接口

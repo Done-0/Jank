@@ -11,7 +11,7 @@ import (
 func GetTotalAccounts() (int64, error) {
 	var count int64
 	if err := global.DB.Model(&account.Account{}).Where("deleted = ?", false).Count(&count).Error; err != nil {
-		return 0, fmt.Errorf("获取用户总数失败: %v", err)
+		return 0, fmt.Errorf("获取用户总数失败: %w", err)
 	}
 	return count, nil
 }
@@ -20,7 +20,7 @@ func GetTotalAccounts() (int64, error) {
 func GetAccountByEmail(email string) (*account.Account, error) {
 	var user account.Account
 	if err := global.DB.Where("email = ? AND deleted = ?", email, false).First(&user).Error; err != nil {
-		return nil, fmt.Errorf("获取用户失败: %v", err)
+		return nil, fmt.Errorf("获取用户失败: %w", err)
 	}
 	return &user, nil
 }
@@ -29,7 +29,7 @@ func GetAccountByEmail(email string) (*account.Account, error) {
 func GetAccountByAccountID(accountID int64) (*account.Account, error) {
 	var user account.Account
 	if err := global.DB.Where("id = ? AND deleted = ?", accountID, false).First(&user).Error; err != nil {
-		return nil, fmt.Errorf("获取用户失败: %v", err)
+		return nil, fmt.Errorf("获取用户失败: %w", err)
 	}
 	return &user, nil
 }
@@ -37,7 +37,7 @@ func GetAccountByAccountID(accountID int64) (*account.Account, error) {
 // CreateAccount 创建新用户
 func CreateAccount(acc *account.Account) error {
 	if err := global.DB.Create(acc).Error; err != nil {
-		return fmt.Errorf("创建用户失败: %v", err)
+		return fmt.Errorf("创建用户失败: %w", err)
 	}
 	return nil
 }
@@ -45,7 +45,7 @@ func CreateAccount(acc *account.Account) error {
 // UpdateAccount 更新账户信息
 func UpdateAccount(acc *account.Account) error {
 	if err := global.DB.Save(acc).Error; err != nil {
-		return fmt.Errorf("更新账户失败: %v", err)
+		return fmt.Errorf("更新账户失败: %w", err)
 	}
 	return nil
 }
