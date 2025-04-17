@@ -39,7 +39,7 @@ func SendImgVerificationCode(c echo.Context) error {
 	email := c.QueryParam("email")
 	if email == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
-		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizErr.New(bizErr.UnKnowErr), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizErr.New(bizErr.BadRequest), c))
 	}
 
 	key := ImgVerificationCodeCachePrefix + email
@@ -75,12 +75,12 @@ func SendEmailVerificationCode(c echo.Context) error {
 	email := c.QueryParam("email")
 	if email == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
-		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizErr.New(bizErr.BadRequest), c))
 	}
 
 	if !utils.ValidEmail(email) {
 		utils.BizLogger(c).Errorf("邮箱格式无效: %s", email)
-		return c.JSON(http.StatusBadRequest, vo.Fail("邮箱格式无效", bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail("邮箱格式无效", bizErr.New(bizErr.BadRequest), c))
 	}
 
 	key := EmailVerificationCodeCacheKeyPrefix + email
@@ -91,9 +91,8 @@ func SendEmailVerificationCode(c echo.Context) error {
 		utils.BizLogger(c).Errorf("检查邮箱验证码是否有效失败: %v", err)
 		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError), c))
 	}
-
 	if exists > 0 {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.SendEmailVerificationCodeFail), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError), c))
 	}
 
 	// 生成并缓存验证码

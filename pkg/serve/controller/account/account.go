@@ -68,11 +68,11 @@ func RegisterAcc(c echo.Context) error {
 	}
 
 	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "图形验证码校验失败"), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "邮箱验证码校验失败"), c))
 	}
 
 	acc, err := service.RegisterAcc(req, c)
@@ -107,12 +107,12 @@ func LoginAccount(c echo.Context) error {
 	}
 
 	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendImgVerificationCodeFail, "图形验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "图形验证码校验失败"), c))
 	}
 
 	response, err := service.LoginAcc(req, c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -161,7 +161,7 @@ func ResetPassword(c echo.Context) error {
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.SendEmailVerificationCodeFail, "邮箱验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "邮箱验证码校验失败"), c))
 	}
 
 	err := service.ResetPassword(req, c)

@@ -1,8 +1,13 @@
 package banner
 
-import "fmt"
+import (
+	"fmt"
 
-func InitBanner() {
+	"github.com/labstack/echo/v4"
+)
+
+func InitBanner(app *echo.Echo) {
+	app.HideBanner = true
 	banner := `
    ╔══════════════════════════════════════╗
    ║       ██╗ █████╗ ███╗   ██╗██╗  ██╗  ║

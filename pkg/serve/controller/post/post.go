@@ -28,7 +28,7 @@ import (
 func GetOnePost(c echo.Context) error {
 	req := new(dto.GetOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -82,7 +82,7 @@ func GetAllPosts(c echo.Context) error {
 func CreateOnePost(c echo.Context) error {
 	req := new(dto.CreateOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -114,7 +114,7 @@ func CreateOnePost(c echo.Context) error {
 func UpdateOnePost(c echo.Context) error {
 	req := new(dto.UpdateOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -146,7 +146,7 @@ func UpdateOnePost(c echo.Context) error {
 func DeleteOnePost(c echo.Context) error {
 	req := new(dto.DeleteOnePostRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)

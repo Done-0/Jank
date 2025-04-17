@@ -24,8 +24,9 @@ func Start() {
 
 	// 初始化 echo 实例
 	app := echo.New()
-	app.HideBanner = true
-	banner.InitBanner()
+
+	// 初始化 banner
+	banner.InitBanner(app)
 
 	// 初始化中间件
 	middleware.InitMiddleware(app)

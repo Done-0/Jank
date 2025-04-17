@@ -36,7 +36,8 @@ func initSwagger() {
 		time.Sleep(2 * time.Second)
 		config, err := configs.LoadConfig()
 		if err != nil {
-			global.SysLog.Fatalf("配置加载失败: %v", err)
+			global.SysLog.Fatalf("加载 Swagger 配置失败: %v", err)
+			return
 		}
 
 		docs.SwaggerInfo.Title = "Jank Blog API"

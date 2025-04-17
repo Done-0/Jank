@@ -28,12 +28,15 @@ var emailServers = map[string]struct {
 func SendEmail(content string, toEmail []string) (bool, error) {
 	config, err := configs.LoadConfig()
 	if err != nil {
-		global.SysLog.Errorf("加载 SMTP Auth 配置失败, toEmail: %v, 错误信息: %v", toEmail, err)
+		global.SysLog.Errorf("加载邮件配置失败, toEmail: %v, 错误信息: %v", toEmail, err)
 		return false, fmt.Errorf("加载邮件配置失败: %v", err)
 	}
 
-	// 获取邮箱类型和对应的服务器配置
+	// 获取SMTP相关配置
+	fromEmail := config.AppConfig.FromEmail
 	emailType := config.AppConfig.EmailType
+
+	// 获取邮箱类型和对应的服务器配置
 	serverConfig, ok := emailServers[emailType]
 	if !ok || emailType == "" {
 		emailType = "qq"
@@ -42,13 +45,13 @@ func SendEmail(content string, toEmail []string) (bool, error) {
 	}
 
 	e := email.NewEmail()
-	e.From = config.AppConfig.FromEmail
+	e.From = fromEmail
 	e.To = toEmail
 	e.Subject = SUBJECT
 	e.Text = []byte(content)
 
 	smtpAddr := serverConfig.Server + serverConfig.Port
-	auth := smtp.PlainAuth("", config.AppConfig.FromEmail, config.AppConfig.EmailSmtp, serverConfig.Server)
+	auth := smtp.PlainAuth("", fromEmail, config.AppConfig.EmailSmtp, serverConfig.Server)
 
 	if err := e.Send(smtpAddr, auth); err != nil {
 		global.SysLog.Errorf("发送邮件失败, toEmail: %v, 错误信息: %v", toEmail, err)

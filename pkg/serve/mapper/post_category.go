@@ -12,10 +12,6 @@ import (
 
 // CreatePostCategory 创建文章-类目关联
 func CreatePostCategory(postID, categoryID int64) error {
-	if categoryID == 0 {
-		return nil
-	}
-
 	postCategory := &association.PostCategory{
 		PostID:     postID,
 		CategoryID: categoryID,
@@ -32,8 +28,7 @@ func GetPostCategory(postID int64) (*association.PostCategory, error) {
 	err := global.DB.Where("post_id = ? AND deleted = ?", postID, false).First(&postCategory).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			// 记录未找到不是错误，返回 nil
-			return nil, nil
+			return nil, fmt.Errorf("获取文章-类目关联失败: %w", err)
 		}
 		return nil, fmt.Errorf("获取文章-类目关联失败: %w", err)
 	}
@@ -42,18 +37,12 @@ func GetPostCategory(postID int64) (*association.PostCategory, error) {
 
 // UpdatePostCategory 更新文章-类目关联
 func UpdatePostCategory(postID, categoryID int64) error {
-	if categoryID == 0 {
-		return DeletePostCategory(postID)
-	}
-
-	// 检查文章-类目关联是否存在
 	var exists int64
 	if err := global.DB.Model(&association.PostCategory{}).
 		Where("post_id = ? AND deleted = ?", postID, false).
 		Count(&exists).Error; err != nil {
 		return fmt.Errorf("检查文章-类目关联失败: %w", err)
 	}
-
 	if exists > 0 {
 		if err := global.DB.Model(&association.PostCategory{}).
 			Where("post_id = ? AND deleted = ?", postID, false).

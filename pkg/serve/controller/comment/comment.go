@@ -26,7 +26,7 @@ import (
 func GetOneComment(c echo.Context) error {
 	req := new(dto.GetOneCommentRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -55,7 +55,7 @@ func GetOneComment(c echo.Context) error {
 func GetCommentGraph(c echo.Context) error {
 	req := new(dto.GetCommentGraphRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -84,7 +84,7 @@ func GetCommentGraph(c echo.Context) error {
 func CreateOneComment(c echo.Context) error {
 	req := new(dto.CreateCommentRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
@@ -114,7 +114,7 @@ func CreateOneComment(c echo.Context) error {
 func DeleteOneComment(c echo.Context) error {
 	req := new(dto.DeleteCommentRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)

@@ -59,9 +59,14 @@ type Config struct {
 	SwaggerConfig SwaggerConfig  `mapstructure:"swagger"`
 }
 
+// CfgPath 配置文件路径
+const (
+	CfgPath = "./configs/config.yml"
+)
+
 // LoadConfig 加载配置文件
 func LoadConfig() (*Config, error) {
-	viper.SetConfigFile("./configs/config.yml")
+	viper.SetConfigFile(CfgPath)
 
 	err := viper.ReadInConfig()
 	if err != nil {

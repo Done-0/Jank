@@ -16,8 +16,8 @@ var CodeMsg = map[int]string{
 	ServerError: "服务端异常",
 	BadRequest:  "错误请求",
 
-	SendImgVerificationCodeFail:   "发送图形验证码失败",
-	SendEmailVerificationCodeFail: "发送邮箱验证码失败",
+	SendImgVerificationCodeFail:   "图形验证码发送失败",
+	SendEmailVerificationCodeFail: "邮箱验证码发送失败",
 }
 
 func GetMessage(code int) string {

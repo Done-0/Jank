@@ -24,6 +24,7 @@ func initLogger() {
 	cfg, err := configs.LoadConfig()
 	if err != nil {
 		log.Fatalf("初始化日志组件时加载配置失败: %v", err)
+		return
 	}
 
 	logFilePath := cfg.LogConfig.LogFilePath
