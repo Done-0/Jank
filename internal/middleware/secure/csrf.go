@@ -13,7 +13,6 @@ import (
 
 // InitCSRF 初始化 CSRF 中间件，使用默认配置
 func InitCSRF() echo.MiddlewareFunc {
-	// 使用默认配置生成中间件
 	return csrfWithConfig(defaultCSRFConfig)
 }
 

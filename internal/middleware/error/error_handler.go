@@ -12,8 +12,8 @@ import (
 	"jank.com/jank_blog/pkg/vo"
 )
 
-// InitGlobalError 全局错误处理中间件
-func InitGlobalError() echo.MiddlewareFunc {
+// InitError 全局错误处理中间件
+func InitError() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if err := next(c); err != nil {

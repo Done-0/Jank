@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitBanner(app *echo.Echo) {
+func New(app *echo.Echo) {
 	app.HideBanner = true
 	banner := `
    ╔══════════════════════════════════════╗
