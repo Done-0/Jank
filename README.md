@@ -108,6 +108,11 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    EMAIL_TYPE: "qq" # 邮箱类型，可选值: qq, gmail, outlook
    FROM_EMAIL: "<FROM_EMAIL>" # 发件人邮箱
    EMAIL_SMTP: "<EMAIL_SMTP>" # SMTP 授权码
+
+   # Swagger 相关
+   swagger:
+    SWAGGER_HOST: "localhost:9010" # 启用后访问 http://localhost:9010/swagger/index.html 页面获取 Swagger 可视化文档
+    SWAGGER_ENABLED: "true" # 是否启用Swagger，可选值: true, false
    ```
 
 3. **启动服务**：  
@@ -130,7 +135,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
    ```
 
 4. **访问接口**：  
-   本地启动应用后，浏览器访问 [http://localhost:9010/ping](http://localhost:9010/ping)
+   本地启动应用后，浏览器访问 [http://localhost:9010/testPing](http://localhost:9010/testPing)
 
 ## Docker 容器部署（postgres）
 

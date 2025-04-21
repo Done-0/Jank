@@ -60,6 +60,7 @@ func New() {
 		case fileErr != nil:
 			log.Printf("创建日志文件失败: %v，使用标准输出", fileErr)
 			logger.SetOutput(os.Stdout)
+			global.LogFile = nil
 		default:
 			logger.SetOutput(fileHandle)
 			global.LogFile = fileHandle
@@ -81,6 +82,8 @@ func New() {
 		}
 
 		logger.AddHook(lfshook.NewHook(writeMap, formatter))
+
+		global.LogFile = writer
 	}
 
 	global.SysLog = logger

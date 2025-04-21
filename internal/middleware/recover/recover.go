@@ -1,4 +1,4 @@
-package recoverMiddleware
+package recover_middleware
 
 import (
 	"runtime"

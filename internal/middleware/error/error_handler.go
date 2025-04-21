@@ -1,4 +1,4 @@
-package errorMiddleware
+package error_middleware
 
 import (
 	"errors"

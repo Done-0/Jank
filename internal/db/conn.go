@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	DialectPostgres = "postgres"
-	DialectSqlite   = "sqlite"
-	DialectMySQL    = "mysql"
+	DIALECT_POSTGRES = "postgres"
+	DIALECT_SQLITE   = "sqlite"
+	DIALECT_MYSQL    = "mysql"
 )
 
 // New 初始化数据库连接
@@ -26,12 +26,12 @@ func New(config *configs.Config) {
 	var err error
 
 	switch config.DBConfig.DBDialect {
-	case DialectSqlite:
+	case DIALECT_SQLITE:
 		global.DB, err = connectToDB(config, config.DBConfig.DBName)
 		if err != nil {
 			global.SysLog.Fatalf("连接 SQLite 数据库失败: %v", err)
 		}
-	case DialectPostgres, DialectMySQL:
+	case DIALECT_POSTGRES, DIALECT_MYSQL:
 		systemDB, err := connectToSystemDB(config)
 		if err != nil {
 			global.SysLog.Fatalf("连接系统数据库失败: %v", err)
@@ -61,9 +61,9 @@ func New(config *configs.Config) {
 // connectToSystemDB 连接到系统数据库
 func connectToSystemDB(config *configs.Config) (*gorm.DB, error) {
 	switch config.DBConfig.DBDialect {
-	case DialectPostgres:
+	case DIALECT_POSTGRES:
 		return connectToDB(config, "postgres")
-	case DialectMySQL:
+	case DIALECT_MYSQL:
 		return connectToDB(config, "information_schema")
 	default:
 		return nil, fmt.Errorf("不支持的数据库类型: %s", config.DBConfig.DBDialect)
@@ -73,9 +73,9 @@ func connectToSystemDB(config *configs.Config) (*gorm.DB, error) {
 // ensureDBExists 确保数据库存在，不存在则创建
 func ensureDBExists(db *gorm.DB, config *configs.Config) error {
 	switch config.DBConfig.DBDialect {
-	case DialectPostgres:
+	case DIALECT_POSTGRES:
 		return ensurePostgresDBExists(db, config.DBConfig.DBName, config.DBConfig.DBUser)
-	case DialectMySQL:
+	case DIALECT_MYSQL:
 		return ensureMySQLDBExists(db, config.DBConfig.DBName)
 	default:
 		return nil
@@ -95,11 +95,11 @@ func connectToDB(config *configs.Config, dbName string) (*gorm.DB, error) {
 // getDialector 根据数据库类型获取对应的驱动器
 func getDialector(config *configs.Config, dbName string) (gorm.Dialector, error) {
 	switch config.DBConfig.DBDialect {
-	case DialectPostgres:
+	case DIALECT_POSTGRES:
 		return getPostgresDialector(config, dbName), nil
-	case DialectSqlite:
+	case DIALECT_SQLITE:
 		return getSqliteDialector(config, dbName)
-	case DialectMySQL:
+	case DIALECT_MYSQL:
 		return getMySQLDialector(config, dbName), nil
 	default:
 		return nil, fmt.Errorf("不支持的数据库类型: %s", config.DBConfig.DBDialect)

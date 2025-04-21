@@ -51,7 +51,8 @@ type LogConfig struct {
 
 // SwaggerConfig Swagger配置
 type SwaggerConfig struct {
-	SwaggerHost string `mapstructure:"SWAGGER_HOST"`
+	SwaggerHost    string `mapstructure:"SWAGGER_HOST"`
+	SwaggerEnabled string `mapstructure:"SWAGGER_ENABLED"`
 }
 
 // Config 总配置结构

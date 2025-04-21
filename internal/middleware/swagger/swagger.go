@@ -1,11 +1,10 @@
-package swaggerMiddleware
+package swagger_middleware
 
 import (
 	"fmt"
 	"os/exec"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -33,7 +32,6 @@ func InitSwagger() echo.MiddlewareFunc {
 // 初始化 Swagger 配置信息
 func initSwagger() {
 	swaggerOnce.Do(func() {
-		time.Sleep(2 * time.Second)
 		config, err := configs.LoadConfig()
 		if err != nil {
 			global.SysLog.Fatalf("加载 Swagger 配置失败: %v", err)
@@ -51,7 +49,7 @@ func initSwagger() {
 		docs.SwaggerInfo.BasePath = "/"
 		docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
-		cmd := exec.Command("swag", "init")
+		cmd := exec.Command("swag", "init", "-g", "pkg/router/router.go")
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			global.SysLog.Fatalf("初始化 Swagger 文档失败，错误: %v\n输出信息: %s", err, string(output))

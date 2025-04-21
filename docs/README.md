@@ -153,7 +153,6 @@
                 "title": "文章标题6",
                 "image": "https://haowallpaper.com/link/common/file/previewFileImg/16019647630462336",
                 "visibility": "public",
-                "content_markdown": "",
                 "content_html": "这里将会是文章内容的 HTML 格式",
                 "category_ids": 13
               }
@@ -181,7 +180,6 @@
           "title": "文章标题1",
           "image": "https://haowallpaper.com/link/common/file/previewFileImg/15942630369381760",
           "visibility": "public",
-          "content_markdown": "",
           "content_html": "这里将会是文章内容的 HTML 格式",
           "category_ids": 12
         },
@@ -208,7 +206,6 @@
             "title": "文章标题7",
             "image": "https://haowallpaper.com/link/common/file/previewFileImg/16019647630462336",
             "visibility": "public",
-            "content_markdown": "",
             "content_html": "这里将会是文章内容的 HTML 格式",
             "category_ids": 13
           },
@@ -236,7 +233,6 @@
             "title": "文章标题1",
             "image": "https://haowallpaper.com/link/common/file/previewFileImg/15942630369381760",
             "visibility": "public",
-            "content_markdown": "",
             "content_html": "<p>文章内容 1</p>",
             "category_ids": 12
           },

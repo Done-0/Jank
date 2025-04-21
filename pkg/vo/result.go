@@ -39,7 +39,7 @@ func Fail(data interface{}, err error, c echo.Context) Result {
 	}
 
 	return Result{
-		Err:       bizErr.New(bizErr.ServerError),
+		Err:       bizErr.New(bizErr.SERVER_ERR),
 		Data:      data,
 		RequestId: c.Response().Header().Get(echo.HeaderXRequestID),
 		TimeStamp: time.Now().Unix(),

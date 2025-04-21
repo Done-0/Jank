@@ -1,4 +1,4 @@
-package authMiddleware
+package auth_middleware
 
 import (
 	"fmt"
@@ -23,8 +23,8 @@ type JWTConfig struct {
 var DefaultJWTConfig = JWTConfig{
 	Authorization: "Authorization",
 	TokenPrefix:   "Bearer ",
-	RefreshToken:  "Refresh_Token",
-	UserCache:     "User_Cache",
+	RefreshToken:  "REFRESH_TOKEN",
+	UserCache:     "USER_CACHE",
 }
 
 // AuthMiddleware 处理 JWT 认证中间件

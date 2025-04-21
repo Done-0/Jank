@@ -1,4 +1,4 @@
-package logger
+package logger_middleware
 
 import (
 	"bytes"
@@ -193,11 +193,11 @@ func loggerWithConfig(config loggerConfig) echo.MiddlewareFunc {
 			log := global.SysLog.WithFields(fields)
 			switch {
 			case status >= 500:
-				log.Error(biz_err.GetMessage(biz_err.ServerError))
+				log.Error(biz_err.GetMessage(biz_err.SERVER_ERR))
 			case status >= 400:
-				log.Warn(biz_err.GetMessage(biz_err.BadRequest))
+				log.Warn(biz_err.GetMessage(biz_err.BAD_REQUEST))
 			default:
-				log.Info(biz_err.GetMessage(biz_err.Success))
+				log.Info(biz_err.GetMessage(biz_err.SUCCESS))
 			}
 
 			return err

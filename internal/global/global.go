@@ -1,7 +1,7 @@
 package global
 
 import (
-	"os"
+	"io"
 
 	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
@@ -16,5 +16,5 @@ var (
 var (
 	SysLog  *logrus.Logger // 全局系统级日志对象
 	BizLog  *logrus.Entry  // 全局业务级日志对象
-	LogFile *os.File       // 全局日志文件对象
+	LogFile io.Closer      // 全局日志文件对象
 )

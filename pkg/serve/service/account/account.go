@@ -24,8 +24,8 @@ var (
 )
 
 const (
-	UserCache           = "User_Cache"
-	UserCacheExpireTime = time.Hour * 2 // Access Token 有效期
+	USER_CACHE             = "USER_CACHE"
+	USER_CACHE_EXPIRE_TIME = time.Hour * 2 // Access Token 有效期
 )
 
 // GetAccount 获取用户信息逻辑
@@ -114,9 +114,9 @@ func LoginAcc(req *dto.LoginRequest, c echo.Context) (*account.LoginVO, error) {
 		return nil, fmt.Errorf("token 生成失败: %w", err)
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d", UserCache, acc.ID)
+	cacheKey := fmt.Sprintf("%s:%d", USER_CACHE, acc.ID)
 
-	err = global.RedisClient.Set(context.Background(), cacheKey, accessTokenString, UserCacheExpireTime).Err()
+	err = global.RedisClient.Set(context.Background(), cacheKey, accessTokenString, USER_CACHE_EXPIRE_TIME).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("登录时设置缓存失败: %v", err)
 		return nil, fmt.Errorf("登录时设置缓存失败: %w", err)
@@ -147,7 +147,7 @@ func LogoutAcc(c echo.Context) error {
 		return fmt.Errorf("解析 access token 失败: %w", err)
 	}
 
-	cacheKey := fmt.Sprintf("%s:%d", UserCache, accountID)
+	cacheKey := fmt.Sprintf("%s:%d", USER_CACHE, accountID)
 	err = global.RedisClient.Del(c.Request().Context(), cacheKey).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("删除 Redis 缓存失败: %v", err)

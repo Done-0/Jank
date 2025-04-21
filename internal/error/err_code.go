@@ -1,28 +1,28 @@
 package biz_err
 
 const (
-	Success     = 200
-	UnKnowErr   = 00000
-	ServerError = 10000
-	BadRequest  = 20000
+	SUCCESS     = 200
+	UNKNOWN_ERR = 00000
+	SERVER_ERR  = 10000
+	BAD_REQUEST = 20000
 
-	SendImgVerificationCodeFail   = 10001
-	SendEmailVerificationCodeFail = 10002
+	SEND_IMG_VERIFICATION_CODE_FAIL   = 10001
+	SEND_EMAIL_VERIFICATION_CODE_FAIL = 10002
 )
 
 var CodeMsg = map[int]string{
-	Success:     "请求成功",
-	UnKnowErr:   "未知业务异常",
-	ServerError: "服务端异常",
-	BadRequest:  "错误请求",
+	SUCCESS:     "请求成功",
+	UNKNOWN_ERR: "未知业务异常",
+	SERVER_ERR:  "服务端异常",
+	BAD_REQUEST: "错误请求",
 
-	SendImgVerificationCodeFail:   "图形验证码发送失败",
-	SendEmailVerificationCodeFail: "邮箱验证码发送失败",
+	SEND_IMG_VERIFICATION_CODE_FAIL:   "图形验证码发送失败",
+	SEND_EMAIL_VERIFICATION_CODE_FAIL: "邮箱验证码发送失败",
 }
 
 func GetMessage(code int) string {
 	if msg, ok := CodeMsg[code]; ok {
 		return msg
 	}
-	return CodeMsg[UnKnowErr]
+	return CodeMsg[UNKNOWN_ERR]
 }

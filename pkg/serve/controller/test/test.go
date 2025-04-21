@@ -18,7 +18,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Success      200  {string}  string  "Pong successfully!\n"
-// @Router       /test/ping [get]
+// @Router       /test/testPing [get]
 func TestPing(c echo.Context) error {
 	utils.BizLogger(c).Info("Ping...")
 	return c.String(http.StatusOK, "Pong successfully!\n")
@@ -30,7 +30,7 @@ func TestPing(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Success      200  {string}  string  "Hello, Jank 🎉!\n"
-// @Router       /test/hello [get]
+// @Router       /test/testHello [get]
 func TestHello(c echo.Context) error {
 	utils.BizLogger(c).Info("Hello, Jank!")
 	return c.String(http.StatusOK, "Hello, Jank 🎉!\n")
@@ -80,7 +80,7 @@ func TestRedis(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  vo.Result "测试成功响应成功!"
-// @Router       /test/testSuccess [get]
+// @Router       /test/testSuccessRes [get]
 func TestSuccRes(c echo.Context) error {
 	utils.BizLogger(c).Info("测试成功响应...")
 	return c.JSON(http.StatusOK, vo.Success("测试成功响应成功!", c))
@@ -92,10 +92,10 @@ func TestSuccRes(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Success      500  {object}  vo.Result
-// @Router       /test/testErr [get]
+// @Router       /test/testErrRes [get]
 func TestErrRes(c echo.Context) error {
 	utils.BizLogger(c).Info("测试失败响应...")
-	return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizErr.New(bizErr.ServerError), c))
+	return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizErr.New(bizErr.SERVER_ERR), c))
 }
 
 // TestErrorMiddleware         @Summary    测试错误处理中间件接口
@@ -116,7 +116,7 @@ func TestErrorMiddleware(c echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Success      200  {string}  string  "模拟耗时请求处理完成!\n"
-// @Router       /test/long [get]
+// @Router       /test/testLongReq [get]
 func TestLongReq(c echo.Context) error {
 	utils.BizLogger(c).Info("开始测试耗时请求...")
 	time.Sleep(20 * time.Second)

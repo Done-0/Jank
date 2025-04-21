@@ -2,10 +2,10 @@ package model
 
 import (
 	account "jank.com/jank_blog/internal/model/account"
+	association "jank.com/jank_blog/internal/model/association"
 	category "jank.com/jank_blog/internal/model/category"
 	comment "jank.com/jank_blog/internal/model/comment"
 	post "jank.com/jank_blog/internal/model/post"
-	association "jank.com/jank_blog/internal/model/association"
 )
 
 // GetAllModels 获取并注册所有模型

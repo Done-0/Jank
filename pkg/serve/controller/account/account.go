@@ -9,7 +9,7 @@ import (
 	"jank.com/jank_blog/internal/utils"
 	"jank.com/jank_blog/pkg/serve/controller/account/dto"
 	"jank.com/jank_blog/pkg/serve/controller/verification"
-	"jank.com/jank_blog/pkg/serve/service/account"
+	service "jank.com/jank_blog/pkg/serve/service/account"
 	"jank.com/jank_blog/pkg/vo"
 )
 
@@ -27,17 +27,17 @@ import (
 func GetAccount(c echo.Context) error {
 	req := new(dto.GetAccountRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
 	}
 
 	response, err := service.GetAccount(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -59,25 +59,25 @@ func GetAccount(c echo.Context) error {
 func RegisterAcc(c echo.Context) error {
 	req := new(dto.RegisterRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
 	}
 
 	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "图形验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "图形验证码校验失败"), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "邮箱验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "邮箱验证码校验失败"), c))
 	}
 
 	acc, err := service.RegisterAcc(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(acc, c))
@@ -98,21 +98,21 @@ func RegisterAcc(c echo.Context) error {
 func LoginAccount(c echo.Context) error {
 	req := new(dto.LoginRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
 	}
 
 	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "图形验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "图形验证码校验失败"), c))
 	}
 
 	response, err := service.LoginAcc(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success(response, c))
@@ -130,7 +130,7 @@ func LoginAccount(c echo.Context) error {
 // @Router       /account/logoutAccount [post]
 func LogoutAccount(c echo.Context) error {
 	if err := service.LogoutAcc(c); err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("用户注销成功", c))
@@ -147,26 +147,26 @@ func LogoutAccount(c echo.Context) error {
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "未授权，用户未登录"
 // @Failure      500     {object}   vo.Result         "服务器错误"
-// @security     BearerAuth
+// @Security     BearerAuth
 // @Router       /account/resetPassword [post]
 func ResetPassword(c echo.Context) error {
 	req := new(dto.ResetPwdRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BadRequest, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
 	}
 
 	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BadRequest, "邮箱验证码校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "邮箱验证码校验失败"), c))
 	}
 
 	err := service.ResetPassword(req, c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.ServerError, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
 	}
 
 	return c.JSON(http.StatusOK, vo.Success("密码重置成功", c))

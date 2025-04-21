@@ -15,337 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/acc-role/assignRoleToAcc": {
-            "post": {
-                "description": "根据用户ID和角色ID为用户分配角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户角色管理"
-                ],
-                "summary": "为用户分配角色",
-                "parameters": [
-                    {
-                        "description": "分配角色信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "用户角色分配成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/acc-role/deleteRoleFromAcc": {
-            "post": {
-                "description": "根据用户ID和角色ID移除用户的角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户角色管理"
-                ],
-                "summary": "移除用户角色",
-                "parameters": [
-                    {
-                        "description": "移除角色信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "角色删除成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/acc-role/getRolesByAcc": {
-            "post": {
-                "description": "根据用户ID获取用户的所有角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户角色管理"
-                ],
-                "summary": "获取用户角色",
-                "parameters": [
-                    {
-                        "description": "获取用户角色信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.GetRolesByAccRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "角色列表",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/account.RoleVo"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/acc-role/updateRoleForAcc": {
-            "post": {
-                "description": "根据用户ID和角色ID更新用户角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户角色管理"
-                ],
-                "summary": "更新用户角色",
-                "parameters": [
-                    {
-                        "description": "更新角色信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "角色更新成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/account/getAccount": {
             "post": {
                 "description": "根据提供的邮箱获取对应用户的详细信息",
@@ -382,7 +51,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/account.GetAccountVo"
+                                            "$ref": "#/definitions/account.GetAccountVO"
                                         }
                                     }
                                 }
@@ -447,7 +116,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/account.LoginVo"
+                                            "$ref": "#/definitions/account.LoginVO"
                                         }
                                     }
                                 }
@@ -700,7 +369,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.CategoriesVo"
+                                            "$ref": "#/definitions/category.CategoriesVO"
                                         }
                                     }
                                 }
@@ -755,7 +424,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.CategoriesVo"
+                                            "$ref": "#/definitions/category.CategoriesVO"
                                         }
                                     }
                                 }
@@ -819,7 +488,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/category.CategoriesVo"
+                                                "$ref": "#/definitions/category.CategoriesVO"
                                             }
                                         }
                                     }
@@ -875,7 +544,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/category.CategoriesVo"
+                                                "$ref": "#/definitions/category.CategoriesVO"
                                             }
                                         }
                                     }
@@ -926,7 +595,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.CategoriesVo"
+                                            "$ref": "#/definitions/category.CategoriesVO"
                                         }
                                     }
                                 }
@@ -996,7 +665,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/category.CategoriesVo"
+                                            "$ref": "#/definitions/category.CategoriesVO"
                                         }
                                     }
                                 }
@@ -1060,7 +729,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/comment.CommentsVo"
+                                            "$ref": "#/definitions/comment.CommentsVO"
                                         }
                                     }
                                 }
@@ -1110,7 +779,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/comment.CommentsVo"
+                                            "$ref": "#/definitions/comment.CommentsVO"
                                         }
                                     }
                                 }
@@ -1168,7 +837,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/comment.CommentsVo"
+                                                "$ref": "#/definitions/comment.CommentsVO"
                                             }
                                         }
                                     }
@@ -1180,308 +849,6 @@ const docTemplate = `{
                         "description": "服务器错误",
                         "schema": {
                             "$ref": "#/definitions/vo.Result"
-                        }
-                    }
-                }
-            }
-        },
-        "/permission/createOnePermission": {
-            "post": {
-                "description": "创建新的权限，权限信息包括代码和描述",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "权限管理"
-                ],
-                "summary": "创建权限",
-                "parameters": [
-                    {
-                        "description": "权限信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreatePermissionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "创建成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/account.PermissionVo"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/permission/deleteOnePermission": {
-            "post": {
-                "description": "根据权限ID删除权限",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "权限管理"
-                ],
-                "summary": "删除权限",
-                "parameters": [
-                    {
-                        "description": "权限ID",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.DeletePermissionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "删除成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/permission/listAllPermissions": {
-            "post": {
-                "description": "获取系统中所有权限的信息",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "权限管理"
-                ],
-                "summary": "获取所有权限",
-                "responses": {
-                    "200": {
-                        "description": "获取成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/account.PermissionVo"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/permission/updateOnePermission": {
-            "post": {
-                "description": "更新权限的代码和描述",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "权限管理"
-                ],
-                "summary": "更新权限",
-                "parameters": [
-                    {
-                        "description": "权限信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.UpdatePermissionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "更新成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/account.PermissionVo"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
                         }
                     }
                 }
@@ -1528,7 +895,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/post.PostsVo"
+                                            "$ref": "#/definitions/post.PostsVO"
                                         }
                                     }
                                 }
@@ -1648,7 +1015,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/post.PostsVo"
+                                                "$ref": "#/definitions/post.PostsVO"
                                             }
                                         }
                                     }
@@ -1701,7 +1068,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/post.PostsVo"
+                                            "$ref": "#/definitions/post.PostsVO"
                                         }
                                     }
                                 }
@@ -1770,7 +1137,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/post.PostsVo"
+                                            "$ref": "#/definitions/post.PostsVO"
                                         }
                                     }
                                 }
@@ -1798,706 +1165,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/role-permission/assignPermissionToRole": {
-            "post": {
-                "description": "根据角色ID和权限ID为角色分配权限",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色权限管理"
-                ],
-                "summary": "为角色分配权限",
-                "parameters": [
-                    {
-                        "description": "分配权限信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignPermissionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "角色权限分配成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role-permission/deletePermissionFromRole": {
-            "post": {
-                "description": "根据角色ID和权限ID移除角色的权限",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色权限管理"
-                ],
-                "summary": "移除角色权限",
-                "parameters": [
-                    {
-                        "description": "移除权限信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignPermissionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "角色权限删除成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role-permission/getPermissionsByRole": {
-            "post": {
-                "description": "根据角色ID获取角色的所有权限",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色权限管理"
-                ],
-                "summary": "获取角色权限",
-                "parameters": [
-                    {
-                        "description": "获取角色权限信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.GetPermissionsByRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "权限列表",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/account.PermissionVo"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role-permission/updatePermissionForRole": {
-            "post": {
-                "description": "根据角色ID和权限ID更新角色权限",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色权限管理"
-                ],
-                "summary": "更新角色权限",
-                "parameters": [
-                    {
-                        "description": "更新权限信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignPermissionRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "权限更新成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role/createOneRole": {
-            "post": {
-                "description": "创建一个新的角色，角色信息包括代码和描述",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "创建角色",
-                "parameters": [
-                    {
-                        "description": "角色信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "创建成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/account.RoleVo"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role/deleteOneRole": {
-            "post": {
-                "description": "根据角色ID删除角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "删除角色",
-                "parameters": [
-                    {
-                        "description": "角色ID",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.DeleteRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "删除成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role/listAllRoles": {
-            "post": {
-                "description": "获取系统中所有角色的信息",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "获取所有角色",
-                "responses": {
-                    "200": {
-                        "description": "获取成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/account.RoleVo"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/role/updateOneRole": {
-            "post": {
-                "description": "更新角色的代码和描述",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "更新角色",
-                "parameters": [
-                    {
-                        "description": "角色信息",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.UpdateRoleRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "更新成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/account.RoleVo"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "参数错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "服务器错误",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/vo.Result"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/test/hello": {
-            "get": {
-                "description": "测试接口",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "test"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Hello, Jank 🎉!\\n",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/test/long": {
-            "get": {
-                "description": "模拟一个耗时请求",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "test"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "模拟耗时请求处理完成!\\n",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/test/ping": {
-            "get": {
-                "description": "测试接口",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "test"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Pong successfully!\\n",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/test/testErr": {
+        "/test/testErrRes": {
             "get": {
                 "description": "用于测试错误响应",
                 "consumes": [
@@ -2541,6 +1209,28 @@ const docTemplate = `{
                 }
             }
         },
+        "/test/testHello": {
+            "get": {
+                "description": "测试接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hello, Jank 🎉!\\n",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/test/testLogger": {
             "get": {
                 "description": "用于测试日志功能",
@@ -2556,6 +1246,50 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "测试日志成功!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testLongReq": {
+            "get": {
+                "description": "模拟一个耗时请求",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "模拟耗时请求处理完成!\\n",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/test/testPing": {
+            "get": {
+                "description": "测试接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pong successfully!\\n",
                         "schema": {
                             "type": "string"
                         }
@@ -2585,7 +1319,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/test/testSuccess": {
+        "/test/testSuccessRes": {
             "get": {
                 "description": "用于测试成功响应",
                 "consumes": [
@@ -2631,7 +1365,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "验证码发送成功, 请注意查收邮件",
+                        "description": "邮箱验证码发送成功, 请注意查收邮件",
                         "schema": {
                             "$ref": "#/definitions/vo.Result"
                         }
@@ -2643,7 +1377,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "服务器错误，验证码发送失败",
+                        "description": "服务器错误，邮箱验证码发送失败",
                         "schema": {
                             "$ref": "#/definitions/vo.Result"
                         }
@@ -2736,7 +1470,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "account.GetAccountVo": {
+        "account.GetAccountVO": {
             "description": "请求获取账户信息时所需参数",
             "type": "object",
             "properties": {
@@ -2751,7 +1485,7 @@ const docTemplate = `{
                 }
             }
         },
-        "account.LoginVo": {
+        "account.LoginVO": {
             "description": "登录成功后返回的访问令牌和刷新令牌",
             "type": "object",
             "properties": {
@@ -2763,44 +1497,14 @@ const docTemplate = `{
                 }
             }
         },
-        "account.PermissionVo": {
-            "description": "权限信息的返回结构",
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "account.RoleVo": {
-            "description": "角色信息的返回结构",
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "category.CategoriesVo": {
+        "category.CategoriesVO": {
             "description": "获取类目响应",
             "type": "object",
             "properties": {
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/category.CategoriesVo"
+                        "$ref": "#/definitions/category.CategoriesVO"
                     }
                 },
                 "description": {
@@ -2820,7 +1524,7 @@ const docTemplate = `{
                 }
             }
         },
-        "comment.CommentsVo": {
+        "comment.CommentsVO": {
             "description": "获取单个评论的响应",
             "type": "object",
             "properties": {
@@ -2836,45 +1540,13 @@ const docTemplate = `{
                 "replies": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/comment.CommentsVo"
+                        "$ref": "#/definitions/comment.CommentsVO"
                     }
                 },
                 "reply_to_comment_id": {
                     "type": "integer"
                 },
                 "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.AssignPermissionRequest": {
-            "description": "分配权限给角色的请求结构",
-            "type": "object",
-            "required": [
-                "permission_id",
-                "role_id"
-            ],
-            "properties": {
-                "permission_id": {
-                    "type": "integer"
-                },
-                "role_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.AssignRoleRequest": {
-            "description": "用户分配角色的请求结构",
-            "type": "object",
-            "required": [
-                "account_id",
-                "role_id"
-            ],
-            "properties": {
-                "account_id": {
-                    "type": "integer"
-                },
-                "role_id": {
                     "type": "integer"
                 }
             }
@@ -2928,8 +1600,9 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
-                "category_ids": {
-                    "type": "string"
+                "category_id": {
+                    "type": "integer",
+                    "minimum": 0
                 },
                 "content_markdown": {
                     "type": "string"
@@ -2943,68 +1616,12 @@ const docTemplate = `{
                     "minLength": 1
                 },
                 "visibility": {
-                    "type": "string",
-                    "default": "private"
-                }
-            }
-        },
-        "dto.CreatePermissionRequest": {
-            "description": "创建权限时的请求结构",
-            "type": "object",
-            "required": [
-                "code",
-                "description"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CreateRoleRequest": {
-            "description": "创建角色时的请求结构",
-            "type": "object",
-            "required": [
-                "code",
-                "description"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
+                    "type": "boolean",
+                    "default": false
                 }
             }
         },
         "dto.DeleteOnePostRequest": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.DeletePermissionRequest": {
-            "description": "删除权限时的请求结构",
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.DeleteRoleRequest": {
-            "description": "删除角色时的请求结构",
             "type": "object",
             "required": [
                 "id"
@@ -3029,9 +1646,6 @@ const docTemplate = `{
         },
         "dto.GetOnePostRequest": {
             "type": "object",
-            "required": [
-                "id"
-            ],
             "properties": {
                 "id": {
                     "type": "integer",
@@ -3040,30 +1654,6 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "maxLength": 225
-                }
-            }
-        },
-        "dto.GetPermissionsByRoleRequest": {
-            "description": "获取角色权限请求所需参数",
-            "type": "object",
-            "required": [
-                "role_id"
-            ],
-            "properties": {
-                "role_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.GetRolesByAccRequest": {
-            "description": "获取角色请求所需参数",
-            "type": "object",
-            "required": [
-                "account_id"
-            ],
-            "properties": {
-                "account_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -3180,8 +1770,9 @@ const docTemplate = `{
                 "id"
             ],
             "properties": {
-                "category_ids": {
-                    "type": "string"
+                "category_id": {
+                    "type": "integer",
+                    "minimum": 0
                 },
                 "content_markdown": {
                     "type": "string"
@@ -3198,65 +1789,20 @@ const docTemplate = `{
                     "minLength": 0
                 },
                 "visibility": {
-                    "type": "string",
-                    "default": "private"
+                    "type": "boolean",
+                    "default": false
                 }
             }
         },
-        "dto.UpdatePermissionRequest": {
-            "description": "更新权限时的请求结构",
-            "type": "object",
-            "required": [
-                "code",
-                "description",
-                "id"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.UpdateRoleRequest": {
-            "description": "更新角色时的请求结构",
-            "type": "object",
-            "required": [
-                "code",
-                "description",
-                "id"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "post.PostsVo": {
+        "post.PostsVO": {
             "description": "获取帖子时返回的响应数据",
             "type": "object",
             "properties": {
-                "category_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                "category_id": {
+                    "type": "integer"
                 },
                 "content_html": {
-                    "type": "string"
-                },
-                "content_markdown": {
+                    "description": "ContentMarkdown string ` + "`" + `json:\"content_markdown\"` + "`" + `",
                     "type": "string"
                 },
                 "id": {
@@ -3269,7 +1815,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "visibility": {
-                    "type": "string"
+                    "type": "boolean"
                 }
             }
         },
@@ -3287,17 +1833,25 @@ const docTemplate = `{
                 "timeStamp": {}
             }
         }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "输入格式: Bearer {token}",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "localhost:9010",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Jank Blog API",
+	Description:      "This is the API documentation for Jank Blog.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
