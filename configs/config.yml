@@ -1,16 +1,16 @@
 # 应用相关
 app:
   APP_NAME: "JANK_BLOG"
-  APP_HOST: "localhost" # 如果使用docker，则改为"0.0.0.0"
+  APP_HOST: "127.0.0.1" # 如果使用docker，则改为"0.0.0.0"
   APP_PORT: "9010"
   EMAIL_TYPE: "qq" # 支持的邮箱类型: qq, gmail, outlook
-  FROM_EMAIL: "<FROM_EMAIL>"
-  EMAIL_SMTP: "<EMAIL_SMTP>"
+  FROM_EMAIL: "<FROM_EMAIL>" # 发件人邮箱
+  EMAIL_SMTP: "<EMAIL_SMTP>" # SMTP 授权码
 
 database:
   DB_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
   DB_NAME: "jank_db"
-  DB_HOST: "localhost" # 如果使用docker，则改为"postgres_db"
+  DB_HOST: "127.0.0.1" # 如果使用docker，则改为"postgres_db"
   DB_PORT: "5432"
   DB_USER: "<DATABASE_USER>"
   DB_PSW: "<DATABASE_PASSWORD>"
@@ -18,7 +18,7 @@ database:
 
 # Redis 相关
 redis:
-  REDIS_HOST: "localhost" # 如果使用docker，则改为"redis_db"
+  REDIS_HOST: "127.0.0.1" # 如果使用docker，则改为"redis_db"
   REDIS_PORT: "6379"
   REDIS_DB: "0"
   REDIS_PSW: ""
@@ -34,5 +34,5 @@ log:
 
 # Swagger 相关
 swagger:
-  SWAGGER_HOST: "localhost:9010" # 启用后访问 http://localhost:9010/swagger/index.html 页面获取 Swagger 可视化文档
-  SWAGGER_ENABLED: "false" # 是否启用Swagger，可选值: true, false
+  SWAGGER_HOST: "localhost:9010"
+  SWAGGER_ENABLED: "true" # 是否启用Swagger，可选值: true, false

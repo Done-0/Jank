@@ -52,7 +52,10 @@ func initSwagger() {
 		cmd := exec.Command("swag", "init", "-g", "pkg/router/router.go")
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			global.SysLog.Fatalf("初始化 Swagger 文档失败，错误: %v\n输出信息: %s", err, string(output))
+			global.SysLog.Errorf("初始化 Swagger 文档失败，错误: %v\n输出信息: %s", err, string(output))
+			global.SysLog.Info("继续启动服务，但 Swagger 文档可能不可用")
+		} else {
+			global.SysLog.Info("成功生成 Swagger 文档")
 		}
 
 		fmt.Printf("Swagger service started on: http://%s/swagger/index.html\n", docs.SwaggerInfo.Host)

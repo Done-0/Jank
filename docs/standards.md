@@ -272,6 +272,16 @@ import "../net" // 禁止使用相对路径引入外部包
 import "github.com/repo/proj/src/net"
 ```
 
+- 包名和导入路径不匹配，建议使用别名：
+
+```go
+// 错误示例
+import "jank.com/jank_blog/internal/model/account" // 此文件的实际包名为 model
+
+// 正确示例
+import model "jank.com/jank_blog/internal/model/account" // 使用 model 别名
+```
+
 ### 5. 错误处理
 
 - 不得丢弃任何有返回 err 的调用，禁止使用 `_` 丢弃错误，必须全部处理。
