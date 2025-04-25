@@ -254,7 +254,7 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 | 其他 | 1 | 36 | 0 | 6 | 1.0% |
 | **总计** | **86** | **3768** | **687** | **762** | **100%** |
 
-*注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-04-24*
+*注：统计数据由 GitHub Actions 自动更新，最后更新于 2025-04-25*
 *排除了 docs、tmp 目录和 go.mod、go.sum、LICENSE、.gitignore、.dockerignore、README.md、README_en.md 文件*
 ## 许可证
 
