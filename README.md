@@ -194,9 +194,9 @@ Jank 是一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发�
 
 ## 官方社区
 
-如果有任何疑问或建议，欢迎加入微信官方社区讨论。
+最新开发进度在 [Jank-Community](https://github.com/Jank-Community)，如果有任何疑问或建议，欢迎加入微信官方社区讨论。
 
-<img src="https://s2.loli.net/2025/05/02/dT6QShPUvRs1rIB.jpg" alt="官方社区" width="300" />
+<img src="https://s2.loli.net/2025/05/10/kLbM4tWTSe2fjXg.jpg" alt="官方社区" width="300" />
 
 > 注：因社群成员较多，请自觉遵守规范。  
 > 严禁讨论涉黄、赌、毒及政治敏感内容，禁止发布任何形式的不良广告。
