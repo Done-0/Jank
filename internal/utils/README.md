@@ -4,6 +4,7 @@
 
 ## 工具类列表
 
+- **db_transaction_utils**：数据库事务管理工具
 - **email_utils**: 邮箱相关工具，用于发送验证码和其它电子邮件
 - **img_verification_utils**: 图形验证码生成工具
 - **jwt_utils**: JWT 令牌生成、验证和刷新工具

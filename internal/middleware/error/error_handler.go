@@ -1,3 +1,6 @@
+// Package error_middleware 提供全局错误处理中间件
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package error_middleware
 
 import (
@@ -13,6 +16,8 @@ import (
 )
 
 // InitError 全局错误处理中间件
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func InitError() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -33,7 +38,7 @@ func InitError() echo.MiddlewareFunc {
 				logMessage := fmt.Sprintf("请求异常: %v | Method: %s | URI: %s | IP: %s | User-Agent: %s", err, requestMethod, requestURI, clientIP, userAgent)
 				global.SysLog.Error(logMessage)
 
-				return c.JSON(code, vo.Fail(nil, bizerr.New(code, err.Error()), c))
+				return c.JSON(code, vo.Fail(c, nil, bizerr.New(code, err.Error())))
 			}
 			return nil
 		}

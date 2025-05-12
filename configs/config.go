@@ -1,3 +1,6 @@
+// Package configs 提供应用程序配置加载和更新功能
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package configs
 
 import (
@@ -74,6 +77,11 @@ var (
 )
 
 // Init 初始化配置
+// 参数：
+//   - configPath: 配置文件路径
+//
+// 返回值：
+//   - error: 初始化过程中的错误
 func Init(configPath string) error {
 	viperInstance = viper.New()
 	viperInstance.SetConfigFile(configPath)
@@ -93,6 +101,9 @@ func Init(configPath string) error {
 }
 
 // LoadConfig 获取配置
+// 返回值：
+//   - *Config: 配置副本
+//   - error: 获取过程中的错误
 func LoadConfig() (*Config, error) {
 	configLock.RLock()
 	defer configLock.RUnlock()
@@ -109,8 +120,6 @@ func LoadConfig() (*Config, error) {
 func monitorConfigChanges() {
 	viperInstance.WatchConfig()
 	viperInstance.OnConfigChange(func(e fsnotify.Event) {
-		log.Printf("配置文件变更: %s", e.Name)
-
 		var newConfig Config
 		if err := viperInstance.Unmarshal(&newConfig); err != nil {
 			log.Printf("新配置解析失败: %v", err)
@@ -131,12 +140,20 @@ func monitorConfigChanges() {
 		globalConfig = &newConfig
 
 		for path, values := range changes {
-			log.Printf("配置变更: %s 从 [%v] 变为 [%v]", path, values[0], values[1])
+			log.Printf("配置项 [%s] 发生变化: %v -> %v", path, values[0], values[1])
 		}
 	})
 }
 
 // compareStructs 比较结构体并收集变更
+// 参数：
+//   - oldObj: 旧结构体
+//   - newObj: 新结构体
+//   - prefix: 字段路径前缀
+//   - changes: 记录变更的映射
+//
+// 返回值：
+//   - bool: 结构体类型是否一致
 func compareStructs(oldObj, newObj interface{}, prefix string, changes map[string][2]interface{}) bool {
 	oldVal := reflect.ValueOf(oldObj)
 	newVal := reflect.ValueOf(newObj)

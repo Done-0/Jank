@@ -1,3 +1,6 @@
+// Package cors_middleware 提供跨域资源共享中间件
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package cors_middleware
 
 import (
@@ -9,6 +12,9 @@ import (
 	"jank.com/jank_blog/internal/global"
 )
 
+// InitCORS 初始化 CORS 中间件
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func InitCORS() echo.MiddlewareFunc {
 	return corsWithConfig(defaultCORSConfig())
 }
@@ -22,6 +28,8 @@ type corsConfig struct {
 }
 
 // DefaultCORSConfig 提供了默认的 CORS 配置
+// 返回值：
+//   - corsConfig: CORS 配置
 func defaultCORSConfig() corsConfig {
 	return corsConfig{
 		AllowedOrigins:   []string{"*"},                                                                                                   // 默认允许所有域名
@@ -32,6 +40,11 @@ func defaultCORSConfig() corsConfig {
 }
 
 // corsWithConfig 返回一个 CORS 中间件函数
+// 参数：
+//   - config: CORS配置
+//
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func corsWithConfig(config corsConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

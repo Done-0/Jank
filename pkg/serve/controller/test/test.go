@@ -83,7 +83,7 @@ func TestRedis(c echo.Context) error {
 // @Router       /test/testSuccessRes [get]
 func TestSuccRes(c echo.Context) error {
 	utils.BizLogger(c).Info("测试成功响应...")
-	return c.JSON(http.StatusOK, vo.Success("测试成功响应成功!", c))
+	return c.JSON(http.StatusOK, vo.Success(c, "测试成功响应成功!"))
 }
 
 // TestErrRes    @Summary      测试错误响应接口
@@ -95,7 +95,7 @@ func TestSuccRes(c echo.Context) error {
 // @Router       /test/testErrRes [get]
 func TestErrRes(c echo.Context) error {
 	utils.BizLogger(c).Info("测试失败响应...")
-	return c.JSON(http.StatusInternalServerError, vo.Fail(nil, bizErr.New(bizErr.SERVER_ERR), c))
+	return c.JSON(http.StatusInternalServerError, vo.Fail(c, nil, bizErr.New(bizErr.SERVER_ERR)))
 }
 
 // TestErrorMiddleware         @Summary    测试错误处理中间件接口

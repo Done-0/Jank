@@ -1,3 +1,6 @@
+// Package banner 提供应用程序启动横幅显示功能
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package banner
 
 import (
@@ -6,6 +9,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// New 初始化并显示应用程序启动横幅
+// 参数：
+//   - app: Echo实例
 func New(app *echo.Echo) {
 	app.HideBanner = true
 	banner := `

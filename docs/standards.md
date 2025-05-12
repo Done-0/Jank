@@ -144,6 +144,7 @@ type User struct {
 // NewtAttrModel 属性数据层操作类的工厂方法
 // 参数：
 //      ctx: 上下文信息
+//
 // 返回值：
 //      *AttrModel: 属性操作类指针
 func NewAttrModel(ctx *common.Context) *AttrModel {

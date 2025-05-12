@@ -1,3 +1,6 @@
+// Package comment 提供评论相关的视图对象定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package comment
 
 // CommentsVO 获取评论响应

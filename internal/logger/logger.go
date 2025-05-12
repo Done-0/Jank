@@ -1,3 +1,6 @@
+// Package logger 提供应用程序日志功能的初始化和配置
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package logger
 
 import (
@@ -15,6 +18,7 @@ import (
 	"jank.com/jank_blog/internal/global"
 )
 
+// New 初始化日志组件
 func New() {
 	cfg, err := configs.LoadConfig()
 	if err != nil {

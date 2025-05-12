@@ -1,3 +1,6 @@
+// Package account 提供账户相关的视图对象定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package account
 
 // LoginVO           返回给前端的登录信息

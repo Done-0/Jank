@@ -7,6 +7,7 @@ import (
 	"jank.com/jank_blog/internal/model"
 )
 
+// autoMigrate 执行数据库表结构自动迁移
 func autoMigrate() {
 	if global.DB == nil {
 		log.Fatal("数据库初始化失败，无法执行自动迁移...")

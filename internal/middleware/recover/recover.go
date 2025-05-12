@@ -1,3 +1,6 @@
+// Package recover_middleware 提供全局异常恢复中间件
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package recover_middleware
 
 import (
@@ -10,9 +13,11 @@ import (
 )
 
 // InitRecover 初始化全局异常恢复中间件
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func InitRecover() echo.MiddlewareFunc {
 	return middleware.RecoverWithConfig(middleware.RecoverConfig{
-		StackSize: 4096,
+		StackSize: 4096, // 堆栈大小
 		LogErrorFunc: func(c echo.Context, err error, stack []byte) error {
 			stackSize := 4096
 			var buf []byte

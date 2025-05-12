@@ -1,3 +1,6 @@
+// Package model 提供博客文章数据模型定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package model
 
 import (
@@ -14,6 +17,9 @@ type Post struct {
 	ContentHTML     string `gorm:"type:text" json:"contentHtml"`                                // 渲染后的 HTML 内容
 }
 
+// TableName 指定表名
+// 返回值：
+//   - string: 表名
 func (Post) TableName() string {
 	return "posts"
 }

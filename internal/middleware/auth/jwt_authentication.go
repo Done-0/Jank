@@ -1,3 +1,6 @@
+// Package auth_middleware 提供JWT认证相关中间件
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package auth_middleware
 
 import (
@@ -13,10 +16,10 @@ import (
 
 // JWTConfig 定义了 Token 相关的配置
 type JWTConfig struct {
-	Authorization string
-	TokenPrefix   string
-	RefreshToken  string
-	UserCache     string
+	Authorization string // 认证头名称
+	TokenPrefix   string // Token前缀
+	RefreshToken  string // 刷新令牌头名称
+	UserCache     string // 用户缓存键前缀
 }
 
 // DefaultJWTConfig 默认配置
@@ -28,6 +31,8 @@ var DefaultJWTConfig = JWTConfig{
 }
 
 // AuthMiddleware 处理 JWT 认证中间件
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func AuthMiddleware() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

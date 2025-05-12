@@ -1,3 +1,6 @@
+// Package utils 提供JWT令牌生成与验证工具
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package utils
 
 import (
@@ -18,6 +21,13 @@ var (
 )
 
 // GenerateJWT 生成 Access Token 和 Refresh Token
+// 参数：
+//   - accountID: 账户ID
+//
+// 返回值：
+//   - string: Access Token
+//   - string: Refresh Token
+//   - error: 生成过程中的错误
 func GenerateJWT(accountID int64) (string, string, error) {
 	accessTokenString, err := generateToken(accountID, accessSecret, accessExpireTime)
 	if err != nil {
@@ -33,6 +43,13 @@ func GenerateJWT(accountID int64) (string, string, error) {
 }
 
 // ValidateJWTToken 验证 Access Token 或 Refresh Token
+// 参数：
+//   - tokenString: 令牌字符串
+//   - isRefreshToken: 是否为刷新令牌
+//
+// 返回值：
+//   - *jwt.Token: 验证通过的令牌
+//   - error: 验证过程中的错误
 func ValidateJWTToken(tokenString string, isRefreshToken bool) (*jwt.Token, error) {
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
@@ -65,6 +82,12 @@ func ValidateJWTToken(tokenString string, isRefreshToken bool) (*jwt.Token, erro
 }
 
 // RefreshTokenLogic 负责刷新 Token
+// 参数：
+//   - refreshTokenString: 刷新令牌字符串
+//
+// 返回值：
+//   - map[string]string: 包含新的 Access Token 和 Refresh Token 的映射
+//   - error: 刷新过程中的错误
 func RefreshTokenLogic(refreshTokenString string) (map[string]string, error) {
 	token, err := ValidateJWTToken(refreshTokenString, true)
 	if err != nil {
@@ -89,6 +112,12 @@ func RefreshTokenLogic(refreshTokenString string) (map[string]string, error) {
 }
 
 // ParseAccountAndRoleIDFromJWT 从 JWT 中提取 accountID 和 roleID
+// 参数：
+//   - tokenString: 令牌字符串
+//
+// 返回值：
+//   - int64: 账户ID
+//   - error: 解析过程中的错误
 func ParseAccountAndRoleIDFromJWT(tokenString string) (int64, error) {
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
@@ -111,6 +140,14 @@ func ParseAccountAndRoleIDFromJWT(tokenString string) (int64, error) {
 }
 
 // generateToken 通用的 token 生成函数
+// 参数：
+//   - accountID: 账户ID
+//   - secret: 密钥
+//   - expireTime: 过期时间
+//
+// 返回值：
+//   - string: 生成的令牌
+//   - error: 生成过程中的错误
 func generateToken(accountID int64, secret []byte, expireTime time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"account_id": accountID,
@@ -125,6 +162,13 @@ func generateToken(accountID int64, secret []byte, expireTime time.Duration) (st
 }
 
 // validateToken 验证 token 是否有效
+// 参数：
+//   - tokenString: 令牌字符串
+//   - secret: 密钥
+//
+// 返回值：
+//   - *jwt.Token: 验证通过的令牌
+//   - error: 验证过程中的错误
 func validateToken(tokenString string, secret []byte) (*jwt.Token, error) {
 	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

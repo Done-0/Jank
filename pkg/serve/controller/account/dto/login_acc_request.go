@@ -1,3 +1,6 @@
+// Package dto 提供账户相关的数据传输对象定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package dto
 
 // LoginRequest 用户登录请求体

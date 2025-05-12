@@ -1,3 +1,6 @@
+// Package verification 提供验证码相关的HTTP接口处理
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package verification
 
 import (
@@ -18,10 +21,10 @@ import (
 )
 
 const (
-	EMAIL_VERIFICATION_CODE_CACHE_KEY_PREFIX = "EMAIL:VERIFICATION:CODE:"
-	EMAIL_VERIFICATION_CODE_CACHE_EXPIRATION = 3 * time.Minute
-	IMG_VERIFICATION_CODE_CACHE_PREFIX       = "IMG:VERIFICATION:CODE:CACHE:"
-	IMG_VERIFICATION_CODE_CACHE_EXPIRATION   = 3 * time.Minute
+	EMAIL_VERIFICATION_CODE_CACHE_KEY_PREFIX = "EMAIL:VERIFICATION:CODE:"     // 邮箱验证码缓存前缀
+	EMAIL_VERIFICATION_CODE_CACHE_EXPIRATION = 3 * time.Minute                // 邮箱验证码缓存过期时间
+	IMG_VERIFICATION_CODE_CACHE_PREFIX       = "IMG:VERIFICATION:CODE:CACHE:" // 图形验证码缓存前缀
+	IMG_VERIFICATION_CODE_CACHE_EXPIRATION   = 3 * time.Minute                // 图形验证码缓存过期时间
 )
 
 // SendImgVerificationCode godoc
@@ -39,7 +42,7 @@ func SendImgVerificationCode(c echo.Context) error {
 	email := c.QueryParam("email")
 	if email == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
-		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, "请求参数错误，邮箱地址为空", bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
 	key := IMG_VERIFICATION_CODE_CACHE_PREFIX + email
@@ -48,16 +51,16 @@ func SendImgVerificationCode(c echo.Context) error {
 	imgBase64, answer, err := utils.GenImgVerificationCode()
 	if err != nil {
 		utils.BizLogger(c).Errorf("生成图片验证码失败: %v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR)))
 	}
 
 	err = global.RedisClient.Set(context.Background(), key, answer, IMG_VERIFICATION_CODE_CACHE_EXPIRATION).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("图形验证码写入缓存失败，key: %v, 错误: %v", key, err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR)))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(verification.ImgVerificationVO{ImgBase64: imgBase64}, c))
+	return c.JSON(http.StatusOK, vo.Success(c, verification.ImgVerificationVO{ImgBase64: imgBase64}))
 }
 
 // SendEmailVerificationCode godoc
@@ -75,12 +78,12 @@ func SendEmailVerificationCode(c echo.Context) error {
 	email := c.QueryParam("email")
 	if email == "" {
 		utils.BizLogger(c).Errorf("请求参数错误，邮箱地址为空")
-		return c.JSON(http.StatusBadRequest, vo.Fail("请求参数错误，邮箱地址为空", bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, "请求参数错误，邮箱地址为空", bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
 	if !utils.ValidEmail(email) {
 		utils.BizLogger(c).Errorf("邮箱格式无效: %s", email)
-		return c.JSON(http.StatusBadRequest, vo.Fail("邮箱格式无效", bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, "邮箱格式无效", bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
 	key := EMAIL_VERIFICATION_CODE_CACHE_KEY_PREFIX + email
@@ -89,10 +92,10 @@ func SendEmailVerificationCode(c echo.Context) error {
 	exists, err := global.RedisClient.Exists(context.Background(), key).Result()
 	if err != nil {
 		utils.BizLogger(c).Errorf("检查邮箱验证码是否有效失败: %v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR)))
 	}
 	if exists > 0 {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, "邮箱验证码已存在", bizErr.New(bizErr.SERVER_ERR)))
 	}
 
 	// 生成并缓存验证码
@@ -100,7 +103,7 @@ func SendEmailVerificationCode(c echo.Context) error {
 	err = global.RedisClient.Set(context.Background(), key, strconv.Itoa(code), EMAIL_VERIFICATION_CODE_CACHE_EXPIRATION).Err()
 	if err != nil {
 		utils.BizLogger(c).Errorf("邮箱验证码写入缓存失败: %v", err)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR)))
 	}
 
 	// 发送验证码邮件
@@ -110,24 +113,46 @@ func SendEmailVerificationCode(c echo.Context) error {
 	if !success {
 		utils.BizLogger(c).Errorf("邮箱验证码发送失败，邮箱地址: %s, 错误: %v", email, err)
 		global.RedisClient.Del(context.Background(), key)
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SEND_EMAIL_VERIFICATION_CODE_FAIL), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SEND_EMAIL_VERIFICATION_CODE_FAIL)))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("邮箱验证码发送成功, 请注意查收！", c))
+	return c.JSON(http.StatusOK, vo.Success(c, "邮箱验证码发送成功, 请注意查收！"))
 }
 
 // VerifyEmailCode 校验邮箱验证码
-func VerifyEmailCode(code, email string, c echo.Context) bool {
-	return verifyCode(code, email, EMAIL_VERIFICATION_CODE_CACHE_KEY_PREFIX, c)
+// 参数：
+//   - c: Echo 上下文
+//   - code: 验证码
+//   - email: 邮箱地址
+//
+// 返回值：
+//   - bool: 验证成功返回 true，失败返回 false
+func VerifyEmailCode(c echo.Context, code, email string) bool {
+	return verifyCode(c, code, email, EMAIL_VERIFICATION_CODE_CACHE_KEY_PREFIX)
 }
 
 // VerifyImgCode 校验图形验证码
-func VerifyImgCode(code, email string, c echo.Context) bool {
-	return verifyCode(code, email, IMG_VERIFICATION_CODE_CACHE_PREFIX, c)
+// 参数：
+//   - c: Echo 上下文
+//   - code: 验证码
+//   - email: 邮箱地址
+//
+// 返回值：
+//   - bool: 验证成功返回 true，失败返回 false
+func VerifyImgCode(c echo.Context, code, email string) bool {
+	return verifyCode(c, code, email, IMG_VERIFICATION_CODE_CACHE_PREFIX)
 }
 
 // verifyCode 通用验证码校验
-func verifyCode(code, email, prefix string, c echo.Context) bool {
+// 参数：
+//   - c: Echo 上下文
+//   - code: 验证码
+//   - email: 邮箱地址
+//   - prefix: 缓存键前缀
+//
+// 返回值：
+//   - bool: 验证成功返回 true，失败返回 false
+func verifyCode(c echo.Context, code, email, prefix string) bool {
 	key := prefix + email
 
 	storedCode, err := global.RedisClient.Get(c.Request().Context(), key).Result()

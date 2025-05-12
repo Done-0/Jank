@@ -1,3 +1,6 @@
+// Package post 提供文章相关的视图对象定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package post
 
 // PostsVO    获取帖子的响应结构

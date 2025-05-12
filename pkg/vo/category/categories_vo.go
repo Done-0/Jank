@@ -1,3 +1,6 @@
+// Package category 提供类目相关的视图对象定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package category
 
 // CategoriesVO 获取类目响应

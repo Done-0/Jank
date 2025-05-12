@@ -1,3 +1,6 @@
+// Package db 提供数据库连接和管理功能
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package db
 
 import (
@@ -15,13 +18,16 @@ import (
 	"jank.com/jank_blog/internal/global"
 )
 
+// 数据库类型常量
 const (
-	DIALECT_POSTGRES = "postgres"
-	DIALECT_SQLITE   = "sqlite"
-	DIALECT_MYSQL    = "mysql"
+	DIALECT_POSTGRES = "postgres" // PostgreSQL 数据库
+	DIALECT_SQLITE   = "sqlite"   // SQLite 数据库
+	DIALECT_MYSQL    = "mysql"    // MySQL 数据库
 )
 
 // New 初始化数据库连接
+// 参数：
+//   - config: 应用配置
 func New(config *configs.Config) {
 	var err error
 
@@ -59,6 +65,12 @@ func New(config *configs.Config) {
 }
 
 // connectToSystemDB 连接到系统数据库
+// 参数：
+//   - config: 应用配置
+//
+// 返回值：
+//   - *gorm.DB: 数据库连接
+//   - error: 连接过程中的错误
 func connectToSystemDB(config *configs.Config) (*gorm.DB, error) {
 	switch config.DBConfig.DBDialect {
 	case DIALECT_POSTGRES:
@@ -71,6 +83,12 @@ func connectToSystemDB(config *configs.Config) (*gorm.DB, error) {
 }
 
 // ensureDBExists 确保数据库存在，不存在则创建
+// 参数：
+//   - db: 数据库连接
+//   - config: 应用配置
+//
+// 返回值：
+//   - error: 创建过程中的错误
 func ensureDBExists(db *gorm.DB, config *configs.Config) error {
 	switch config.DBConfig.DBDialect {
 	case DIALECT_POSTGRES:
@@ -83,6 +101,13 @@ func ensureDBExists(db *gorm.DB, config *configs.Config) error {
 }
 
 // connectToDB 连接到指定数据库
+// 参数：
+//   - config: 应用配置
+//   - dbName: 数据库名称
+//
+// 返回值：
+//   - *gorm.DB: 数据库连接
+//   - error: 连接过程中的错误
 func connectToDB(config *configs.Config, dbName string) (*gorm.DB, error) {
 	dialector, err := getDialector(config, dbName)
 	if err != nil {
@@ -93,6 +118,13 @@ func connectToDB(config *configs.Config, dbName string) (*gorm.DB, error) {
 }
 
 // getDialector 根据数据库类型获取对应的驱动器
+// 参数：
+//   - config: 应用配置
+//   - dbName: 数据库名称
+//
+// 返回值：
+//   - gorm.Dialector: 数据库方言
+//   - error: 获取方言过程中的错误
 func getDialector(config *configs.Config, dbName string) (gorm.Dialector, error) {
 	switch config.DBConfig.DBDialect {
 	case DIALECT_POSTGRES:
@@ -107,6 +139,12 @@ func getDialector(config *configs.Config, dbName string) (gorm.Dialector, error)
 }
 
 // getPostgresDialector 获取 PostgreSQL 驱动器
+// 参数：
+//   - config: 应用配置
+//   - dbName: 数据库名称
+//
+// 返回值：
+//   - gorm.Dialector: PostgreSQL 方言
 func getPostgresDialector(config *configs.Config, dbName string) gorm.Dialector {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
@@ -120,6 +158,12 @@ func getPostgresDialector(config *configs.Config, dbName string) gorm.Dialector 
 }
 
 // getMySQLDialector 获取 MySQL 驱动器
+// 参数：
+//   - config: 应用配置
+//   - dbName: 数据库名称
+//
+// 返回值：
+//   - gorm.Dialector: MySQL 方言
 func getMySQLDialector(config *configs.Config, dbName string) gorm.Dialector {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -133,6 +177,13 @@ func getMySQLDialector(config *configs.Config, dbName string) gorm.Dialector {
 }
 
 // getSqliteDialector 获取 SQLite 驱动器并确保目录存在
+// 参数：
+//   - config: 应用配置
+//   - dbName: 数据库名称
+//
+// 返回值：
+//   - gorm.Dialector: SQLite 方言
+//   - error: 创建目录过程中的错误
 func getSqliteDialector(config *configs.Config, dbName string) (gorm.Dialector, error) {
 	if err := os.MkdirAll(config.DBConfig.DBPath, os.ModePerm); err != nil {
 		return nil, fmt.Errorf("创建 SQLite 数据库目录失败: %v", err)
@@ -143,6 +194,13 @@ func getSqliteDialector(config *configs.Config, dbName string) (gorm.Dialector, 
 }
 
 // ensurePostgresDBExists 确保 PostgreSQL 数据库存在，不存在则创建
+// 参数：
+//   - db: 数据库连接
+//   - dbName: 数据库名称
+//   - dbUser: 数据库用户
+//
+// 返回值：
+//   - error: 创建过程中的错误
 func ensurePostgresDBExists(db *gorm.DB, dbName, dbUser string) error {
 	var exists bool
 	query := "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = ?)"
@@ -164,6 +222,12 @@ func ensurePostgresDBExists(db *gorm.DB, dbName, dbUser string) error {
 }
 
 // ensureMySQLDBExists 确保 MySQL 数据库存在，不存在则创建
+// 参数：
+//   - db: 数据库连接
+//   - dbName: 数据库名称
+//
+// 返回值：
+//   - error: 创建过程中的错误
 func ensureMySQLDBExists(db *gorm.DB, dbName string) error {
 	var count int64
 	query := "SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name = ?"

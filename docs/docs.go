@@ -992,13 +992,15 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "integer",
-                        "description": "每页显示数量",
-                        "name": "pageSize",
-                        "in": "query"
+                        "description": "每页条数",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1034,7 +1036,7 @@ const docTemplate = `{
         },
         "/post/getOnePost": {
             "get": {
-                "description": "根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数",
+                "description": "根据文章 ID 获取文章的详细信息",
                 "consumes": [
                     "application/json"
                 ],
@@ -1589,8 +1591,7 @@ const docTemplate = `{
                     "minLength": 1
                 },
                 "parent_id": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 }
             }
         },
@@ -1601,8 +1602,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category_id": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "content_markdown": {
                     "type": "string"
@@ -1650,10 +1650,6 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "default": 0
-                },
-                "title": {
-                    "type": "string",
-                    "maxLength": 225
                 }
             }
         },
@@ -1759,8 +1755,7 @@ const docTemplate = `{
                     "minLength": 1
                 },
                 "parent_id": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 }
             }
         },
@@ -1771,8 +1766,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category_id": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "content_markdown": {
                     "type": "string"
@@ -1823,14 +1817,22 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
+                    "description": "错误码",
                     "type": "integer"
                 },
-                "data": {},
+                "data": {
+                    "description": "响应数据"
+                },
                 "msg": {
+                    "description": "错误信息",
                     "type": "string"
                 },
-                "requestId": {},
-                "timeStamp": {}
+                "requestId": {
+                    "description": "请求ID"
+                },
+                "timeStamp": {
+                    "description": "响应时间戳"
+                }
             }
         }
     },
@@ -1850,7 +1852,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:9010",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Jank Blog API",
+	Title:            "",
 	Description:      "This is the API documentation for Jank Blog.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

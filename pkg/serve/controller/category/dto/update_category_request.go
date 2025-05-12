@@ -1,3 +1,6 @@
+// Package dto 提供类目相关的数据传输对象定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package dto
 
 // UpdateOneCategoryRequest    更新类目请求
@@ -8,8 +11,8 @@ package dto
 // @Param path        body     string  false "类目路径"
 // @Param children    body     array   false "子类目"
 type UpdateOneCategoryRequest struct {
-	ID          int64  `json:"id" xml:"id" form:"id" query:"id" validate:"required,gt=0"`
+	ID          int64  `json:"id" xml:"id" form:"id" query:"id" validate:"required"`
 	Name        string `json:"name" xml:"name" form:"name" query:"name" validate:"required,min=1,max=255"`
 	Description string `json:"description" xml:"description" form:"description" query:"description" default:""`
-	ParentID    int64  `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id" validate:"gte=0"`
+	ParentID    int64  `json:"parent_id" xml:"parent_id" form:"parent_id" query:"parent_id" validate:"omitempty"`
 }

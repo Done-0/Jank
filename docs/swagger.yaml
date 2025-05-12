@@ -79,7 +79,6 @@ definitions:
         minLength: 1
         type: string
       parent_id:
-        minimum: 0
         type: integer
     required:
     - name
@@ -87,7 +86,6 @@ definitions:
   dto.CreateOnePostRequest:
     properties:
       category_id:
-        minimum: 0
         type: integer
       content_markdown:
         type: string
@@ -123,9 +121,6 @@ definitions:
       id:
         default: 0
         type: integer
-      title:
-        maxLength: 225
-        type: string
     type: object
   dto.LoginRequest:
     description: 用户登录请求所需参数
@@ -199,7 +194,6 @@ definitions:
         minLength: 1
         type: string
       parent_id:
-        minimum: 0
         type: integer
     required:
     - id
@@ -208,7 +202,6 @@ definitions:
   dto.UpdateOnePostRequest:
     properties:
       category_id:
-        minimum: 0
         type: integer
       content_markdown:
         type: string
@@ -246,18 +239,22 @@ definitions:
   vo.Result:
     properties:
       code:
+        description: 错误码
         type: integer
-      data: {}
+      data:
+        description: 响应数据
       msg:
+        description: 错误信息
         type: string
-      requestId: {}
-      timeStamp: {}
+      requestId:
+        description: 请求ID
+      timeStamp:
+        description: 响应时间戳
     type: object
 host: localhost:9010
 info:
   contact: {}
   description: This is the API documentation for Jank Blog.
-  title: Jank Blog API
   version: "1.0"
 paths:
   /account/getAccount:
@@ -847,10 +844,12 @@ paths:
       - description: 页码
         in: query
         name: page
+        required: true
         type: integer
-      - description: 每页显示数量
+      - description: 每页条数
         in: query
-        name: pageSize
+        name: page_size
+        required: true
         type: integer
       produces:
       - application/json
@@ -877,7 +876,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: 根据文章 ID 或标题获取文章的详细信息，至少需要提供其中一个参数
+      description: 根据文章 ID 获取文章的详细信息
       parameters:
       - description: 获取文章请求参数
         in: body

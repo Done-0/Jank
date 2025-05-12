@@ -1,3 +1,6 @@
+// Package account 提供账户相关的HTTP接口处理
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package account
 
 import (
@@ -24,23 +27,28 @@ import (
 // @Failure      400     {object}   vo.Result              "请求参数错误"
 // @Failure      404     {object}   vo.Result              "用户不存在"
 // @Router       /account/getAccount [post]
+// 参数：
+//   - c: Echo 上下文
+//
+// 返回值：
+//   - error: 操作过程中的错误
 func GetAccount(c echo.Context) error {
 	req := new(dto.GetAccountRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败")))
 	}
 
-	response, err := service.GetAccount(req, c)
+	response, err := service.GetAccount(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(response, c))
+	return c.JSON(http.StatusOK, vo.Success(c, response))
 }
 
 // RegisterAcc godoc
@@ -56,31 +64,36 @@ func GetAccount(c echo.Context) error {
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      500     {object}   vo.Result         "服务器错误"
 // @Router       /account/registerAccount [post]
+// 参数：
+//   - c: Echo 上下文
+//
+// 返回值：
+//   - error: 操作过程中的错误
 func RegisterAcc(c echo.Context) error {
 	req := new(dto.RegisterRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败")))
 	}
 
-	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "图形验证码校验失败"), c))
+	if !verification.VerifyImgCode(c, req.ImgVerificationCode, req.Email) {
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "图形验证码校验失败")))
 	}
 
-	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "邮箱验证码校验失败"), c))
+	if !verification.VerifyEmailCode(c, req.EmailVerificationCode, req.Email) {
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "邮箱验证码校验失败")))
 	}
 
-	acc, err := service.RegisterAcc(req, c)
+	acc, err := service.RegisterAcc(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(acc, c))
+	return c.JSON(http.StatusOK, vo.Success(c, acc))
 }
 
 // LoginAccount godoc
@@ -95,27 +108,32 @@ func RegisterAcc(c echo.Context) error {
 // @Failure      400     {object}   vo.Result         "参数错误，验证码校验失败"
 // @Failure      401     {object}   vo.Result         "登录失败，凭证无效"
 // @Router       /account/loginAccount [post]
+// 参数：
+//   - c: Echo 上下文
+//
+// 返回值：
+//   - error: 操作过程中的错误
 func LoginAccount(c echo.Context) error {
 	req := new(dto.LoginRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败")))
 	}
 
-	if !verification.VerifyImgCode(req.ImgVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "图形验证码校验失败"), c))
+	if !verification.VerifyImgCode(c, req.ImgVerificationCode, req.Email) {
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "图形验证码校验失败")))
 	}
 
-	response, err := service.LoginAcc(req, c)
+	response, err := service.LoginAcc(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(response, c))
+	return c.JSON(http.StatusOK, vo.Success(c, response))
 }
 
 // LogoutAccount godoc
@@ -128,12 +146,17 @@ func LoginAccount(c echo.Context) error {
 // @Failure      500  {object}  vo.Result  "服务器错误"
 // @Security     BearerAuth
 // @Router       /account/logoutAccount [post]
+// 参数：
+//   - c: Echo 上下文
+//
+// 返回值：
+//   - error: 操作过程中的错误
 func LogoutAccount(c echo.Context) error {
 	if err := service.LogoutAcc(c); err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("用户注销成功", c))
+	return c.JSON(http.StatusOK, vo.Success(c, "用户注销成功"))
 }
 
 // ResetPassword godoc
@@ -149,25 +172,30 @@ func LogoutAccount(c echo.Context) error {
 // @Failure      500     {object}   vo.Result         "服务器错误"
 // @Security     BearerAuth
 // @Router       /account/resetPassword [post]
+// 参数：
+//   - c: Echo 上下文
+//
+// 返回值：
+//   - error: 操作过程中的错误
 func ResetPassword(c echo.Context) error {
 	req := new(dto.ResetPwdRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败"), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "请求参数校验失败")))
 	}
 
-	if !verification.VerifyEmailCode(req.EmailVerificationCode, req.Email, c) {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST, "邮箱验证码校验失败"), c))
+	if !verification.VerifyEmailCode(c, req.EmailVerificationCode, req.Email) {
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST, "邮箱验证码校验失败")))
 	}
 
-	err := service.ResetPassword(req, c)
+	err := service.ResetPassword(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success("密码重置成功", c))
+	return c.JSON(http.StatusOK, vo.Success(c, "密码重置成功"))
 }

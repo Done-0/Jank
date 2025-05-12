@@ -1,3 +1,6 @@
+// Package secure_middleware 提供安全相关中间件
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package secure_middleware
 
 import (
@@ -12,6 +15,8 @@ import (
 )
 
 // InitCSRF 初始化 CSRF 中间件，使用默认配置
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func InitCSRF() echo.MiddlewareFunc {
 	return csrfWithConfig(defaultCSRFConfig)
 }
@@ -47,6 +52,11 @@ var defaultCSRFConfig = csrfConfig{
 }
 
 // csrfWithConfig 使用传入的配置生成 CSRF 中间件
+// 参数：
+//   - config: CSRF 配置
+//
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func csrfWithConfig(config csrfConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -73,6 +83,13 @@ func csrfWithConfig(config csrfConfig) echo.MiddlewareFunc {
 }
 
 // getTokenFromRequest 从请求中获取 CSRF token
+// 参数：
+//   - c: Echo 上下文
+//   - lookup: Token 查找方式
+//
+// 返回值：
+//   - string: CSRF Token
+//   - error: 获取过程中的错误
 func getTokenFromRequest(c echo.Context, lookup string) (string, error) {
 	parts := strings.Split(lookup, ":")
 	if len(parts) != 2 {
@@ -91,6 +108,11 @@ func getTokenFromRequest(c echo.Context, lookup string) (string, error) {
 }
 
 // generateCSRFToken 生成随机的 CSRF token
+// 参数：
+//   - length: Token长度
+//
+// 返回值：
+//   - string: 生成的 CSRF Token
 func generateCSRFToken(length uint8) string {
 	token := make([]byte, length)
 	rand.Read(token)
@@ -98,6 +120,10 @@ func generateCSRFToken(length uint8) string {
 }
 
 // setCSRFCookie 设置 CSRF Token 到 Cookie
+// 参数：
+//   - c: Echo 上下文
+//   - config: CSRF 配置
+//   - token: CSRF Token
 func setCSRFCookie(c echo.Context, config csrfConfig, token string) {
 	cookie := &http.Cookie{
 		Name:     config.CookieName,

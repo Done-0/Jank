@@ -1,3 +1,6 @@
+// Package comment 提供评论相关的HTTP接口处理
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package comment
 
 import (
@@ -26,20 +29,20 @@ import (
 func GetOneComment(c echo.Context) error {
 	req := new(dto.GetOneCommentRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
-	comment, err := service.GetCommentWithReplies(req, c)
+	comment, err := service.GetCommentWithReplies(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(comment, c))
+	return c.JSON(http.StatusOK, vo.Success(c, comment))
 }
 
 // GetCommentGraph godoc
@@ -55,20 +58,20 @@ func GetOneComment(c echo.Context) error {
 func GetCommentGraph(c echo.Context) error {
 	req := new(dto.GetCommentGraphRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
-	comments, err := service.GetCommentGraphByPostID(req, c)
+	comments, err := service.GetCommentGraphByPostID(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(comments, c))
+	return c.JSON(http.StatusOK, vo.Success(c, comments))
 }
 
 // CreateOneComment godoc
@@ -84,20 +87,20 @@ func GetCommentGraph(c echo.Context) error {
 func CreateOneComment(c echo.Context) error {
 	req := new(dto.CreateCommentRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
-	comment, err := service.CreateComment(req, c)
+	comment, err := service.CreateComment(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(comment, c))
+	return c.JSON(http.StatusOK, vo.Success(c, comment))
 }
 
 // DeleteOneComment godoc
@@ -114,18 +117,18 @@ func CreateOneComment(c echo.Context) error {
 func DeleteOneComment(c echo.Context) error {
 	req := new(dto.DeleteCommentRequest)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(err, bizErr.New(bizErr.BAD_REQUEST, err.Error()), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, err, bizErr.New(bizErr.BAD_REQUEST, err.Error())))
 	}
 
 	errors := utils.Validator(*req)
 	if errors != nil {
-		return c.JSON(http.StatusBadRequest, vo.Fail(errors, bizErr.New(bizErr.BAD_REQUEST), c))
+		return c.JSON(http.StatusBadRequest, vo.Fail(c, errors, bizErr.New(bizErr.BAD_REQUEST)))
 	}
 
-	comment, err := service.DeleteComment(req, c)
+	comment, err := service.DeleteComment(c, req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, vo.Fail(err, bizErr.New(bizErr.SERVER_ERR, err.Error()), c))
+		return c.JSON(http.StatusInternalServerError, vo.Fail(c, err, bizErr.New(bizErr.SERVER_ERR, err.Error())))
 	}
 
-	return c.JSON(http.StatusOK, vo.Success(comment, c))
+	return c.JSON(http.StatusOK, vo.Success(c, comment))
 }

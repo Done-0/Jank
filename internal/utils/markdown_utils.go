@@ -1,3 +1,6 @@
+// Package utils 提供Markdown渲染工具
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package utils
 
 import (
@@ -20,12 +23,17 @@ var bufferPool = sync.Pool{
 
 // MarkdownConfig 用于配置 Goldmark 渲染器
 type MarkdownConfig struct {
-	Extensions      []goldmark.Extender
-	ParserOptions   []parser.Option
-	RendererOptions []renderer.Option
+	Extensions      []goldmark.Extender // Goldmark 扩展
+	ParserOptions   []parser.Option     // 解析器选项
+	RendererOptions []renderer.Option   // 渲染器选项
 }
 
 // NewMarkdownRenderer 创建一个新的 Markdown 渲染器
+// 参数：
+//   - config: Markdown配置
+//
+// 返回值：
+//   - goldmark.Markdown: Markdown渲染器
 func NewMarkdownRenderer(config MarkdownConfig) goldmark.Markdown {
 	return goldmark.New(
 		goldmark.WithExtensions(config.Extensions...),
@@ -35,6 +43,8 @@ func NewMarkdownRenderer(config MarkdownConfig) goldmark.Markdown {
 }
 
 // defaultMarkdownConfig 返回默认的 Markdown 配置
+// 返回值：
+//   - MarkdownConfig: 默认Markdown配置
 func defaultMarkdownConfig() MarkdownConfig {
 	return MarkdownConfig{
 		Extensions: []goldmark.Extender{
@@ -64,6 +74,12 @@ func defaultMarkdownConfig() MarkdownConfig {
 }
 
 // RenderMarkdown 将 Markdown 渲染为 HTML
+// 参数：
+//   - content: Markdown内容
+//
+// 返回值：
+//   - string: 渲染后的 HTML
+//   - error: 渲染过程中的错误
 func RenderMarkdown(content []byte) (string, error) {
 	md := NewMarkdownRenderer(defaultMarkdownConfig())
 	buf := bufferPool.Get().(*bytes.Buffer)

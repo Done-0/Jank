@@ -1,3 +1,6 @@
+// Package secure_middleware 提供安全相关中间件
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package secure_middleware
 
 import (
@@ -7,6 +10,8 @@ import (
 )
 
 // InitXss 返回一个 XSS 防护中间件，使用默认配置
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func InitXss() echo.MiddlewareFunc {
 	return xssWithConfig(defaultXSSConfig)
 }
@@ -22,6 +27,7 @@ type xssConfig struct {
 	ContentSecurityPolicy string                  // Content-Security-Policy 头部配置
 }
 
+// defaultXSSConfig 默认的 XSS 防护配置
 var defaultXSSConfig = xssConfig{
 	Skipper:               func(c echo.Context) bool { return false }, // 默认不跳过
 	XSSPrevention:         "1; mode=block",                            // 开启 XSS 防护
@@ -32,7 +38,12 @@ var defaultXSSConfig = xssConfig{
 	ContentSecurityPolicy: "",                                         // Content-Security-Policy 头部配置
 }
 
-// XssWithConfig 返回一个中间件函数
+// xssWithConfig 返回一个 XSS 防护中间件函数
+// 参数：
+//   - config: XSS 防护配置
+//
+// 返回值：
+//   - echo.MiddlewareFunc: Echo 框架中间件函数
 func xssWithConfig(config xssConfig) echo.MiddlewareFunc {
 	if config.Skipper == nil {
 		config.Skipper = defaultXSSConfig.Skipper

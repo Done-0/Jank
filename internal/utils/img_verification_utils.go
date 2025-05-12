@@ -1,3 +1,6 @@
+// Package utils 提供图形验证码生成工具
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package utils
 
 import (
@@ -18,6 +21,10 @@ const (
 var store = base64Captcha.DefaultMemStore
 
 // GenImgVerificationCode 生成图形验证码
+// 返回值：
+//   - string: 图片验证码的 Base64 编码
+//   - string: 验证码答案
+//   - error: 生成过程中的错误
 func GenImgVerificationCode() (string, string, error) {
 	driver := createDriver()
 	captcha := base64Captcha.NewCaptcha(driver, store)
@@ -30,6 +37,8 @@ func GenImgVerificationCode() (string, string, error) {
 }
 
 // createDriver 创建验证码的驱动配置
+// 返回值：
+//   - *base64Captcha.DriverString: 验证码驱动对象
 func createDriver() *base64Captcha.DriverString {
 	return &base64Captcha.DriverString{
 		Height:          ImgHeight,

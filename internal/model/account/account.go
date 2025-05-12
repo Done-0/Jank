@@ -1,3 +1,6 @@
+// Package model 提供用户账户数据模型定义
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package model
 
 import "jank.com/jank_blog/internal/model/base"
@@ -12,6 +15,9 @@ type Account struct {
 	Avatar   string `gorm:"type:varchar(255);default:null" json:"avatar"`      // 用户头像
 }
 
+// TableName 指定表名
+// 返回值：
+//   - string: 表名
 func (Account) TableName() string {
 	return "accounts"
 }

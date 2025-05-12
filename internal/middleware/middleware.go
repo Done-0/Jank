@@ -1,3 +1,6 @@
+// Package middleware 提供中间件集成和初始化功能
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package middleware
 
 import (
@@ -14,6 +17,9 @@ import (
 	swagger_middleware "jank.com/jank_blog/internal/middleware/swagger"
 )
 
+// New 初始化并注册所有中间件
+// 参数：
+//   - app: Echo 实例
 func New(app *echo.Echo) {
 	// 设置全局错误处理
 	app.Use(error_middleware.InitError())
@@ -34,7 +40,9 @@ func New(app *echo.Echo) {
 	initSwagger(app)
 }
 
-// 初始化Swagger
+// initSwagger 根据配置初始化 Swagger 文档中间件
+// 参数：
+//   - app: Echo实例
 func initSwagger(app *echo.Echo) {
 	cfg, err := configs.LoadConfig()
 	if err != nil {
@@ -45,8 +53,8 @@ func initSwagger(app *echo.Echo) {
 	switch cfg.SwaggerConfig.SwaggerEnabled {
 	case "true":
 		app.Use(swagger_middleware.InitSwagger())
-		global.SysLog.Info("Swagger已启用")
+		global.SysLog.Info("Swagger 已启用")
 	default:
-		global.SysLog.Info("Swagger已禁用")
+		global.SysLog.Info("Swagger 已禁用")
 	}
 }

@@ -29,7 +29,7 @@ func InitSwagger() echo.MiddlewareFunc {
 	}
 }
 
-// 初始化 Swagger 配置信息
+// initSwagger 初始化 Swagger 配置信息
 func initSwagger() {
 	swaggerOnce.Do(func() {
 		config, err := configs.LoadConfig()

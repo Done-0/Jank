@@ -1,3 +1,6 @@
+// Package utils 提供邮件操作相关工具
+// 创建者：Done-0
+// 创建时间：2025-05-10
 package utils
 
 import (
@@ -25,6 +28,13 @@ var emailServers = map[string]struct {
 }
 
 // SendEmail 发送邮件到指定邮箱
+// 参数：
+//   - content: 邮件内容
+//   - toEmail: 接收邮件的邮箱地址数组
+//
+// 返回值：
+//   - bool: 发送成功返回 true，失败返回 false
+//   - error: 发送过程中的错误
 func SendEmail(content string, toEmail []string) (bool, error) {
 	config, err := configs.LoadConfig()
 	if err != nil {
@@ -62,12 +72,19 @@ func SendEmail(content string, toEmail []string) (bool, error) {
 }
 
 // NewRand 生成六位数随机验证码
+// 返回值：
+//   - int: 六位数随机验证码
 func NewRand() int {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return r.Intn(900000) + 100000
 }
 
 // ValidEmail 检查邮箱格式是否有效
+// 参数：
+//   - email: 待验证的邮箱地址
+//
+// 返回值：
+//   - bool: 邮箱格式有效返回 true，无效返回 false
 func ValidEmail(email string) bool {
 	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	return regexp.MustCompile(pattern).MatchString(email)
