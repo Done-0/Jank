@@ -131,7 +131,7 @@ func CreateOnePost(c echo.Context, req *dto.CreateOnePostRequest) (*post.PostsVO
 // 返回值：
 //   - interface{}: 获取到的文章视图对象
 //   - error: 操作过程中的错误
-func GetOnePostByID(c echo.Context, req *dto.GetOnePostRequest) (interface{}, error) {
+func GetOnePostByID(c echo.Context, req *dto.GetOnePostRequest) (*post.PostsVO, error) {
 	pos, err := mapper.GetPostByID(c, req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("根据 ID 获取文章失败: %v", err)

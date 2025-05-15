@@ -24,7 +24,7 @@ import (
 // 返回值：
 //   - interface{}: 获取到的类目视图对象
 //   - error: 操作过程中的错误
-func GetCategoryByID(c echo.Context, req *dto.GetOneCategoryRequest) (interface{}, error) {
+func GetCategoryByID(c echo.Context, req *dto.GetOneCategoryRequest) (*category.CategoriesVO, error) {
 	cat, err := mapper.GetCategoryByID(c, req.ID)
 	if err != nil {
 		utils.BizLogger(c).Errorf("根据 ID 获取类目失败: %v", err)

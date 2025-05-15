@@ -21,7 +21,7 @@ import (
 //   - error: 操作过程中的错误
 func CreateComment(c echo.Context, comment *model.Comment) error {
 	db := utils.GetDBFromContext(c)
-	if err := db.Create(comment).Error; err != nil {
+	if err := db.Model(&model.Comment{}).Create(comment).Error; err != nil {
 		return fmt.Errorf("创建评论失败: %w", err)
 	}
 	return nil
@@ -38,7 +38,7 @@ func CreateComment(c echo.Context, comment *model.Comment) error {
 func GetCommentByID(c echo.Context, id int64) (*model.Comment, error) {
 	var comment model.Comment
 	db := utils.GetDBFromContext(c)
-	if err := db.Where("id = ? AND deleted = ?", id, false).First(&comment).Error; err != nil {
+	if err := db.Model(&model.Comment{}).Where("id = ? AND deleted = ?", id, false).First(&comment).Error; err != nil {
 		return nil, fmt.Errorf("获取评论失败: %w", err)
 	}
 	return &comment, nil
@@ -55,7 +55,7 @@ func GetCommentByID(c echo.Context, id int64) (*model.Comment, error) {
 func GetReplyByCommentID(c echo.Context, id int64) ([]*model.Comment, error) {
 	var comments []*model.Comment
 	db := utils.GetDBFromContext(c)
-	if err := db.Where("reply_to_comment_id = ? AND deleted = ?", id, false).Find(&comments).Error; err != nil {
+	if err := db.Model(&model.Comment{}).Where("reply_to_comment_id = ? AND deleted = ?", id, false).Find(&comments).Error; err != nil {
 		return nil, fmt.Errorf("获取评论回复失败: %w", err)
 	}
 	return comments, nil
@@ -72,7 +72,7 @@ func GetReplyByCommentID(c echo.Context, id int64) ([]*model.Comment, error) {
 func GetCommentsByPostID(c echo.Context, postID int64) ([]*model.Comment, error) {
 	var comments []*model.Comment
 	db := utils.GetDBFromContext(c)
-	if err := db.Where("post_id = ? AND deleted = ?", postID, false).Find(&comments).Error; err != nil {
+	if err := db.Model(&model.Comment{}).Where("post_id = ? AND deleted = ?", postID, false).Find(&comments).Error; err != nil {
 		return nil, fmt.Errorf("获取文章评论失败: %w", err)
 	}
 	return comments, nil
@@ -87,7 +87,7 @@ func GetCommentsByPostID(c echo.Context, postID int64) ([]*model.Comment, error)
 //   - error: 操作过程中的错误
 func UpdateComment(c echo.Context, comment *model.Comment) error {
 	db := utils.GetDBFromContext(c)
-	if err := db.Save(comment).Error; err != nil {
+	if err := db.Model(&model.Comment{}).Save(comment).Error; err != nil {
 		return fmt.Errorf("更新评论失败: %w", err)
 	}
 	return nil

@@ -8,7 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	post "jank.com/jank_blog/internal/model/post"
+	model "jank.com/jank_blog/internal/model/post"
 	"jank.com/jank_blog/internal/utils"
 )
 
@@ -19,9 +19,9 @@ import (
 //
 // 返回值：
 //   - error: 操作过程中的错误
-func CreatePost(c echo.Context, newPost *post.Post) error {
+func CreatePost(c echo.Context, newPost *model.Post) error {
 	db := utils.GetDBFromContext(c)
-	if err := db.Create(newPost).Error; err != nil {
+	if err := db.Model(&model.Post{}).Create(newPost).Error; err != nil {
 		return fmt.Errorf("创建文章失败: %w", err)
 	}
 	return nil
@@ -33,12 +33,12 @@ func CreatePost(c echo.Context, newPost *post.Post) error {
 //   - id: 文章 ID
 //
 // 返回值：
-//   - *post.Post: 文章信息
+//   - *model.Post: 文章信息
 //   - error: 操作过程中的错误
-func GetPostByID(c echo.Context, id int64) (*post.Post, error) {
-	var pos post.Post
+func GetPostByID(c echo.Context, id int64) (*model.Post, error) {
+	var pos model.Post
 	db := utils.GetDBFromContext(c)
-	if err := db.Where("id = ? AND deleted = ?", id, false).First(&pos).Error; err != nil {
+	if err := db.Model(&model.Post{}).Where("id = ? AND deleted = ?", id, false).First(&pos).Error; err != nil {
 		return nil, fmt.Errorf("获取文章失败: %w", err)
 	}
 	return &pos, nil
@@ -51,21 +51,21 @@ func GetPostByID(c echo.Context, id int64) (*post.Post, error) {
 //   - pageSize: 每页大小
 //
 // 返回值：
-//   - []*post.Post: 文章列表
+//   - []*model.Post: 文章列表
 //   - int64: 文章总数
 //   - error: 操作过程中的错误
-func GetAllPostsWithPaging(c echo.Context, page, pageSize int) ([]*post.Post, int64, error) {
-	var posts []*post.Post
+func GetAllPostsWithPaging(c echo.Context, page, pageSize int) ([]*model.Post, int64, error) {
+	var posts []*model.Post
 	var total int64
 	db := utils.GetDBFromContext(c)
 
 	// 查询文章总数
-	if err := db.Model(&post.Post{}).Where("deleted = ?", false).Count(&total).Error; err != nil {
+	if err := db.Model(&model.Post{}).Where("deleted = ?", false).Count(&total).Error; err != nil {
 		return nil, 0, fmt.Errorf("获取文章总数失败: %w", err)
 	}
 
 	// 使用雪花算法ID排序的分页查询 (雪花ID本身包含时间信息，降序排列即为最新内容)
-	if err := db.Where("deleted = ?", false).
+	if err := db.Model(&model.Post{}).Where("deleted = ?", false).
 		Order("id DESC").
 		Limit(pageSize).Offset((page - 1) * pageSize).
 		Find(&posts).Error; err != nil {
@@ -82,9 +82,9 @@ func GetAllPostsWithPaging(c echo.Context, page, pageSize int) ([]*post.Post, in
 //
 // 返回值：
 //   - error: 操作过程中的错误
-func UpdateOnePostByID(c echo.Context, postID int64, newPost *post.Post) error {
+func UpdateOnePostByID(c echo.Context, postID int64, newPost *model.Post) error {
 	db := utils.GetDBFromContext(c)
-	result := db.Model(&post.Post{}).Where("id = ? AND deleted = ?", postID, false).Updates(newPost)
+	result := db.Model(&model.Post{}).Where("id = ? AND deleted = ?", postID, false).Updates(newPost)
 
 	if result.Error != nil {
 		return fmt.Errorf("更新文章失败: %w", result.Error)
@@ -101,7 +101,7 @@ func UpdateOnePostByID(c echo.Context, postID int64, newPost *post.Post) error {
 //   - error: 操作过程中的错误
 func DeleteOnePostByID(c echo.Context, postID int64) error {
 	db := utils.GetDBFromContext(c)
-	result := db.Model(&post.Post{}).
+	result := db.Model(&model.Post{}).
 		Where("id = ? AND deleted = ?", postID, false).
 		Update("deleted", true)
 

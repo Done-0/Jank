@@ -8,7 +8,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	account "jank.com/jank_blog/internal/model/account"
+	model "jank.com/jank_blog/internal/model/account"
 	"jank.com/jank_blog/internal/utils"
 )
 
@@ -22,7 +22,7 @@ import (
 func GetTotalAccounts(c echo.Context) (int64, error) {
 	var count int64
 	db := utils.GetDBFromContext(c)
-	if err := db.Model(&account.Account{}).Where("deleted = ?", false).Count(&count).Error; err != nil {
+	if err := db.Model(&model.Account{}).Where("deleted = ?", false).Count(&count).Error; err != nil {
 		return 0, fmt.Errorf("获取用户总数失败: %w", err)
 	}
 	return count, nil
@@ -34,12 +34,12 @@ func GetTotalAccounts(c echo.Context) (int64, error) {
 //   - email: 用户邮箱
 //
 // 返回值：
-//   - *account.Account: 账户信息
+//   - *model.Account: 账户信息
 //   - error: 操作过程中的错误
-func GetAccountByEmail(c echo.Context, email string) (*account.Account, error) {
-	var user account.Account
+func GetAccountByEmail(c echo.Context, email string) (*model.Account, error) {
+	var user model.Account
 	db := utils.GetDBFromContext(c)
-	if err := db.Where("email = ? AND deleted = ?", email, false).First(&user).Error; err != nil {
+	if err := db.Model(&model.Account{}).Where("email = ? AND deleted = ?", email, false).First(&user).Error; err != nil {
 		return nil, fmt.Errorf("获取用户失败: %w", err)
 	}
 	return &user, nil
@@ -51,12 +51,12 @@ func GetAccountByEmail(c echo.Context, email string) (*account.Account, error) {
 //   - accountID: 账户 ID
 //
 // 返回值：
-//   - *account.Account: 账户信息
+//   - *model.Account: 账户信息
 //   - error: 操作过程中的错误
-func GetAccountByAccountID(c echo.Context, accountID int64) (*account.Account, error) {
-	var user account.Account
+func GetAccountByAccountID(c echo.Context, accountID int64) (*model.Account, error) {
+	var user model.Account
 	db := utils.GetDBFromContext(c)
-	if err := db.Where("id = ? AND deleted = ?", accountID, false).First(&user).Error; err != nil {
+	if err := db.Model(&model.Account{}).Where("id = ? AND deleted = ?", accountID, false).First(&user).Error; err != nil {
 		return nil, fmt.Errorf("获取用户失败: %w", err)
 	}
 	return &user, nil
@@ -69,9 +69,9 @@ func GetAccountByAccountID(c echo.Context, accountID int64) (*account.Account, e
 //
 // 返回值：
 //   - error: 操作过程中的错误
-func CreateAccount(c echo.Context, acc *account.Account) error {
+func CreateAccount(c echo.Context, acc *model.Account) error {
 	db := utils.GetDBFromContext(c)
-	if err := db.Create(acc).Error; err != nil {
+	if err := db.Model(&model.Account{}).Create(acc).Error; err != nil {
 		return fmt.Errorf("创建用户失败: %w", err)
 	}
 	return nil
@@ -84,9 +84,9 @@ func CreateAccount(c echo.Context, acc *account.Account) error {
 //
 // 返回值：
 //   - error: 操作过程中的错误
-func UpdateAccount(c echo.Context, acc *account.Account) error {
+func UpdateAccount(c echo.Context, acc *model.Account) error {
 	db := utils.GetDBFromContext(c)
-	if err := db.Save(acc).Error; err != nil {
+	if err := db.Model(&model.Account{}).Save(acc).Error; err != nil {
 		return fmt.Errorf("更新账户失败: %w", err)
 	}
 	return nil
