@@ -142,7 +142,7 @@ docker-compose up -d
 
 ### 官方社区
 
-<img src="https://s2.loli.net/2025/06/22/zX4AbN8mSPYsC63.jpg" alt="官方社区" width="300" />
+<img src="https://s2.loli.net/2025/06/29/5bxyhJBUF762Opk.jpg" alt="官方社区" width="300" />
 
 > 注：因社群成员较多，请自觉遵守规范。严禁讨论涉黄、赌、毒及政治敏感内容，禁止发布任何形式的不良广告。
 
