@@ -1,18 +1,20 @@
-// Package model 提供类目数据模型定义
+// Package category 提供分类数据模型定义
 // 创建者：Done-0
-// 创建时间：2025-05-10
-package model
+// 创建时间：2025-08-13
+package category
 
-import "jank.com/jank_blog/internal/model/base"
+import (
+	"github.com/Done-0/jank/internal/model/base"
+)
 
-// Category 类目模型
+// Category 分类模型
 type Category struct {
 	base.Base
-	Name        string      `gorm:"type:varchar(255);not null;index" json:"name"`    // 类目名称
-	Description string      `gorm:"type:varchar(255);default:''" json:"description"` // 类目描述
-	ParentID    int64       `gorm:"index;default:null" json:"parent_id"`             // 父类目ID
-	Path        string      `gorm:"type:varchar(225);not null;index" json:"path"`    // 类目路径
-	Children    []*Category `gorm:"-" json:"children"`                               // 子类目，不存储在数据库，用于递归构建树结构
+	Name        string `gorm:"type:varchar(100);not null;index" json:"name"`              // 分类名称
+	Description string `gorm:"type:varchar(500)" json:"description"`                      // 分类描述（可选）
+	ParentID    int64  `gorm:"type:bigint;not null;default:0;index" json:"parent_id"`     // 父分类 ID，0 表示顶级分类
+	Sort        int64  `gorm:"type:bigint;not null;default:100;index" json:"sort"`        // 排序权重，数字越大越靠前
+	IsActive    bool   `gorm:"type:boolean;not null;default:true;index" json:"is_active"` // 是否启用
 }
 
 // TableName 指定表名

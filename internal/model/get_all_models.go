@@ -1,34 +1,24 @@
 // Package model 提供应用程序的数据模型定义和聚合
 // 创建者：Done-0
-// 创建时间：2025-05-10
+// 创建时间：2025-08-05
 package model
 
 import (
-	account "jank.com/jank_blog/internal/model/account"
-	association "jank.com/jank_blog/internal/model/association"
-	category "jank.com/jank_blog/internal/model/category"
-	comment "jank.com/jank_blog/internal/model/comment"
-	post "jank.com/jank_blog/internal/model/post"
+	"github.com/Done-0/jank/internal/model/category"
+	"github.com/Done-0/jank/internal/model/post"
+	"github.com/Done-0/jank/internal/model/rbac"
+	"github.com/Done-0/jank/internal/model/user"
 )
 
 // GetAllModels 获取并注册所有模型
 // 返回值：
-//   - []interface{}: 所有需要注册到数据库的模型列表
-func GetAllModels() []interface{} {
-	return []interface{}{
-		// account 模块
-		&account.Account{},
-
-		// post 模块
-		&post.Post{},
-
-		// category 模块
-		&category.Category{},
-
-		// comment 模块
-		&comment.Comment{},
-
-		// association 跨模块中间表
-		&association.PostCategory{},
+//
+//	[]any: 所有模型列表
+func GetAllModels() []any {
+	return []any{
+		&user.User{},         // 用户模型
+		&rbac.Policy{},       // RBAC策略模型
+		&post.Post{},         // 文章模型
+		&category.Category{}, // 分类模型
 	}
 }

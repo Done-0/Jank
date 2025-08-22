@@ -1,24 +1,93 @@
-# 忽略 .logs 目录
+*.o
+*.a
+*.so
+_obj
+_test
+*.[568vq]
+[568vq].out
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+_testmain.go
+*.exe
+*.exe~
+*.test
+*.prof
+*.rar
+*.zip
+*.gz
+*.psd
+*.bmd
+*.cfg
+*.pptx
+*.log
+*nohup.out
+*settings.pyc
+*.sublime-project
+*.sublime-workspace
+!.gitkeep
+.DS_Store
+/.idea
+/.vscode
+/output
+*.local.yml
+dumped_hertz_remote_config.json
+
+# Build directories
+build/
+bin/
+
+# Exclude dist directories (build artifacts)
+dist/
+# But keep frontend theme dist (static files)
+!themes/frontend/dist/
+
+# Logs
+logs/
+log/
 .logs/
 
-# 忽略 tmp 目录
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Config files with sensitive data
+config.local.yml
+config.prod.yml
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+
+# Docker volumes
+docker/data/
+docker/logs/
+
+# Air (live reload tool) temporary files
 tmp/
 
-# 忽略 .history 文件
-.history
+# Local development files
+*.local.*
 
-# 忽略 .vscode 和 .idea 
-.vscode/
-.idea/
+# Claude
+.claude/
+CLAUDE.md
 
-# 忽略 ci.yml 文件
-ci.yml
-
-# 忽略配置文件
-.configs/conf.yaml
-
-# 忽略 docs 目录
-.docs/
-
-# 忽略数据库文件
-/database/
+# asdf
+.tool-versions

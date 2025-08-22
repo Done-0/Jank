@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+</head>
+<body class="dark">
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Blog</a>
+            <button data-theme-toggle class="theme-toggle">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <aside class="sidebar-left">
+            <div id="category-buttons" class="category-buttons"></div>
+        </aside>
+
+        <main class="main-content">
+            <div id="home-view" class="view-container">
+                <div id="posts-container" class="posts-grid"></div>
+                
+                <div id="pagination-container"></div>
+            </div>
+
+            <div id="article-view" class="view-container" style="display: none;">
+                <div class="article-detail-layout">
+                    <article class="article-main">
+                        <header class="article-header">
+                            <h1 id="article-title" class="article-title"></h1>
+                            <div class="article-meta">
+                                <span id="article-category" class="article-category"></span>
+                                <div class="article-dates">
+                                    <time id="article-created-date" class="article-date"></time>
+                                    <span class="date-separator" style="display: none;">•</span>
+                                    <time id="article-updated-date" class="article-date" style="display: none;"></time>
+                                </div>
+                            </div>
+                        </header>
+                        <div id="article-html-content" class="article-html-content"></div>
+                    </article>
+
+                    <aside class="article-toc">
+                        <div class="toc-header">目录</div>
+                        <nav id="article-toc-nav" class="toc-nav"></nav>
+                        <button id="back-to-home" class="back-button">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            返回
+                        </button>
+                    </aside>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="profile-name">Author</h3>
+                    <p class="profile-bio">Developer & Writer</p>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-row">
+                        <span>Posts</span>
+                        <span id="total-posts">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Categories</span>
+                        <span id="total-categories">-</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script type="module" src="/assets/js/main.js"></script>
+</body>
+</html>

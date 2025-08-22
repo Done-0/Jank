@@ -1,0 +1,12 @@
+{
+    "id": "com.jank.themes.console",
+    "name": "Jank 默认后台管理界面",
+    "version": "1.0.0",
+    "author": "Done-0",
+    "description": "Jank 默认后台管理界面",
+    "repository": "https://github.com/Done-0/jank-console",
+    "preview": "/preview.png",
+    "type": "console",
+    "index_file_path": "/dist/index.html",
+    "static_dir_path": "/dist/assets"
+}

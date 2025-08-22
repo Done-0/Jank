@@ -1,0 +1,20 @@
+# Casbin RBAC 权限策略文件 - 核心角色配置
+# 格式说明：
+# p, [角色], [资源], [操作] - 授予角色对资源的操作权限
+# g, [角色1], [角色2] - 角色1继承角色2的所有权限
+# 
+# 注意：此文件仅定义核心角色，其他角色可通过 RBAC API 动态管理
+
+# ===== 核心权限策略 =====
+
+# 超级管理员 - 系统最高权限
+p, super_admin, *, *, 超级管理员权限, 拥有系统所有权限
+
+# 普通用户 - 基础功能
+p, user, /api/v1/user/profile, GET, 查看用户资料, 允许用户查看自己的资料信息
+p, user, /api/v1/user/update, POST, 更新用户信息, 允许用户更新自己的基本信息
+p, user, /api/v1/user/reset-password, POST, 重置用户密码, 允许用户重置自己的密码
+p, user, /api/v1/user/logout, POST, 用户登出, 允许用户安全登出系统
+
+# ===== 角色继承关系 =====
+g, super_admin, user

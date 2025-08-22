@@ -1,0 +1,16 @@
+{
+  "id": "com.jank.plugins.hello-world",
+  "name": "Hello World Plugin",
+  "version": "1.0.0",
+  "author": "Done-0",
+  "description": "A simple hello world plugin for demonstration",
+  "repository": "https://github.com/Done-0/jank-hello-world-plugin",
+  "binary": "./bin/hello-world",
+  "type": "handler",
+  "auto_start": true,
+  "start_timeout": 30000,
+  "min_port": 10000,
+  "max_port": 25000,
+  "auto_mtls": true,
+  "managed": true
+}

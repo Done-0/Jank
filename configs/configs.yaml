@@ -1,0 +1,94 @@
+# 应用相关
+APP:
+  APP_NAME: "Jank"
+  APP_HOST: "127.0.0.1" # 如果使用 docker，则改为"0.0.0.0"
+  APP_PORT: "8080"
+  # CORS 跨域相关
+  CORS:
+    ALLOW_ORIGINS: ["*"] # 允许的源，生产环境应指定具体域名
+    ALLOW_CREDENTIALS: true # 是否允许携带凭证
+    MAX_AGE: 12 # 预检请求缓存时间（小时）
+  # 邮箱相关
+  EMAIL:
+    EMAIL_TYPE: "qq" # 支持的邮箱类型: qq, gmail, outlook
+    FROM_EMAIL: "" # 发件人邮箱
+    EMAIL_SMTP: "" # SMTP 授权码
+  # JWT 认证相关
+  JWT:
+    SECRET: "jank-jwt-secret-key" # JWT 签名密钥
+    EXPIRE_TIME: 2 # Token 有效期（小时）
+    REFRESH_EXPIRE: 48 # 刷新Token有效期（小时）
+  # 用户角色相关
+  USER:
+    # 管理员账户配置
+    ADMIN_EMAIL: "" # 管理员邮箱
+    ADMIN_PASSWORD: "" # 管理员密码
+    ADMIN_NICKNAME: "系统管理员" # 管理员昵称
+    ADMIN_ROLE: "super_admin" # 管理员角色
+    DEFAULT_ROLE: "user" # 默认用户角色
+    # 注册控制
+    ALLOW_REGISTER: false # 是否允许用户注册
+
+# 数据库相关
+DATABASE:
+  DB_DIALECT: "postgres" # 数据库类型, 可选值: postgres, mysql, sqlite
+  DB_NAME: "jank_db"
+  DB_HOST: "127.0.0.1" # 如果使用 docker，则改为"postgres"
+  DB_PORT: "5432"
+  DB_USER: "root"
+  DB_PSW: "123456"
+  DB_PATH: "./database" # SQLite 数据库文件路径
+
+# Redis 相关
+REDIS:
+  REDIS_HOST: "127.0.0.1" # 如果使用 docker，则改为"redis"
+  REDIS_PORT: "6379"
+  REDIS_PSW: ""
+  REDIS_DB: "0"
+
+# 日志相关
+LOG:
+  LOG_FILE_PATH: ".logs/"
+  LOG_FILE_NAME: "app.log"
+  LOG_TIMESTAMP_FMT: "2006-01-02 15:04:05"
+  LOG_MAX_AGE: "72"
+  LOG_ROTATION_TIME: "24"
+  LOG_LEVEL: "INFO"
+
+# Casbin 相关
+CASBIN:
+  MODEL_PATH: "configs/rbac_model.conf" # 模型文件路径
+  POLICY_PATH: "configs/rbac_policy.csv" # 策略文件路径（仅在不使用数据库适配器时有效）
+  DB_ADAPTER: "true" # 是否使用数据库适配器存储策略
+
+# 插件相关
+PLUGIN:
+  # 插件目录和文件
+  PLUGIN_DIR: "plugins" # 插件目录
+  PLUGIN_CONFIG_FILE: "plugin.json" # 插件配置文件
+  PLUGIN_BIN_DIR: "bin" # 插件二进制文件目录
+  PLUGIN_MAIN_FILE: "main.go" # 插件主文件名
+  
+  # 构建相关
+  BUILD_SCRIPT_DIR: "scripts" # 构建脚本目录
+  BUILD_SCRIPT_FILE: "build.sh" # 构建脚本文件名
+  BUILD_TIMEOUT_MINUTES: 15 # 构建超时时间（分钟）
+
+# 主题相关
+THEME:
+  # 主题目录和文件
+  THEME_DIR: "./themes" # 主题目录
+  THEME_CONFIG_FILE: "theme.json" # 主题配置文件
+  
+  # Frontend 主题配置（用户前端）
+  FRONTEND_DEFAULT_THEME: "com.jank.themes.frontend" # Frontend 默认主题 ID
+  FRONTEND_LAST_ACTIVE_THEME: "com.jank.themes.frontend" # Frontend 上次激活的主题 ID
+  
+  # Console 主题配置（管理后台）
+  CONSOLE_DEFAULT_THEME: "com.jank.themes.console" # Console 默认主题 ID
+  CONSOLE_LAST_ACTIVE_THEME: "com.jank.themes.console" # Console 上次激活的主题 ID
+
+  # 构建相关
+  BUILD_SCRIPT_DIR: "scripts" # 构建脚本目录
+  BUILD_SCRIPT_FILE: "build.sh" # 构建脚本文件名
+  BUILD_TIMEOUT_MINUTES: 60 # 构建超时时间（分钟）

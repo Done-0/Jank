@@ -1,6 +1,6 @@
 // Package redis 提供Redis连接和管理功能
 // 创建者：Done-0
-// 创建时间：2025-05-10
+// 创建时间：2025-08-05
 package redis
 
 import (
@@ -12,29 +12,49 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"jank.com/jank_blog/configs"
-	"jank.com/jank_blog/internal/global"
+	"github.com/Done-0/jank/configs"
+	"github.com/Done-0/jank/internal/global"
 )
 
-// New 初始化Redis连接
+// New 初始化 Redis 连接
 // 参数：
-//   - config: 应用配置
+//
+//	config: 应用配置
 func New(config *configs.Config) {
 	client := newRedisClient(config)
 	if err := client.Ping(context.Background()).Err(); err != nil {
-		global.SysLog.Errorf("Redis 连接失败: %v", err)
+		global.SysLog.Errorf("failed to ping Redis: %v", err)
 		return
 	}
 	global.RedisClient = client
-	global.SysLog.Infof("Redis 连接成功!")
+	global.SysLog.Infof("Redis connected successfully...")
 }
 
-// newRedisClient 创建新的Redis客户端
+// Close 关闭 Redis 连接
+// 返回值：
+//
+//	error: 错误信息
+func Close() error {
+	if global.RedisClient == nil {
+		return nil
+	}
+
+	if err := global.RedisClient.Close(); err != nil {
+		return fmt.Errorf("failed to close Redis connection: %w", err)
+	}
+
+	global.SysLog.Info("Redis connection closed")
+	return nil
+}
+
+// newRedisClient 创建新的 Redis 客户端
 // 参数：
-//   - config: 应用配置
+//
+//	config: 应用配置
 //
 // 返回值：
-//   - *redis.Client: Redis客户端实例
+//
+//	*redis.Client: Redis 客户端实例
 func newRedisClient(config *configs.Config) *redis.Client {
 	db, _ := strconv.Atoi(config.RedisConfig.RedisDB)
 	return redis.NewClient(&redis.Options{

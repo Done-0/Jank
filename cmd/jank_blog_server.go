@@ -1,57 +1,80 @@
 // Package cmd 提供应用程序的启动和运行入口
 // 创建者：Done-0
-// 创建时间：2025-05-10
+// 创建时间：2025-08-05
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/labstack/echo/v4"
+	"github.com/cloudwego/hertz/pkg/app/server"
 
-	"jank.com/jank_blog/configs"
-	"jank.com/jank_blog/internal/banner"
-	"jank.com/jank_blog/internal/db"
-	"jank.com/jank_blog/internal/logger"
-	"jank.com/jank_blog/internal/middleware"
-	"jank.com/jank_blog/internal/redis"
-	"jank.com/jank_blog/pkg/router"
+	"github.com/Done-0/jank/configs"
+	"github.com/Done-0/jank/internal/casbin"
+	"github.com/Done-0/jank/internal/db"
+	"github.com/Done-0/jank/internal/global"
+	"github.com/Done-0/jank/internal/logger"
+	"github.com/Done-0/jank/internal/middleware"
+	"github.com/Done-0/jank/internal/plugin"
+	"github.com/Done-0/jank/internal/redis"
+	"github.com/Done-0/jank/internal/theme"
+	"github.com/Done-0/jank/pkg/router"
 )
 
 // Start 启动服务
 func Start() {
-	if err := configs.Init(configs.DefaultConfigPath); err != nil {
-		log.Fatalf("配置初始化失败: %v", err)
-		return
+	// 初始化配置
+	if err := configs.New(configs.DefaultConfigPath); err != nil {
+		log.Fatalf("failed to initialize config: %v", err)
 	}
 
-	config, err := configs.LoadConfig()
+	cfgs, err := configs.GetConfig()
 	if err != nil {
-		log.Fatalf("获取配置失败: %v", err)
-		return
+		log.Fatalf("failed to get config: %v", err)
 	}
 
-	// 初始化 Logger
-	logger.New()
+	// 初始化日志
+	logger.New(cfgs)
 
-	// 初始化 echo 实例
-	app := echo.New()
+	// 初始化数据库
+	db.New(cfgs)
 
-	// 初始化 Banner
-	banner.New(app)
+	// 初始化 Redis
+	redis.New(cfgs)
 
-	// 初始化中间件
-	middleware.New(app)
+	// 初始化 Casbin 权限系统
+	casbin.New(cfgs)
 
-	// 初始化数据库连接并自动迁移模型
-	db.New(config)
+	// 初始化插件系统
+	plugin.New(cfgs)
 
-	// 初始化 Redis 连接
-	redis.New(config)
+	// 初始化主题系统
+	theme.New(cfgs)
+
+	// 创建 Hertz 服务器实例
+	addr := fmt.Sprintf("%s:%s", cfgs.AppConfig.AppHost, cfgs.AppConfig.AppPort)
+	h := server.Default(
+		server.WithHostPorts(addr),
+		server.WithExitWaitTime(10*time.Second),
+	)
+
+	// 注册中间件
+	middleware.New(h)
 
 	// 注册路由
-	router.New(app)
+	router.New(h)
 
-	// 启动服务
-	app.Logger.Fatal(app.Start(fmt.Sprintf("%s:%s", config.AppConfig.AppHost, config.AppConfig.AppPort)))
+	// 注册优雅关闭钩子
+	h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {
+		plugin.GlobalPluginManager.Shutdown()
+		theme.GlobalThemeManager.Shutdown()
+	})
+
+	// 启动信息
+	global.SysLog.Infof("⇨ Hertz server starting on %s", addr)
+
+	// 优雅关闭
+	h.Spin()
 }

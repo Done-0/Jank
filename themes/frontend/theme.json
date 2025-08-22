@@ -1,0 +1,13 @@
+{
+    "id": "com.jank.themes.frontend",
+    "name": "默认主题",
+    "version": "1.0.0",
+    "author": "Done-0",
+    "description": "简洁的默认主题",
+    "repository": "https://github.com/Done-0/jank-themes",
+    "preview": "https://s2.loli.net/2025/06/04/zgJYMvEerumZaj7.png",
+    "type": "frontend",
+    "index_file_path": "/dist/index.html",
+    "static_dir_path": "/dist/assets"
+
+}

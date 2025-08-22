@@ -1,26 +1,31 @@
 // Package routes 提供路由注册功能
 // 创建者：Done-0
-// 创建时间：2025-05-10
+// 创建时间：2025-08-13
 package routes
 
 import (
-	"github.com/labstack/echo/v4"
+	"log"
 
-	auth_middleware "jank.com/jank_blog/internal/middleware/auth"
-	"jank.com/jank_blog/pkg/serve/controller/category"
+	"github.com/cloudwego/hertz/pkg/route"
+
+	"github.com/Done-0/jank/internal/middleware/jwt"
+	"github.com/Done-0/jank/pkg/wire"
 )
 
-// RegisterCategoryRoutes 注册类目相关路由
-// 参数：
-//   - r: Echo 路由组数组，r[0] 为 API v1 版本组
-func RegisterCategoryRoutes(r ...*echo.Group) {
-	// api v1 group
-	apiV1 := r[0]
-	categoryGroupV1 := apiV1.Group("/category")
-	categoryGroupV1.GET("/getOneCategory", category.GetOneCategory)
-	categoryGroupV1.GET("/getCategoryTree", category.GetCategoryTree)
-	categoryGroupV1.GET("/getCategoryChildrenTree", category.GetCategoryChildrenTree)
-	categoryGroupV1.POST("/createOneCategory", category.CreateOneCategory, auth_middleware.AuthMiddleware())
-	categoryGroupV1.POST("/updateOneCategory", category.UpdateOneCategory, auth_middleware.AuthMiddleware())
-	categoryGroupV1.POST("/deleteOneCategory", category.DeleteOneCategory, auth_middleware.AuthMiddleware())
+// RegisterCategoryRoutes 注册分类相关路由
+func RegisterCategoryRoutes(r *route.RouterGroup) {
+	categoryController, err := wire.NewCategoryController()
+	if err != nil {
+		log.Fatalf("Failed to initialize category controller: %v", err)
+	}
+
+	// 分类路由组
+	categoryGroup := r.Group("/category")
+	{
+		categoryGroup.GET("/get", categoryController.GetCategory)           // 获取单个分类
+		categoryGroup.GET("/list", categoryController.ListCategories)       // 获取分类列表
+		categoryGroup.POST("/create", jwt.New(), categoryController.Create) // 创建分类
+		categoryGroup.POST("/update", jwt.New(), categoryController.Update) // 更新分类
+		categoryGroup.POST("/delete", jwt.New(), categoryController.Delete) // 删除分类
+	}
 }

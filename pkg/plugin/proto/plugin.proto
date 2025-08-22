@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package plugin;
+
+import "google/protobuf/any.proto";
+
+option go_package = ".";
+
+service PluginService {
+  rpc Execute(ExecuteRequest) returns (ExecuteResponse);
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message ExecuteRequest {
+  string method = 1;
+  map<string, google.protobuf.Any> args = 2;
+}
+
+message ExecuteResponse {
+  map<string, google.protobuf.Any> data = 1;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string status = 1;
+}

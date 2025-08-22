@@ -3,7 +3,7 @@
 </p>
 
 <p style="text-align: center;">
-  <em>Jank，一个轻量级的博客系统，基于 Go 语言和 Echo 框架开发，强调极简、低耦合和高扩展</em>
+  <em>Jank，一个轻量级的博客系统，基于 Go 语言和 hertz 框架开发，强调极简、低耦合和高扩展</em>
 </p>
 
 <p style="text-align: center;">
@@ -27,31 +27,60 @@
   </a>
 </p>
 
-## 快速链接
-
-👉 [演示站点](https://www.jank.org.cn)
-
 ## 技术栈
 
 - **Go 语言**：热门后端开发语言，适合构建高并发应用。
-- **Echo 框架**：高性能的 Web 框架，支持快速开发和灵活的路由管理。
+- **hertz 框架**：高性能的 Web 框架，支持快速开发和灵活的路由管理。
 - **数据库**：开源的关系型数据库，支持 Postgres、MySQL 和 SQLite。
 - **Redis**：热门缓存解决方案，提供快速数据存取和持久化选项。
-- **JWT**：安全的用户身份验证机制，确保数据传输的完整性和安全性。
 - **Docker**：容器化部署工具，简化应用的打包和分发流程。
-- **前端**：react + ts + vite + shadcn/ui + tailwindcss。
+- **plugins**：基于 gRPC 的插件系统。
+- **console**：react + ts + vite + tanstack + shadcn/ui + tailwindcss。
+- **frontend**：html + css + js。
 
-> 最新项目支持多插件、多前端主题，对开发基本无限制，拓展性极强。
-> 
-> 最新项目采用字节开源 hertz 框架，全新架构，项目正在重构中，暂未发布，敬请期待！
->
-> 对项目使用、主题开发、插件开发感兴趣的朋友可以进入下方官方社区交流。
+## 特性
+
+- **轻量级**：Jank 是一个轻量级的博客系统，易于部署和维护。
+- **高性能**：基于 Go 语言和 hertz 框架，具备高并发处理能力。
+- **灵活扩展**：支持多插件和多主题，满足不同场景需求。
+
+## 配置文件
+
+[配置文件](https://github.com/Done-0/Jank/blob/main/configs/configs.yaml)
+
+## 开发规范
+
+[Jank 主题开发规范](https://github.com/Done-0/Jank/blob/main/docs/themes.md) ｜ [Jank 插件开发规范](https://github.com/Done-0/Jank/blob/main/docs/plugins.md)
+
+> 主题示例：[示例控制台界面](https://github.com/Done-0/Jank/blob/main/themes/console) ｜ [示例前端界面](https://github.com/Done-0/Jank/blob/main/themes/frontend)
+> 插件示例：[示例插件](https://github.com/Done-0/Jank/blob/main/plugins/hello-world)
+
+## 快速入门
+
+1. 克隆项目
+
+```bash
+git clone https://github.com/Done-0/Jank.git
+cd Jank
+```
+
+2. 安装依赖
+
+```bash
+go mod tidy
+```
+
+3. 运行项目
+
+```bash
+go run main.go
+```
 
 ## 社区支持
 
 ### 官方社区
 
-<img src="https://s2.loli.net/2025/08/15/gVOinEamK4YyMXT.jpg" alt="官方社区" width="300" />
+<img src="https://s2.loli.net/2025/08/22/3sVIXy5otzRaPrg.jpg" alt="官方社区" width="300" />
 
 > 注：因社群成员较多，请自觉遵守规范。严禁讨论涉黄、赌、毒及政治敏感内容，禁止发布任何形式的不良广告。
 

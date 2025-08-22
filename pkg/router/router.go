@@ -1,41 +1,39 @@
 // Package router 提供应用程序路由注册功能
 // 创建者：Done-0
-// 创建时间：2025-05-10
+// 创建时间：2025-08-05
 package router
 
 import (
-	"github.com/labstack/echo/v4"
+	"github.com/cloudwego/hertz/pkg/app/server"
 
-	"jank.com/jank_blog/pkg/router/routes"
+	"github.com/Done-0/jank/pkg/router/routes"
 )
 
-// New @title		Jank Blog API
-// @version		1.0
-// @description	This is the API documentation for Jank Blog.
-// @host		localhost:9010
-// @BasePath	/
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
-// @description 输入格式: Bearer {token}
 // New 函数用于注册应用程序的路由
 // 参数：
-//   - app: Echo 实例
-func New(app *echo.Echo) {
-	// 创建多版本 API 路由组
-	api1 := app.Group("/api/v1")
-	api2 := app.Group("/api/v2")
+//
+//	app: Hertz 路由引擎
+func New(app *server.Hertz) {
+	api := app.Group("/api/v1")
 
-	// 注册测试相关的路由
-	routes.RegisterTestRoutes(api1, api2)
-	// 注册账户相关的路由
-	routes.RegisterAccountRoutes(api1)
-	// 注册验证相关的路由
-	routes.RegisterVerificationRoutes(api1)
+	// 注册用户相关的路由
+	routes.RegisterUserRoutes(api)
+
+	// 注册RBAC相关的路由
+	routes.RegisterRBACRoutes(api)
+
+	// 注册验证码相关的路由
+	routes.RegisterVerificationRoutes(api)
+
+	// 注册分类相关的路由
+	routes.RegisterCategoryRoutes(api)
+
 	// 注册文章相关的路由
-	routes.RegisterPostRoutes(api1)
-	// 注册类目相关的路由
-	routes.RegisterCategoryRoutes(api1)
-	// 注册评论相关的路由
-	routes.RegisterCommentRoutes(api1)
+	routes.RegisterPostRoutes(api)
+
+	// 注册插件相关的路由
+	routes.RegisterPluginRoutes(api)
+
+	// 注册主题相关的路由
+	routes.RegisterThemeRoutes(app, api)
 }
